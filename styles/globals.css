@@ -1,0 +1,510 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Syne:wght@400;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Nice defaults */
+html, body {
+  height: 100%;
+}
+
+/* Your project hides scrollbar in a few places */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ============================================================================
+   CSS CUSTOM PROPERTIES (Design Tokens)
+   ============================================================================ */
+
+:root {
+  /* Brand Colors */
+  --accent-orange: #FF4D00;
+  --accent-orange-hover: #ff6b2b;
+  
+  /* Background Colors */
+  --bg-dark: #050505;
+  --bg-card: #0F0F0F;
+  --bg-elevated: #111111;
+  
+  /* Text Colors */
+  --text-main: #ffffff;
+  --text-muted: #666666;
+  --text-subtle: #888888;
+  
+  /* Border Colors */
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.2);
+  
+  /* Transitions */
+  --transition: cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.4s var(--transition);
+  --transition-slow: 0.8s var(--transition);
+}
+
+/* ============================================================================
+   BASE STYLES
+   ============================================================================ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  overflow-x: hidden;
+  cursor: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Display font utility */
+.font-display {
+  font-family: 'Syne', sans-serif;
+}
+
+/* ============================================================================
+   CUSTOM CURSOR
+   ============================================================================ */
+
+#cursor {
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s, background-color 0.3s, opacity 0.3s;
+  mix-blend-mode: exclusion;
+}
+
+#cursor.hovered {
+  width: 60px;
+  height: 60px;
+  background-color: var(--accent-orange);
+  opacity: 0.8;
+  mix-blend-mode: normal;
+}
+
+/* Hide custom cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  #cursor {
+    display: none;
+  }
+  
+  body {
+    cursor: auto;
+  }
+  
+  .hover-trigger {
+    cursor: pointer;
+  }
+}
+
+/* ============================================================================
+   NOISE OVERLAY
+   ============================================================================ */
+
+.noise {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9000;
+  opacity: 0.03;
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWCAAAAGFBMVEUAAAA5OTkAAAAAAAAAAABMTExERERmZmZnOtAyAAAACHRSTlMAMwAqzMzM/wO30gAAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAAAOElEQVQ4y2NgIBewMjAwMjBwMDBwMDIwMKA4FknADKaFQGYw60Amw6gD6Ri1g1E7GLWDUTsg2wEA6XQA8Z018fEAAAAASUVORK5CYII=');
+}
+
+/* ============================================================================
+   MARQUEE ANIMATION
+   ============================================================================ */
+
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+}
+
+.marquee-content {
+  display: flex;
+  animation: marquee 80s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* ============================================================================
+   HERO CAROUSEL
+   ============================================================================ */
+
+.fdl-hero-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background-color: #000;
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+@media (max-width: 768px) {
+  .fdl-hero-wrapper {
+    height: 70vh;
+  }
+}
+
+.fdl-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+  cursor: grab;
+}
+
+.fdl-track:active {
+  cursor: grabbing;
+}
+
+.fdl-slide {
+  min-width: 100%;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.fdl-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.fdl-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============================================================================
+   PRODUCT CAROUSEL
+   ============================================================================ */
+
+.prod-carousel-item {
+  transition: transform 0.4s var(--transition), box-shadow 0.4s var(--transition);
+}
+
+.prod-carousel-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+}
+
+.prod-overlay {
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.4s var(--transition);
+}
+
+.prod-carousel-item:hover .prod-overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Hide scrollbar for carousel */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ============================================================================
+   NAVIGATION DROPDOWN
+   ============================================================================ */
+
+.nav-dropdown {
+  opacity: 0;
+  transform: translateY(10px);
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.group:hover .nav-dropdown {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+/* ============================================================================
+   FORM ELEMENTS
+   ============================================================================ */
+
+.lux-input {
+  background: transparent;
+  border-bottom: 1px solid var(--border-color);
+  color: white;
+  transition: border-color 0.3s;
+}
+
+.lux-input:focus {
+  outline: none;
+  border-bottom-color: var(--accent-orange);
+}
+
+.lux-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Range Slider */
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  background: transparent;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: var(--accent-orange);
+  cursor: pointer;
+  margin-top: -8px;
+  border: 2px solid white;
+  box-shadow: 0 0 10px rgba(255, 77, 0, 0.5);
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+}
+
+input[type=range]::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: var(--accent-orange);
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 0 10px rgba(255, 77, 0, 0.5);
+}
+
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+}
+
+/* ============================================================================
+   TEXT UTILITIES
+   ============================================================================ */
+
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+}
+
+.text-outline-strong {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.8);
+}
+
+.text-outline-orange {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--accent-orange);
+}
+
+/* ============================================================================
+   SCROLLBAR
+   ============================================================================ */
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-orange);
+}
+
+/* ============================================================================
+   ANIMATIONS
+   ============================================================================ */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from { 
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from { 
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s var(--transition) forwards;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.6s var(--transition) forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.4s var(--transition) forwards;
+}
+
+/* Staggered animation delays */
+.animate-delay-100 { animation-delay: 100ms; }
+.animate-delay-200 { animation-delay: 200ms; }
+.animate-delay-300 { animation-delay: 300ms; }
+.animate-delay-400 { animation-delay: 400ms; }
+.animate-delay-500 { animation-delay: 500ms; }
+
+/* ============================================================================
+   COMPONENT UTILITIES
+   ============================================================================ */
+
+/* Card hover effect */
+.card-hover {
+  @apply transition-all duration-500;
+}
+
+.card-hover:hover {
+  @apply bg-[#111] border-white/20;
+}
+
+/* Button base styles */
+.btn-primary {
+  @apply px-8 py-4 bg-white text-black font-bold uppercase tracking-widest;
+  @apply hover:bg-[var(--accent-orange)] hover:text-white;
+  @apply transition-all duration-300;
+}
+
+.btn-secondary {
+  @apply px-8 py-4 border border-white text-white font-bold uppercase tracking-widest;
+  @apply hover:bg-white hover:text-black;
+  @apply transition-all duration-300;
+}
+
+.btn-ghost {
+  @apply px-4 py-2 text-white font-bold uppercase tracking-widest;
+  @apply hover:text-[var(--accent-orange)];
+  @apply transition-colors duration-300;
+}
+
+/* Image grayscale effect */
+.img-grayscale {
+  @apply grayscale transition-all duration-700;
+}
+
+.img-grayscale:hover,
+.group:hover .img-grayscale {
+  @apply grayscale-0;
+}
+
+/* ============================================================================
+   TAILWIND LAYER EXTENSIONS
+   ============================================================================ */
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .bg-noise {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWCAAAAGFBMVEUAAAA5OTkAAAAAAAAAAABMTExERERmZmZnOtAyAAAACHRSTlMAMwAqzMzM/wO30gAAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAAAOElEQVQ4y2NgIBewMjAwMjBwMDBwMDIwMKA4FknADKaFQGYw60Amw6gD6Ri1g1E7GLWDUTsg2wEA6XQA8Z018fEAAAAASUVORK5CYII=');
+  }
+}
+
+/* ============================================================================
+   RESPONSIVE UTILITIES
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .mobile-full-height {
+    min-height: calc(100vh - 80px);
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .marquee-content {
+    animation: none;
+  }
+}

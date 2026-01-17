@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "gallery": "node scripts/generate-gallery.mjs"
   },
   "dependencies": {
     "@woocommerce/woocommerce-rest-api": "^1.0.1",

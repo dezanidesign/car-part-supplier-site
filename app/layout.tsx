@@ -1,12 +1,23 @@
 import type { Metadata, Viewport } from "next";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
-import { CustomCursor } from "@/components/layout/CustomCursor";
+// import { CustomCursor } from "@/components/layout/CustomCursor";
 import "../styles/globals.css";
+import { Syne, Space_Grotesk } from "next/font/google";
 
-// ============================================================================
-// METADATA
-// ============================================================================
+const syne = Syne({
+  subsets: ["latin"],
+  weight: ["400", "700", "800"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-body",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.fdlbespoke.co.uk"),
@@ -83,45 +94,22 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-// ============================================================================
-// ROOT LAYOUT
-// ============================================================================
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <head>
-        {/* Preconnect to external resources */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
-        {/* Favicon */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/manifest.json" />
-      </head>
-      <body className="bg-[#050505] text-white antialiased min-h-screen flex flex-col">
-        {/* Custom Cursor (desktop only) */}
-        <CustomCursor />
-        
-        {/* Noise Overlay */}
+    <html
+      lang="en"
+      className={`scroll-smooth ${syne.variable} ${spaceGrotesk.variable}`}
+    >
+      <body className="bg-[#050505] text-white antialiased min-h-screen flex flex-col font-sans">
+        {/* <CustomCursor /> */}
         <div className="noise" aria-hidden="true" />
-        
-        {/* Navigation */}
+
         <Navigation />
-        
-        {/* Main Content */}
+
         <main className="flex-grow">{children}</main>
-        
-        {/* Footer */}
+
         <Footer />
-        
-        {/* Schema.org structured data */}
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

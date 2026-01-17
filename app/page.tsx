@@ -8,6 +8,7 @@ declare global {
 }
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Link from 'next/link';
 import { 
   ShoppingBag, 
   Menu, 
@@ -531,7 +532,7 @@ const BookingSection = () => (
   </section>
 );
 
-const Footer = ({ setView }) => (
+const Footer = () => (
   <footer className="bg-black py-20 px-6 md:px-16 border-t border-white/10 text-white">
      <div className="flex flex-col md:flex-row justify-between items-start gap-12">
         <div>
@@ -545,12 +546,6 @@ const Footer = ({ setView }) => (
            </div>
            <div className="flex flex-col gap-4">
               <a href="#" className="hover:text-white transition-colors">Email Us</a>
-              {/* Only show admin button if setView is passed */}
-              {setView && (
-                <button onClick={() => setView('admin')} className="hover:text-[var(--accent-orange)] flex items-center gap-2 transition-colors">
-                   Staff Entry <Lock size={10} />
-                </button>
-              )}
            </div>
         </div>
      </div>
@@ -719,7 +714,7 @@ const HeroCarousel = () => {
   );
 };
 
-const ProductCarousel = ({ products, setView }) => {
+const ProductCarousel = ({ products }) => {
   const displayProducts = products.length > 0 ? products : MOCK_PRODUCTS;
   const trackRef = useRef(null);
   
@@ -795,14 +790,14 @@ const ProductCarousel = ({ products, setView }) => {
                 </div>
               ))}
               
-              <div 
-                onClick={() => setView('shop')}
+              <Link 
+                href="/shop"
                 className="prod-carousel-item w-[280px] md:w-[350px] aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-[var(--accent-orange)] to-[#ff8f66] flex flex-col items-center justify-center text-center p-8 cursor-pointer hover-trigger"
               >
                   <ArrowRight size={48} className="text-white mb-4" />
                   <h3 className="font-display text-2xl text-white font-bold">View All</h3>
                   <p className="text-white/90 text-sm mt-2">See full collection</p>
-              </div>
+              </Link>
            </div>
         </div>
       </div>
@@ -1209,27 +1204,10 @@ const InteriorsPage = () => {
   );
 };
 
-// Shop View Placeholder
-const ShopView = () => (
-  <div className="pt-32 pb-24 px-6 md:px-16 min-h-screen bg-[var(--bg-dark)]">
-    <h2 className="font-display text-4xl text-white font-bold uppercase mb-6">
-      Shop
-    </h2>
-    <p className="text-gray-500 uppercase tracking-widest text-xs">
-      ShopView not implemented yet.
-    </p>
-  </div>
-);
-
-// 5. Main App Component
-export default function App() {
-  const [view, setView] = useState('home');
-  const [cart, setCart] = useState([]);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+// 5. Main App Component (Homepage)
+export default function HomePage() {
   const [products, setProducts] = useState([]);
   const [user, setUser] = useState(null);
-  const [isAdminMode, setIsAdminMode] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
   // Auth & Data
   useEffect(() => {
@@ -1265,241 +1243,21 @@ export default function App() {
     return () => unsub();
   }, [user]);
 
-  // Scroll Effect for Header
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Scroll to top on view change
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [view]);
-
-  const addToCart = (item) => setCart([...cart, item]);
-  const cartTotal = cart.reduce((acc, item) => acc + Number(item.price), 0);
-
-  // --- Views ---
-
-  const Navigation = () => {
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    return (
-      <nav className={`fixed w-full z-50 px-6 md:px-16 py-6 flex justify-between items-center transition-all duration-500 ${scrolled ? 'bg-black/90 backdrop-blur-md border-b border-white/5' : 'bg-transparent border-transparent'}`}>
-        <div onClick={() => setView('home')} className="cursor-pointer hover-trigger opacity-90 hover:opacity-100 transition-opacity">
-          <img 
-            src="https://fdlbespoke.co.uk/wp-content/uploads/2025/06/cropped-cropped-FDL-UK-Logo-White-Sq.png" 
-            alt="FDL Bespoke" 
-            className="h-[70px] w-auto md:h-[85px]"
-          />
-        </div>
-
-        <div className="hidden lg:flex gap-12 font-medium text-xs tracking-[0.2em] uppercase text-white h-full items-center">
-          <div 
-            className="relative group h-full flex items-center" 
-            onMouseEnter={() => setIsDropdownOpen(true)} 
-            onMouseLeave={() => setIsDropdownOpen(false)}
-          >
-            <button className="hover:text-[var(--accent-orange)] transition-colors hover-trigger font-bold flex items-center gap-1 py-4">
-              CUSTOMISATION <ChevronDown size={12}/>
-            </button>
-            <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-4 transition-all duration-300 ${isDropdownOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 translate-y-4 invisible'}`}>
-              <div className="bg-black border border-white/10 min-w-[260px] flex flex-col shadow-2xl backdrop-blur-xl">
-                 <button onClick={() => setView('bodykits')} className="text-left px-8 py-5 hover:bg-[var(--accent-orange)] hover:text-white transition-colors border-b border-white/5 text-[10px] tracking-widest font-bold uppercase">Bodykits</button>
-                 <button onClick={() => setView('alloys')} className="text-left px-8 py-5 hover:bg-[var(--accent-orange)] hover:text-white transition-colors border-b border-white/5 text-[10px] tracking-widest font-bold uppercase">Alloy Wheels</button>
-                 <button onClick={() => setView('styling')} className="text-left px-8 py-5 hover:bg-[var(--accent-orange)] hover:text-white transition-colors border-b border-white/5 text-[10px] tracking-widest font-bold uppercase">Styling</button>
-                 <button onClick={() => setView('tints')} className="text-left px-8 py-5 hover:bg-[var(--accent-orange)] hover:text-white transition-colors border-b border-white/5 text-[10px] tracking-widest font-bold uppercase">Tints & Privacy</button>
-                 <button onClick={() => setView('interiors')} className="text-left px-8 py-5 hover:bg-[var(--accent-orange)] hover:text-white transition-colors text-[10px] tracking-widest font-bold uppercase">Interior Conversions</button>
-              </div>
-            </div>
-          </div>
-          <button onClick={() => setView('shop')} className="hover:text-[var(--accent-orange)] transition-colors hover-trigger font-bold">SHOP</button>
-          <button onClick={() => setView('info')} className="hover:text-[var(--accent-orange)] transition-colors hover-trigger font-bold">INFO</button>
-          <button onClick={() => setView('contact')} className="hover:text-[var(--accent-orange)] transition-colors hover-trigger font-bold">CONTACT US</button>
-        </div>
-
-        <div className="flex items-center gap-8">
-          <button onClick={() => setView('cart')} className="relative hover-trigger group">
-              <ShoppingBag className="text-white group-hover:text-[var(--accent-orange)] transition-colors" size={22} />
-              {cart.length > 0 && <span className="absolute -top-2 -right-2 bg-[var(--accent-orange)] text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold shadow-lg">{cart.length}</span>}
-          </button>
-          <button className="lg:hidden text-white hover-trigger" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              {isMenuOpen ? <X /> : <Menu />}
-          </button>
-        </div>
-
-        {isMenuOpen && (
-          <div className="absolute top-full left-0 w-full bg-black border-b border-white/10 p-8 flex flex-col gap-6 lg:hidden animate-in slide-in-from-top-4 h-screen">
-            <button onClick={() => { setView('bodykits'); setIsMenuOpen(false); }} className="font-display text-xl uppercase font-bold text-left hover:text-[var(--accent-orange)] text-white border-b border-white/10 pb-4">Bodykits</button>
-            <button onClick={() => { setView('alloys'); setIsMenuOpen(false); }} className="font-display text-xl uppercase font-bold text-left hover:text-[var(--accent-orange)] text-white border-b border-white/10 pb-4">Alloy Wheels</button>
-            <button onClick={() => { setView('styling'); setIsMenuOpen(false); }} className="font-display text-xl uppercase font-bold text-left hover:text-[var(--accent-orange)] text-white border-b border-white/10 pb-4">Styling</button>
-            <button onClick={() => { setView('tints'); setIsMenuOpen(false); }} className="font-display text-xl uppercase font-bold text-left hover:text-[var(--accent-orange)] text-white border-b border-white/10 pb-4">Tints & Privacy</button>
-            <button onClick={() => { setView('interiors'); setIsMenuOpen(false); }} className="font-display text-xl uppercase font-bold text-left hover:text-[var(--accent-orange)] text-white border-b border-white/10 pb-4">Interior Conversions</button>
-            
-            <div className="mt-8 flex flex-col gap-6">
-                {['Shop', 'Info', 'Contact Us'].map(item => (
-                <button key={item} onClick={() => { 
-                    if(item === 'Shop') setView('shop');
-                    if(item === 'Info') setView('info');
-                    if(item === 'Contact Us') setView('contact');
-                    setIsMenuOpen(false); 
-                }} className="font-display text-2xl uppercase font-bold text-left text-[var(--accent-orange)] hover:text-white">
-                    {item}
-                </button>
-                ))}
-            </div>
-          </div>
-        )}
-      </nav>
-    );
-  };
-
-  const AdminPanel = () => {
-    const [form, setForm] = useState({ name: '', price: '', category: '', image: '', description: '' });
-    
-    const handleAdd = async (e) => {
-      e.preventDefault();
-      if (!db) {
-        alert("Firebase not configured. Cannot add products.");
-        return;
-      }
-      await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'products'), {
-        ...form, price: Number(form.price), createdAt: serverTimestamp()
-      });
-      alert("Added");
-      setForm({ name: '', price: '', category: '', image: '', description: '' });
-    };
-
-    const handleDelete = async (id) => {
-      if (!db) {
-        alert("Firebase not configured. Cannot delete products.");
-        return;
-      }
-      if(confirm("Delete?")) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id));
-    };
-
-    if(!isAdminMode) return (
-       <div className="min-h-screen pt-32 flex items-center justify-center">
-         <div className="border border-white/10 p-12 text-center max-w-md w-full bg-[var(--bg-card)]">
-            <Lock className="mx-auto text-[var(--accent-orange)] mb-4" />
-            <h2 className="font-display text-2xl font-bold uppercase mb-2 text-white">Restricted</h2>
-            <button onClick={() => setIsAdminMode(true)} className="mt-6 px-8 py-3 bg-[var(--accent-orange)] text-white font-bold uppercase tracking-widest hover-trigger">
-              Enter Dashboard
-            </button>
-         </div>
-       </div>
-    );
-
-    return (
-      <div className="pt-32 pb-24 px-6 md:px-16 min-h-screen">
-         <div className="flex justify-between items-end mb-12 border-b border-white/10 pb-6">
-            <h2 className="font-display text-3xl font-bold uppercase text-white">Inventory <span className="text-[var(--accent-orange)]">Control</span></h2>
-            <button onClick={() => setIsAdminMode(false)} className="text-xs uppercase tracking-widest text-gray-500 hover:text-white">Exit</button>
-         </div>
-         
-         <div className="grid lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-1 border border-white/10 p-8 h-fit bg-[var(--bg-card)]">
-               <h3 className="font-display text-lg font-bold uppercase mb-6 text-white">Add Product</h3>
-               <form onSubmit={handleAdd} className="space-y-6">
-                  <input placeholder="Name" className="w-full lux-input py-2" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required />
-                  <input placeholder="Price" type="number" className="w-full lux-input py-2" value={form.price} onChange={e => setForm({...form, price: e.target.value})} required />
-                  <input placeholder="Category" className="w-full lux-input py-2" value={form.category} onChange={e => setForm({...form, category: e.target.value})} required />
-                  <input placeholder="Image URL" className="w-full lux-input py-2" value={form.image} onChange={e => setForm({...form, image: e.target.value})} />
-                  <textarea placeholder="Description" className="w-full lux-input py-2 bg-transparent" value={form.description} onChange={e => setForm({...form, description: e.target.value})} />
-                  <button className="w-full py-4 bg-white text-black font-bold uppercase tracking-widest hover:bg-[var(--accent-orange)] hover:text-white transition-colors">Publish</button>
-               </form>
-            </div>
-            
-            <div className="lg:col-span-2 space-y-4">
-              {products.map(p => (
-                <div key={p.id} className="flex items-center justify-between border border-white/10 p-4 hover:border-[var(--accent-orange)] transition-colors bg-[var(--bg-card)]">
-                   <div className="flex items-center gap-4">
-                      <img src={p.image} className="w-16 h-16 object-cover grayscale" />
-                      <div>
-                        <h4 className="font-bold text-white uppercase">{p.name}</h4>
-                        <p className="text-xs text-gray-500">{p.category} • £{p.price}</p>
-                      </div>
-                   </div>
-                   <button onClick={() => handleDelete(p.id)} className="text-gray-500 hover:text-[var(--accent-orange)]"><Trash2 size={18}/></button>
-                </div>
-              ))}
-            </div>
-         </div>
-      </div>
-    );
-  };
 
   return (
-    <div className="min-h-screen flex flex-col relative">
+    <>
       <GlobalStyles />
       <CustomCursor />
       <div className="noise"></div>
       
-      <Navigation />
-
-      <main className="flex-grow">
-        {view === 'home' && (
-          <>
-            <HeroCarousel />
-            <Marquee />
-            <ServicesGrid />
-            <ProductCarousel products={products} setView={setView} />
-            <ReviewsSection />
-            <BookingSection />
-          </>
-        )}
-        
-        {view === 'shop' && <ShopView />}
-        {view === 'info' && <InfoPage />}
-        
-        {/* High-End Sub-Pages */}
-        {view === 'bodykits' && <BodykitsPage />}
-        {view === 'alloys' && <AlloysPage />}
-        {view === 'styling' && <StylingPage />}
-        {view === 'tints' && <TintsPage />}
-        {view === 'interiors' && <InteriorsPage />}
-
-        {/* Legacy Service View Redirect to main */}
-        {view === 'services' && (
-             <div className="pt-20">
-               <ServicesGrid />
-               <BookingSection />
-             </div>
-        )}
-        
-        {view === 'admin' && <AdminPanel />}
-        {view === 'contact' && <div className="pt-20 min-h-screen bg-[var(--bg-dark)]"><BookingSection /></div>}
-        
-        {view === 'cart' && (
-          <div className="pt-32 pb-24 px-6 md:px-16 min-h-screen bg-[var(--bg-dark)]">
-             <h2 className="font-display text-4xl text-white font-bold uppercase mb-12">Your <span className="text-[var(--accent-orange)]">Build</span></h2>
-             {cart.length === 0 ? <p className="text-gray-500 uppercase tracking-widest text-xs">No parts selected.</p> : (
-               <div className="grid md:grid-cols-2 gap-12">
-                 <div className="space-y-6">
-                   {cart.map((item, i) => (
-                     <div key={i} className="flex gap-6 border border-white/10 p-4 bg-[var(--bg-card)]">
-                        <img src={item.image} className="w-24 h-24 object-cover grayscale" />
-                        <div>
-                           <h4 className="font-bold text-white uppercase text-lg">{item.name}</h4>
-                           <p className="text-[var(--accent-orange)] mt-1">£{item.price}</p>
-                        </div>
-                     </div>
-                   ))}
-                 </div>
-                 <div className="h-fit bg-[var(--bg-card)] border border-white/10 p-10">
-                    <div className="flex justify-between text-white font-display uppercase font-bold text-xl mb-8 border-b border-white/10 pb-4">
-                       <span>Total</span>
-                       <span>£{cartTotal}</span>
-                    </div>
-                    <button className="w-full py-5 bg-[var(--accent-orange)] text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors">Checkout</button>
-                 </div>
-               </div>
-             )}
-          </div>
-        )}
-      </main>
-
-      <Footer setView={setView} />
-    </div>
+      <HeroCarousel />
+      <Marquee />
+      <ServicesGrid />
+      <ProductCarousel products={products} />
+      <ReviewsSection />
+      <BookingSection />
+      
+      <Footer />
+    </>
   );
 }

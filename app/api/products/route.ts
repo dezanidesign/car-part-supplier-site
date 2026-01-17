@@ -1,101 +1,77 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getProducts, type GetProductsParams } from "@/lib/woocommerce";
+import {
+  getAllProducts,
+  fetchProductsByCategorySlug,
+  fetchProductsByMakeSlug,
+} from "@/lib/woo";
 
 /**
  * GET /api/products
- * 
- * Fetches products from WooCommerce API.
- * This route acts as a proxy to keep API credentials server-side.
- * 
- * Query Parameters:
- * - page: Page number (default: 1)
- * - per_page: Items per page (default: 12)
- * - category: Category ID to filter by
- * - search: Search term
- * - featured: "true" to show only featured products
- * - on_sale: "true" to show only sale items
- * - min_price: Minimum price filter
- * - max_price: Maximum price filter
- * - orderby: Sort field (date, title, price, popularity, rating)
- * - order: Sort order (asc, desc)
+ *
+ * Query params:
+ *   - mode: "all" | "make" | "category" (default: "all")
+ *   - categorySlug: required when mode is "make" or "category"
+ *   - per_page: number (default 100)
+ *
+ * Examples:
+ *   /api/products                              → all products
+ *   /api/products?mode=make&categorySlug=bmw   → BMW + all BMW child categories (X5, X7, etc.)
+ *   /api/products?mode=category&categorySlug=x5-g05 → single category only
  */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    
-    // Build params object from query string
-    const params: GetProductsParams = {};
-    
-    // Pagination
-    const page = searchParams.get("page");
-    if (page) params.page = parseInt(page);
-    
-    const perPage = searchParams.get("per_page");
-    if (perPage) params.per_page = parseInt(perPage);
-    
-    // Filters
-    const category = searchParams.get("category");
-    if (category) params.category = parseInt(category);
-    
-    const search = searchParams.get("search");
-    if (search) params.search = search;
-    
-    const featured = searchParams.get("featured");
-    if (featured === "true") params.featured = true;
-    
-    const onSale = searchParams.get("on_sale");
-    if (onSale === "true") params.on_sale = true;
-    
-    const minPrice = searchParams.get("min_price");
-    if (minPrice) params.min_price = minPrice;
-    
-    const maxPrice = searchParams.get("max_price");
-    if (maxPrice) params.max_price = maxPrice;
-    
-    const stockStatus = searchParams.get("stock_status") as GetProductsParams["stock_status"];
-    if (stockStatus) params.stock_status = stockStatus;
-    
-    // Sorting
-    const orderby = searchParams.get("orderby") as GetProductsParams["orderby"];
-    if (orderby) params.orderby = orderby;
-    
-    const order = searchParams.get("order") as GetProductsParams["order"];
-    if (order) params.order = order;
-    
-    // Fetch products
-    const { products, totalPages, totalProducts } = await getProducts(params);
-    
-    // Return response with pagination info
+
+    const mode = searchParams.get("mode") || "all";
+    const categorySlug = searchParams.get("categorySlug")?.trim() || "";
+    const perPage = Math.min(Number(searchParams.get("per_page")) || 100, 100);
+
+    let products = [];
+
+    switch (mode) {
+      case "make":
+        // Fetch products from parent category + all children
+        // e.g., BMW → gets BMW + X5 G05 + X5 G05 LCI + X7 + etc.
+        if (!categorySlug) {
+          return NextResponse.json(
+            { error: "categorySlug is required for mode=make", products: [] },
+            { status: 400 }
+          );
+        }
+        console.log(`[API /products] Fetching make: ${categorySlug}`);
+        products = await fetchProductsByMakeSlug(categorySlug);
+        console.log(`[API /products] Found ${products.length} products for make: ${categorySlug}`);
+        break;
+
+      case "category":
+        // Fetch products from a single category only
+        if (!categorySlug) {
+          return NextResponse.json(
+            { error: "categorySlug is required for mode=category", products: [] },
+            { status: 400 }
+          );
+        }
+        console.log(`[API /products] Fetching single category: ${categorySlug}`);
+        products = await fetchProductsByCategorySlug(categorySlug);
+        break;
+
+      case "all":
+      default:
+        // Fetch all products (handles pagination internally)
+        console.log(`[API /products] Fetching all products`);
+        products = await getAllProducts(perPage);
+        break;
+    }
+
     return NextResponse.json({
       products,
-      pagination: {
-        page: params.page || 1,
-        perPage: params.per_page || 12,
-        totalPages,
-        totalProducts,
-      },
-    }, {
-      headers: {
-        // Cache for 60 seconds, revalidate in background
-        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
-      },
+      count: products.length,
+      mode,
+      categorySlug: categorySlug || null,
     });
   } catch (error) {
-    console.error("Products API error:", error);
-    
-    // Return appropriate error response
+    console.error("[API /products] Error:", error);
     const message = error instanceof Error ? error.message : "Failed to fetch products";
-    
-    return NextResponse.json(
-      { 
-        error: message,
-        products: [],
-        pagination: { page: 1, perPage: 12, totalPages: 0, totalProducts: 0 }
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message, products: [] }, { status: 500 });
   }
 }
-
-// Revalidate this route every 60 seconds
-export const revalidate = 60;

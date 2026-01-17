@@ -61,7 +61,6 @@ body {
   background-color: var(--bg-dark);
   color: var(--text-main);
   overflow-x: hidden;
-  cursor: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -508,3 +507,6 @@ input[type=range]::-moz-range-track {
     animation: none;
   }
 }
+
+html, body, * { cursor: auto !important; }
+#cursor { display: none !important; }

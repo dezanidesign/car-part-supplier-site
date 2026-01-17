@@ -63,7 +63,7 @@ export type ShopModel = {
     },
     {
       label: "Mercedes",
-      slug: "mercedes",
+      slug: "mercedes-benz",
       models: [
         { label: "E63", slug: "e63" },
         { label: "G Wagon - G63", slug: "g-wagon-g63" },

@@ -195,20 +195,27 @@ export async function fetchProductsByCategorySlug(slug: string): Promise<WooProd
 }
 
 /**
+ * Normalize a string to match flexibly (removes hyphens, underscores, spaces, etc.)
+ */
+function normalizeForMatch(str: string): string {
+  return str.toLowerCase().replace(/[\s_-]+/g, '');
+}
+
+/**
  * Fetch products for a MAKE slug (e.g. "bmw", "land-rover") INCLUDING ALL DESCENDANTS.
- * 
+ *
  * This works by:
  * 1. Getting all categories (cached)
- * 2. Finding the make category and all its descendants
+ * 2. Finding the make category and all its descendants (with flexible matching)
  * 3. Getting all products (cached)
  * 4. Filtering to products that belong to any of those categories
- * 
+ *
  * NO EXTRA API CALLS - just filtering cached data!
  */
 export async function fetchProductsByMakeSlug(makeSlug: string): Promise<WooProduct[]> {
   if (!makeSlug) return [];
 
-  const normalizedMakeSlug = makeSlug.toLowerCase().trim();
+  const normalizedMakeSlug = normalizeForMatch(makeSlug);
 
   // Get cached data (or fetch if needed - just 2 API calls total)
   const [allCategories, allProducts] = await Promise.all([
@@ -216,19 +223,34 @@ export async function fetchProductsByMakeSlug(makeSlug: string): Promise<WooProd
     getAllProducts(),
   ]);
 
-  // Find the parent category (the make)
-  const parentCategory = allCategories.find(
-    (c) => c.slug.toLowerCase() === normalizedMakeSlug
+  // Find the parent category (the make) - try multiple matching strategies
+  let parentCategory = allCategories.find(
+    (c) => normalizeForMatch(c.slug) === normalizedMakeSlug
   );
+
+  // Fallback: try matching by name
+  if (!parentCategory) {
+    parentCategory = allCategories.find(
+      (c) => normalizeForMatch(c.name) === normalizedMakeSlug
+    );
+  }
+
+  // Fallback 2: try partial match
+  if (!parentCategory) {
+    parentCategory = allCategories.find(
+      (c) => normalizeForMatch(c.slug).includes(normalizedMakeSlug) ||
+            normalizeForMatch(c.name).includes(normalizedMakeSlug)
+    );
+  }
 
   if (!parentCategory) {
     console.log(`[woo] No category found for make slug: ${makeSlug}`);
-    // Fallback: try to match products that have this slug in their category names
+    // Final fallback: try to match products that have this slug in their category names
     return allProducts.filter((p) =>
       (p.categories || []).some(
         (c) =>
-          c.slug.toLowerCase().includes(normalizedMakeSlug) ||
-          c.name.toLowerCase().includes(normalizedMakeSlug)
+          normalizeForMatch(c.slug).includes(normalizedMakeSlug) ||
+          normalizeForMatch(c.name).includes(normalizedMakeSlug)
       )
     );
   }
@@ -238,7 +260,7 @@ export async function fetchProductsByMakeSlug(makeSlug: string): Promise<WooProd
   const allCategoryIds = new Set([parentCategory.id, ...descendantIds]);
 
   console.log(
-    `[woo] Make "${makeSlug}" (id: ${parentCategory.id}) includes ${allCategoryIds.size} categories`
+    `[woo] Make "${makeSlug}" (id: ${parentCategory.id}, name: "${parentCategory.name}") includes ${allCategoryIds.size} categories (1 parent + ${descendantIds.length} descendants)`
   );
 
   // Filter products that belong to ANY of these categories

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import { getCategoryMeta } from "@/lib/shopCategories";
 import { fetchProductsByCategorySlug } from "@/lib/woo";
 import type { WooProduct } from "@/lib/woo";
@@ -14,10 +15,13 @@ function ProductCard({ product }: { product: WooProduct }) {
   return (
     <div className="border border-white/10 bg-white/5 rounded-xl overflow-hidden hover:border-white/20 transition-colors group">
       <div className="aspect-square relative overflow-hidden bg-black/20">
-        <img
+        <Image
           src={imageSrc}
           alt={imageAlt}
+          width={400}
+          height={400}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          unoptimized
         />
       </div>
       <div className="p-4">

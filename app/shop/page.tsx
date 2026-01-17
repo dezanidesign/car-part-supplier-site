@@ -1,5 +1,5 @@
-import { getAllProducts } from "@/lib/woo"; // You need to ensure this function exists
-import ShopFeed from "../../components/shop/ShopFeed"; // Adjust path to where you saved the component above
+import { getAllProducts, getAllCategories } from "@/lib/woo";
+import ShopFeed from "../../components/shop/ShopFeed";
 
 export const metadata = {
   title: "Shop All | FDL Bespoke",
@@ -10,9 +10,11 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function ShopIndexPage() {
-  // Fetch the first 24 products for the initial page load
-  // If you don't have getAllProducts, use your existing fetcher with a generic 'products' endpoint
-  const products = await getAllProducts(1, 200); 
+  // Fetch all products and categories (cached, only 2 API calls total)
+  const [products, categories] = await Promise.all([
+    getAllProducts(),
+    getAllCategories(),
+  ]); 
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
@@ -31,7 +33,7 @@ export default async function ShopIndexPage() {
 
       {/* Main Shop Interface */}
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 py-12">
-        <ShopFeed initialProducts={products} />
+        <ShopFeed initialProducts={products} initialCategories={categories} />
       </div>
     </div>
   );

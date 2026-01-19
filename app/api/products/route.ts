@@ -5,6 +5,9 @@ import {
   fetchProductsByMakeSlug,
 } from "@/lib/woo";
 
+// Force dynamic rendering (uses request.url)
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/products
  *

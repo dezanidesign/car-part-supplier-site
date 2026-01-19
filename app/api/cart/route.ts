@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
+// Force dynamic rendering (uses request.url and cookies)
+export const dynamic = 'force-dynamic';
+
 const WP_URL = process.env.WOOCOMMERCE_URL;
 const STORE_API_BASE = `${WP_URL}/wp-json/wc/store/v1`;
 

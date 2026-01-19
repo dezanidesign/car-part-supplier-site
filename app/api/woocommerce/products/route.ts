@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchProductsByCategorySlug } from "@/lib/woo";
 
+// Force dynamic rendering (uses request.url)
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/woocommerce/products?categorySlug=xxx
  * 
@@ -43,6 +46,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
-// Revalidate this route every 5 minutes
-export const revalidate = 300;

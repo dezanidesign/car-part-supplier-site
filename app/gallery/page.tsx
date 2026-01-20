@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { ArrowUpRight, Filter, Plus } from "lucide-react";
+import { useEffect, useMemo, useState, useCallback } from "react";
+import { Filter, Plus, X, ChevronLeft, ChevronRight } from "lucide-react";
 import galleryJson from "../data/gallery.json";
 
 type GalleryData = Record<string, string[]>;
@@ -13,6 +13,8 @@ export default function GalleryPage() {
   const [active, setActive] = useState<string>("all");
   const [isLoaded, setIsLoaded] = useState(false);
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   const makes = useMemo(() => ["all", ...Object.keys(gallery)], []);
 
@@ -39,6 +41,44 @@ export default function GalleryPage() {
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + BATCH_SIZE);
   };
+
+  const openLightbox = (index: number) => {
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+    // Prevent body scroll when lightbox is open
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeLightbox = useCallback(() => {
+    setLightboxOpen(false);
+    document.body.style.overflow = "unset";
+  }, []);
+
+  const goToNext = useCallback(() => {
+    setLightboxIndex((prev) => (prev + 1) % allImages.length);
+  }, [allImages.length]);
+
+  const goToPrevious = useCallback(() => {
+    setLightboxIndex((prev) => (prev - 1 + allImages.length) % allImages.length);
+  }, [allImages.length]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    if (!lightboxOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeLightbox();
+      } else if (e.key === "ArrowRight") {
+        goToNext();
+      } else if (e.key === "ArrowLeft") {
+        goToPrevious();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [lightboxOpen, goToNext, goToPrevious, closeLightbox]);
 
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-[#FF4D00] selection:text-white">
@@ -103,40 +143,27 @@ export default function GalleryPage() {
         {displayedImages.length > 0 ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {displayedImages.map((src: string, index: number) => (
-                <div
-                  key={`${src}-${index}`} // Use index in key to ensure uniqueness if dupe URLs exist
-                  className={`group relative aspect-[4/3] overflow-hidden bg-[#111] border border-white/5 
-                    transition-all duration-700 ease-out transform
-                    ${isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}
-                  // Stagger only the first batch to prevent long delays on "Load More"
-                  style={{ transitionDelay: `${(index % BATCH_SIZE) * 50}ms` }}
-                >
-                  <img
-                    src={src}
-                    alt={`Gallery image ${index + 1}`}
-                    className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110 grayscale group-hover:grayscale-0"
-                    loading="lazy"
-                  />
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                  <div className="absolute bottom-0 left-0 w-full p-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100">
-                    <div className="flex justify-between items-end">
-                      <div>
-                        <p className="text-[#FF4D00] text-[10px] font-bold uppercase tracking-widest mb-1">
-                          {active === "all" ? "Featured Project" : active}
-                        </p>
-                        <h3 className="text-white font-display text-xl uppercase font-bold">View Detail</h3>
-                      </div>
-
-                      <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-black transform group-hover:rotate-45 transition-transform duration-500">
-                        <ArrowUpRight size={20} />
-                      </div>
-                    </div>
+              {displayedImages.map((src: string, index: number) => {
+                // Calculate the actual index in allImages array
+                const actualIndex = allImages.indexOf(src);
+                return (
+                  <div
+                    key={`${src}-${index}`}
+                    className={`group relative aspect-[4/3] overflow-hidden bg-[#111] border border-white/5 
+                      transition-all duration-700 ease-out transform cursor-pointer
+                      ${isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}
+                    style={{ transitionDelay: `${(index % BATCH_SIZE) * 50}ms` }}
+                    onClick={() => openLightbox(actualIndex)}
+                  >
+                    <img
+                      src={src}
+                      alt={`Gallery image ${index + 1}`}
+                      className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110 grayscale group-hover:grayscale-0"
+                      loading="lazy"
+                    />
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Load More Button */}
@@ -162,6 +189,70 @@ export default function GalleryPage() {
           </div>
         )}
       </main>
+
+      {/* Lightbox Modal */}
+      {lightboxOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 md:p-8"
+          onClick={closeLightbox}
+        >
+          {/* Close Button */}
+          <button
+            onClick={closeLightbox}
+            className="absolute top-4 right-4 md:top-8 md:right-8 z-10 w-10 h-10 md:w-12 md:h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110"
+            aria-label="Close lightbox"
+          >
+            <X size={24} className="md:w-6 md:h-6" />
+          </button>
+
+          {/* Previous Button */}
+          {allImages.length > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                goToPrevious();
+              }}
+              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-14 md:h-14 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110"
+              aria-label="Previous image"
+            >
+              <ChevronLeft size={24} className="md:w-7 md:h-7" />
+            </button>
+          )}
+
+          {/* Next Button */}
+          {allImages.length > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                goToNext();
+              }}
+              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-14 md:h-14 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110"
+              aria-label="Next image"
+            >
+              <ChevronRight size={24} className="md:w-7 md:h-7" />
+            </button>
+          )}
+
+          {/* Image Container */}
+          <div
+            className="relative w-full h-full flex items-center justify-center max-w-7xl max-h-[90vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={allImages[lightboxIndex]}
+              alt={`Gallery image ${lightboxIndex + 1}`}
+              className="max-w-full max-h-full object-contain rounded-lg"
+            />
+
+            {/* Image Counter */}
+            {allImages.length > 1 && (
+              <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-full text-white text-sm font-medium">
+                {lightboxIndex + 1} / {allImages.length}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

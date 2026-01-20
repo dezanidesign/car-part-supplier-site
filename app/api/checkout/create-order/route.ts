@@ -21,18 +21,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing WooCommerce env vars" }, { status: 500 });
     }
 
-    // Build Woo order payload
+    // Build minimal WooCommerce order payload
     const orderPayload = {
       status: "pending",
-      payment_method: "", // Woo will let user pick at checkout
-      payment_method_title: "",
       set_paid: false,
       line_items: items.map((i) => ({
         product_id: i.productId,
         quantity: Math.max(1, Math.floor(i.quantity || 1)),
       })),
-      // Optional: add meta so you can trace orders back to storefront
-      meta_data: [{ key: "source", value: "fdl-next-storefront" }],
+      meta_data: [
+        { key: "source", value: "fdl-next-storefront" },
+        { key: "_created_via", value: "storefront" },
+      ],
     };
 
     const auth = Buffer.from(`${ck}:${cs}`).toString("base64");
@@ -44,30 +44,37 @@ export async function POST(req: Request) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(orderPayload),
-      // Don't let Next cache this
       cache: "no-store",
     });
 
     if (!res.ok) {
       const text = await res.text();
-      return NextResponse.json({ error: "Woo order create failed", detail: text }, { status: 500 });
+      console.error("[create-order] WooCommerce API error:", text);
+      return NextResponse.json({ error: "Failed to create order", detail: text }, { status: 500 });
     }
 
     const order = await res.json();
 
-    // Woo often returns a "payment_url" when supported; if not, you can construct order-pay URL using order.id + order.order_key
-    const paymentUrl: string | undefined =
+    // Construct WooCommerce checkout URL with order details
+    // Customer will fill in their info on WooCommerce checkout page
+    const paymentUrl =
       order?.payment_url ||
       (order?.id && order?.order_key
         ? `${baseUrl.replace(/\/$/, "")}/checkout/order-pay/${order.id}/?pay_for_order=true&key=${order.order_key}`
         : undefined);
 
     if (!paymentUrl) {
-      return NextResponse.json({ error: "No payment URL returned", order }, { status: 500 });
+      console.error("[create-order] No payment URL available:", order);
+      return NextResponse.json({ error: "No payment URL available" }, { status: 500 });
     }
 
-    return NextResponse.json({ paymentUrl, orderId: order.id });
+    return NextResponse.json({
+      success: true,
+      orderId: order.id,
+      paymentUrl,
+    });
   } catch (err) {
+    console.error("[create-order] Error:", err);
     return NextResponse.json({ error: "Checkout error", detail: String(err) }, { status: 500 });
   }
 }

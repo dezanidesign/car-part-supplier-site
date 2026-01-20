@@ -30,23 +30,11 @@ const nextConfig = {
   // ============================================================================
   async redirects() {
     return [
-      // Product URLs
-      {
-        source: "/product/:slug",
-        destination: "/shop/:slug",
-        permanent: true,
-      },
       // Category URLs
       {
         source: "/product-category/:slug",
         destination: "/shop?category=:slug",
         permanent: true,
-      },
-      // Cart redirect
-      {
-        source: "/cart",
-        destination: "/cart",
-        permanent: false,
       },
       // Old page redirects (if any)
       {

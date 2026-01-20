@@ -282,3 +282,32 @@ export function clearWooCache(): void {
   cacheTimestamp = 0;
   console.log("[woo] Cache cleared");
 }
+
+/**
+ * Fetch a SINGLE product by slug
+ * Leverages the existing getAllProducts cache for speed
+ */
+export async function fetchProductBySlug(slug: string): Promise<WooProduct | null> {
+  const allProducts = await getAllProducts();
+  const product = allProducts.find((p) => p.slug === slug);
+  return product || null;
+}
+
+/**
+ * Fetch Related Products
+ * Finds other products in the same categories, excluding the current one
+ */
+export async function fetchRelatedProducts(
+  currentProduct: WooProduct,
+  limit = 4
+): Promise<WooProduct[]> {
+  const allProducts = await getAllProducts();
+  const categoryIds = new Set(currentProduct.categories.map((c) => c.id));
+
+  return allProducts
+    .filter((p) => {
+      if (p.id === currentProduct.id) return false; // Exclude self
+      return p.categories.some((c) => categoryIds.has(c.id)); // Must share a category
+    })
+    .slice(0, limit);
+}

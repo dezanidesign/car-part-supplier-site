@@ -53,51 +53,64 @@ export default function ShopMegaMenu({ onNavigate, className = "" }: Props) {
             </div>
           </div>
 
-          {/* RIGHT SIDE: FEATURED (25% Width) */}
-          {/* Added sticky positioning so the image stays in view while you scroll the list */}
+          {/* RIGHT SIDE: CUSTOM BUILD CTA (25% Width) */}
           <div className="w-1/4 border-l border-white/10 pl-12 hidden lg:block relative">
-            <div className="sticky top-0 flex flex-col h-full">
-              
+            <div className="sticky top-0 flex flex-col gap-8">
+
+              {/* Header Section */}
               <div>
-                <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-6 opacity-80">
-                  Featured Collection
-                </h4>
-                
-                {/* Promo Card */}
-                <Link 
-                  href="/shop/carbon-fiber" 
-                  onClick={onNavigate}
-                  className="group/card block relative aspect-[4/5] w-full overflow-hidden bg-[#111] mb-6"
-                >
-                  <div className="absolute inset-0 bg-neutral-900 group-hover/card:scale-105 transition-transform duration-700">
-                     {/* Placeholder Image */}
-                     <img 
-                       src="https://images.unsplash.com/photo-1603584173870-7b299f589836?q=80&w=800&auto=format&fit=crop" 
-                       alt="Carbon Fiber Kits"
-                       className="w-full h-full object-cover opacity-60 group-hover/card:opacity-80 transition-opacity duration-500"
-                     />
-                  </div>
-                  
-                  <div className="absolute bottom-0 left-0 p-6 w-full bg-gradient-to-t from-black to-transparent">
-                    <span className="text-[var(--accent-orange)] text-xs font-bold uppercase tracking-widest mb-2 block">
-                      New Arrival
-                    </span>
-                    <p className="text-white text-xl font-display font-bold leading-tight">
-                      Carbon Fiber Aero Kits
-                    </p>
-                  </div>
-                </Link>
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="h-[1px] w-6 bg-[var(--accent-orange)]"></span>
+                  <h4 className="text-white font-display font-bold uppercase tracking-widest text-sm">
+                    Can't Find It?
+                  </h4>
+                </div>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  We source rare OEM and aftermarket components for all premium marques.
+                </p>
               </div>
 
-              {/* Quick Action Button */}
-              <Link 
-                href="/shop" 
-                onClick={onNavigate}
-                className="flex items-center justify-between text-white border border-white/20 px-6 py-4 hover:bg-white hover:text-black transition-all duration-300 uppercase tracking-widest text-xs font-bold mt-auto"
-              >
-                <span>View All Parts</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+              {/* Services Card */}
+              <div className="bg-[#0a0a0a] border border-white/5 p-6 hover:border-[var(--accent-orange)]/30 transition-all duration-300 group">
+                <p className="text-white text-xs font-bold uppercase tracking-widest mb-4 text-[var(--accent-orange)]">
+                  Specialist Sourcing
+                </p>
+                <ul className="space-y-3">
+                  <li className="flex items-center gap-3 text-gray-400 text-xs group-hover:text-gray-300 transition-colors">
+                    <span className="w-1 h-1 rounded-full bg-[var(--accent-orange)]"></span>
+                    <span>OEM Parts</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-gray-400 text-xs group-hover:text-gray-300 transition-colors">
+                    <span className="w-1 h-1 rounded-full bg-[var(--accent-orange)]"></span>
+                    <span>Limited Edition</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-gray-400 text-xs group-hover:text-gray-300 transition-colors">
+                    <span className="w-1 h-1 rounded-full bg-[var(--accent-orange)]"></span>
+                    <span>Bespoke Fabrication</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="space-y-3">
+                <Link
+                  href="/contact"
+                  onClick={onNavigate}
+                  className="group flex items-center justify-between text-black bg-[var(--accent-orange)] px-6 py-4 hover:bg-white transition-all duration-300 uppercase tracking-widest text-xs font-bold"
+                >
+                  <span>Request Part</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+
+                <Link
+                  href="/shop"
+                  onClick={onNavigate}
+                  className="group flex items-center justify-between text-white border border-white/20 px-6 py-4 hover:border-[var(--accent-orange)] hover:bg-[var(--accent-orange)]/10 transition-all duration-300 uppercase tracking-widest text-xs font-bold"
+                >
+                  <span>View All Parts</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
 
             </div>
           </div>

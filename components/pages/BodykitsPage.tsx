@@ -1,6 +1,7 @@
 'use client';
 
 import { Layers, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 const BodykitsPage = () => (
   <div className="min-h-screen bg-[var(--bg-dark)] pt-32 pb-24 px-6 md:px-16 animate-in fade-in duration-700">
@@ -30,16 +31,16 @@ const BodykitsPage = () => (
           </div>
           
           <div className="mt-16 pt-8 border-t border-white/10">
-             <button className="flex items-center gap-4 text-white hover:text-[var(--accent-orange)] transition-colors group">
+             <Link href="/contact" className="flex items-center gap-4 text-white hover:text-[var(--accent-orange)] transition-colors group">
                 <span className="font-display font-bold uppercase text-xl">Start Your Build</span>
                 <ArrowRight className="group-hover:translate-x-2 transition-transform" />
-             </button>
+             </Link>
           </div>
        </div>
 
        <div className="order-1 lg:order-2 space-y-4">
           <div className="aspect-[4/5] w-full overflow-hidden">
-             <img src="https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=1200&auto=format&fit=crop" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
+             <img src="/gallery/land-rover/5B1A6489.jpg" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
           </div>
           <div className="grid grid-cols-2 gap-4">
              <div className="aspect-square w-full bg-[#111] border border-white/5 flex flex-col justify-center items-center p-6 text-center group hover:border-[var(--accent-orange)] transition-colors">

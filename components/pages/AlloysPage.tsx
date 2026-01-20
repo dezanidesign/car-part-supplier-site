@@ -1,6 +1,7 @@
 'use client';
 
 import { Settings, ArrowRight, ShoppingBag } from 'lucide-react';
+import Link from 'next/link';
 
 const AlloysPage = () => {
   return (
@@ -20,7 +21,7 @@ const AlloysPage = () => {
        <div className="grid lg:grid-cols-2 gap-16 mb-32 items-center">
           <div className="relative group overflow-hidden">
              <div className="absolute top-4 left-4 z-10 bg-white text-black text-xs font-bold uppercase px-3 py-1 tracking-widest">Exclusive Partner</div>
-             <img src="https://images.unsplash.com/photo-1611016186353-9af29c77880e?q=80&w=1200&auto=format&fit=crop" className="w-full aspect-square object-cover grayscale group-hover:grayscale-0 transition-all duration-1000" />
+             <img src="/gallery/range-rover/5B1A5018.jpg" className="w-full aspect-square object-cover grayscale group-hover:grayscale-0 transition-all duration-1000" />
           </div>
           <div className="flex flex-col justify-center">
              <h2 className="font-display text-4xl md:text-5xl text-white font-bold uppercase mb-6">Barugzai <br/>Collection</h2>
@@ -54,8 +55,8 @@ const AlloysPage = () => {
              </ul>
           </div>
           <div className="lg:col-span-8 grid grid-cols-2 gap-4">
-             <img src="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?q=80&w=800&auto=format&fit=crop" className="w-full h-64 object-cover grayscale hover:grayscale-0 transition-all duration-700" />
-             <img src="https://images.unsplash.com/photo-1580273916550-e323be2ebcc6?q=80&w=800&auto=format&fit=crop" className="w-full h-64 object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+             <img src="/gallery/audi/5B1A3711.jpg" className="w-full h-64 object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+             <img src="/gallery/bmw/5B1A5008.jpg" className="w-full h-64 object-cover grayscale hover:grayscale-0 transition-all duration-700" />
           </div>
        </div>
 
@@ -68,9 +69,9 @@ const AlloysPage = () => {
                 <p className="text-gray-400 mb-8">
                    Ready for an upgrade? Trade in your current alloys when purchasing a new set. We also carry a regularly updated selection of certified pre-owned wheels, approved by our specialists.
                 </p>
-                <button className="flex items-center gap-3 text-white border-b border-[var(--accent-orange)] pb-1 hover:text-[var(--accent-orange)] transition-colors">
+                <Link href="/contact" className="inline-flex items-center gap-3 text-white border-b border-[var(--accent-orange)] pb-1 hover:text-[var(--accent-orange)] transition-colors">
                    Browse eBay Store <ArrowRight size={16}/>
-                </button>
+                </Link>
              </div>
              <div className="hidden md:block">
                 <ShoppingBag size={64} className="text-white/10 group-hover:text-white/30 transition-colors" />

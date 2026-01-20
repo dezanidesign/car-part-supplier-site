@@ -34,8 +34,8 @@ const StylingPage = () => {
           </div>
 
           <div className="lg:col-span-8 relative bg-[#111] border border-white/5 rounded-sm overflow-hidden h-[60vh] lg:h-auto self-center">
-             <img 
-               src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?q=80&w=2000&auto=format&fit=crop" 
+             <img
+               src="/gallery/range-rover/5B1A4868.jpg"
                className="w-full h-full object-cover transition-all duration-700 ease-in-out"
                style={{ filter: filter }}
              />

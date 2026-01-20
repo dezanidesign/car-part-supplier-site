@@ -142,10 +142,13 @@ export function Footer() {
           <span>Unit C3, 511 Bradford Rd, Batley WF17 8LL</span>
           <div className="flex gap-4">
             <Link href="/privacy" className="hover:text-gray-500 transition-colors">
-              Privacy Policy
+              Privacy
             </Link>
             <Link href="/terms" className="hover:text-gray-500 transition-colors">
-              Terms of Service
+              Terms
+            </Link>
+            <Link href="/returns" className="hover:text-gray-500 transition-colors">
+              Returns
             </Link>
           </div>
         </div>

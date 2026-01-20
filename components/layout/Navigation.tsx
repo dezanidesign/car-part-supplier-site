@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ShoppingBag, Menu, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
 import { useCartStore } from "@/lib/store";
 import ShopMegaMenu from "./ShopMegaMenu";
@@ -43,6 +43,11 @@ export function Navigation() {
   const [isShopOpen, setIsShopOpen] = useState(false);
 
   const cartItemCount = useCartStore((state) => state.getItemCount());
+  
+  // Refs for mobile menu scroll containers
+  const mainMenuRef = useRef<HTMLDivElement>(null);
+  const shopMenuRef = useRef<HTMLDivElement>(null);
+  const scrollPositionRef = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -51,13 +56,39 @@ export function Navigation() {
   }, []);
 
   useEffect(() => {
-    if (!isMenuOpen) {
+    if (isMenuOpen) {
+      // Save current scroll position
+      scrollPositionRef.current = window.scrollY;
+      
+      // Reset scroll position of menu containers when menu opens
+      if (mainMenuRef.current) mainMenuRef.current.scrollTop = 0;
+      if (shopMenuRef.current) shopMenuRef.current.scrollTop = 0;
+      
+      // Lock body scroll and position
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollPositionRef.current}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+    } else {
       // Reset mobile view when menu closes
-      setTimeout(() => setMobileView('main'), 300); 
+      setTimeout(() => setMobileView('main'), 300);
+      
+      // Restore body scroll and position
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      
+      // Restore scroll position
+      window.scrollTo(0, scrollPositionRef.current);
     }
-    // Lock body scroll
-    document.body.style.overflow = isMenuOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    
+    return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+    };
   }, [isMenuOpen]);
 
   // Desktop Hover Handlers
@@ -76,14 +107,14 @@ export function Navigation() {
 
   return (
     <nav
-      className={`fixed w-full z-50 px-6 md:px-16 py-6 flex justify-between items-center transition-all duration-500 ${
+      className={`fixed w-full z-50 px-6 md:px-16 py-6 flex justify-between items-center transition-all duration-500 top-[36px] ${
         scrolled
           ? "bg-black/90 backdrop-blur-md border-b border-white/5"
           : "bg-transparent"
       }`}
     >
       {/* ======================= LOGO ======================= */}
-      <Link href="/" className="relative z-50">
+      <Link href="/" className="relative z-[250]">
         <Image
           src="https://fdlbespoke.co.uk/wp-content/uploads/2025/06/cropped-cropped-FDL-UK-Logo-White-Sq.png"
           alt="FDL Bespoke"
@@ -144,8 +175,8 @@ export function Navigation() {
       </div>
 
       {/* ======================= ICONS & TOGGLE ======================= */}
-      <div className="flex items-center gap-8 relative z-50">
-        <Link href="/cart" className="relative hover-trigger group">
+      <div className="flex items-center gap-8 relative z-[250]">
+        <Link href="/cart" className="relative group">
           <ShoppingBag className="text-white group-hover:text-[var(--accent-orange)] transition-colors" size={22} />
           {cartItemCount > 0 && (
             <span className="absolute -top-2 -right-2 bg-[var(--accent-orange)] text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold shadow-lg">
@@ -162,11 +193,11 @@ export function Navigation() {
       </div>
 
       {/* ======================= MOBILE MENU (Enkahnz Style) ======================= */}
-      <div className={`fixed inset-0 bg-black z-40 lg:hidden transition-all duration-300 ${isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}>
-        <div className="pt-[120px] pb-8 px-8 h-full flex flex-col relative overflow-hidden">
+      <div className={`fixed top-0 left-0 right-0 bottom-0 bg-black z-[200] lg:hidden transition-all duration-300 ${isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}>
+        <div className="h-full flex flex-col relative overflow-hidden">
           
           {/* VIEW 1: MAIN MENU */}
-          <div className={`flex flex-col gap-6 transition-transform duration-500 absolute inset-0 pt-[120px] px-8 overflow-y-auto ${mobileView === 'main' ? "translate-x-0" : "-translate-x-full"}`}>
+          <div ref={mainMenuRef} className={`flex flex-col gap-6 transition-transform duration-500 absolute inset-0 pt-[120px] px-8 pb-8 overflow-y-auto ${mobileView === 'main' ? "translate-x-0" : "-translate-x-full"}`}>
             
             {/* Customisation Links */}
             <div className="border-b border-white/10 pb-6">
@@ -207,7 +238,7 @@ export function Navigation() {
           </div>
 
           {/* VIEW 2: SHOP SUB-MENU */}
-          <div className={`flex flex-col h-full transition-transform duration-500 absolute inset-0 pt-[120px] px-8 bg-black overflow-y-auto ${mobileView === 'shop' ? "translate-x-0" : "translate-x-full"}`}>
+          <div ref={shopMenuRef} className={`flex flex-col h-full transition-transform duration-500 absolute inset-0 pt-[120px] px-8 pb-8 bg-black overflow-y-auto ${mobileView === 'shop' ? "translate-x-0" : "translate-x-full"}`}>
             
             {/* Back Button Header */}
             <div className="flex items-center gap-4 mb-8 border-b border-white/10 pb-4">

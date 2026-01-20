@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
+import TopBar from "@/components/layout/TopBar";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
+import CartDrawer from "@/components/cart/CartDrawer";
+import { NewsletterPopup } from "@/components/NewsletterPopup";
 // import { CustomCursor } from "@/components/layout/CustomCursor";
 import "../styles/globals.css";
 import { Syne, Space_Grotesk } from "next/font/google";
@@ -104,11 +107,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* <CustomCursor /> */}
         <div className="noise" aria-hidden="true" />
 
+        <TopBar />
         <Navigation />
 
         <main className="flex-grow">{children}</main>
 
         <Footer />
+
+        {/* CART DRAWER ADDED HERE */}
+        <CartDrawer />
+
+        {/* NEWSLETTER POPUP */}
+        <NewsletterPopup /> 
 
         <script
           type="application/ld+json"

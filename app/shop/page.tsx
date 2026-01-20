@@ -19,7 +19,7 @@ export default async function ShopIndexPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-white">
       {/* Header */}
-      <div className="bg-[#050505] pt-32 pb-12 px-6 md:px-12 border-b border-white/10">
+      <div className="bg-[#050505] pt-40 pb-12 px-6 md:px-12 border-b border-white/10">
         <div className="max-w-[1920px] mx-auto">
           <h1 className="font-display text-5xl md:text-8xl font-bold uppercase tracking-tight leading-none">
             The Collection<span className="text-[var(--accent-orange)]">.</span>

@@ -37,7 +37,7 @@ const InfoPage = () => {
 
       {/* Image Strip */}
       <div className="w-full aspect-video md:aspect-[21/9] overflow-hidden mb-32 relative group animate-in fade-in duration-1000 delay-300">
-         <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=2000" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 transform group-hover:scale-105" alt="Workshop" />
+         <img src="/gallery/audi/5B1A3705.jpg" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 transform group-hover:scale-105" alt="Workshop" />
          <div className="absolute inset-0 bg-black/20"></div>
       </div>
 
@@ -62,8 +62,8 @@ const InfoPage = () => {
          </div>
          <div className="relative">
              <div className="grid grid-cols-2 gap-4">
-                <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&q=80&w=800" className="w-full aspect-[3/4] object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Process 1" />
-                <img src="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?q=80&w=1000&auto=format&fit=crop" className="w-full aspect-[3/4] object-cover grayscale hover:grayscale-0 transition-all duration-700 mt-12" alt="Process 2" />
+                <img src="/gallery/bmw/5B1A4995.jpg" className="w-full aspect-[3/4] object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Process 1" />
+                <img src="/gallery/land-rover/5B1A1215.jpg" className="w-full aspect-[3/4] object-cover grayscale hover:grayscale-0 transition-all duration-700 mt-12" alt="Process 2" />
              </div>
          </div>
       </div>

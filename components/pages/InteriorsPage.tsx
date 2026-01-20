@@ -1,10 +1,11 @@
 'use client';
 
 import { Armchair, Maximize } from 'lucide-react';
+import Link from 'next/link';
 
 const InteriorsPage = () => {
   return (
-    <div className="min-h-screen bg-[var(--bg-dark)] animate-in fade-in duration-700">
+    <div className="min-h-screen bg-[var(--bg-dark)] pt-20 animate-in fade-in duration-700">
        <div className="flex flex-col lg:flex-row min-h-screen">
           
           {/* Left: Sticky Narrative Content */}
@@ -36,9 +37,9 @@ const InteriorsPage = () => {
              </div>
 
              <div className="mt-16">
-                <button className="px-8 py-4 border border-white text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors w-full md:w-auto">
+                <Link href="/contact" className="inline-block px-8 py-4 border border-white text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors w-full md:w-auto text-center">
                    Book Design Consultation
-                </button>
+                </Link>
              </div>
           </div>
 
@@ -46,28 +47,16 @@ const InteriorsPage = () => {
           <div className="lg:w-1/2 bg-[#050505]">
              <div className="grid grid-cols-1 gap-1">
                 <div className="aspect-[4/3] relative group overflow-hidden">
-                   <img src="https://images.unsplash.com/photo-1563720225523-2882194cc23a?q=80&w=1200&auto=format&fit=crop" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
-                   <div className="absolute bottom-6 left-6">
-                      <span className="bg-black/50 backdrop-blur px-3 py-1 text-white text-xs font-bold uppercase tracking-widest">Alcantara & Stitch</span>
-                   </div>
+                   <img src="/gallery/range-rover/5B1A5027.jpg" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
                 </div>
                 <div className="aspect-[4/3] relative group overflow-hidden">
-                   <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=1200&auto=format&fit=crop" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
-                   <div className="absolute bottom-6 left-6">
-                      <span className="bg-black/50 backdrop-blur px-3 py-1 text-white text-xs font-bold uppercase tracking-widest">Nappa Leather</span>
-                   </div>
+                   <img src="/gallery/audi/5B1A37051.jpg" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
                 </div>
                 <div className="aspect-[4/3] relative group overflow-hidden">
-                   <img src="https://images.unsplash.com/photo-1560067644-84d72863925c?q=80&w=1200&auto=format&fit=crop" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
-                   <div className="absolute bottom-6 left-6">
-                      <span className="bg-black/50 backdrop-blur px-3 py-1 text-white text-xs font-bold uppercase tracking-widest">Diamond Quilting</span>
-                   </div>
+                   <img src="/gallery/bmw/5B1A8486.jpg" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
                 </div>
                 <div className="aspect-[4/3] relative group overflow-hidden">
-                   <img src="https://images.unsplash.com/photo-1616422285623-13ff0162193c?q=80&w=1200&auto=format&fit=crop" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
-                   <div className="absolute bottom-6 left-6">
-                      <span className="bg-black/50 backdrop-blur px-3 py-1 text-white text-xs font-bold uppercase tracking-widest">Carbon Accents</span>
-                   </div>
+                   <img src="/gallery/land-rover/5B1A9593.jpg" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
                 </div>
              </div>
           </div>

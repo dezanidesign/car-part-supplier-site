@@ -1,15 +1,37 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { getCategoryMeta } from "@/lib/shopCategories";
 import { fetchProductsByCategorySlug } from "@/lib/woo";
 import type { WooProduct } from "@/lib/woo";
+
+// Generate dynamic metadata for SEO
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const meta = getCategoryMeta(params.slug);
+
+  if (!meta) {
+    return {
+      title: "Category Not Found",
+    };
+  }
+
+  return {
+    title: `${meta.label} - ${meta.brandLabel}`,
+    description: `Shop premium ${meta.label} parts and accessories for ${meta.brandLabel}. High-quality automotive styling products with expert support.`,
+    keywords: [meta.label, meta.brandLabel, "car parts", "automotive accessories", "OEM parts", "aftermarket parts"],
+  };
+}
 
 // Product Card Component
 function ProductCard({ product }: { product: WooProduct }) {
   const imageSrc = product.images?.[0]?.src || "/placeholder-product.jpg";
   const imageAlt = product.images?.[0]?.alt || product.name;
-  const price = product.sale_price && parseFloat(product.sale_price) > 0 
-    ? product.sale_price 
+  const price = product.sale_price && parseFloat(product.sale_price) > 0
+    ? product.sale_price
     : product.price;
 
   return (
@@ -33,8 +55,8 @@ function ProductCard({ product }: { product: WooProduct }) {
             £{parseFloat(price || "0").toFixed(2)}
           </span>
           <a
-            href={product.permalink || "#"}
-            className="text-white/60 hover:text-[#FF4D00] text-xs uppercase tracking-wider transition-colors"
+            href={`/product/${product.slug}`} // <-- Points to Next.js route
+            className="text-white/60 hover:text-[#FF4D00]..."
           >
             View →
           </a>
@@ -57,7 +79,7 @@ export default async function ShopCategoryPage({
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
-      <div className="max-w-[1920px] mx-auto px-6 md:px-12 pt-28 pb-20">
+      <div className="max-w-[1920px] mx-auto px-6 md:px-12 pt-36 pb-20">
         {/* HERO */}
         <div className="border border-white/10 bg-white/5 rounded-2xl p-8 md:p-12 overflow-hidden relative">
           <div
@@ -78,56 +100,9 @@ export default async function ShopCategoryPage({
             </h1>
 
             <p className="text-gray-400 mt-5 max-w-2xl">
-              Style packages first, then products for this vehicle model.
+              Browse our curated selection of premium parts for this vehicle model.
             </p>
           </div>
-        </div>
-
-        {/* OPTION 1: STYLE PACKAGES */}
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            { title: "Exterior", desc: "Bodykits, carbon, splitters, diffusers." },
-            { title: "Wheels + Stance", desc: "Alloys, spacers, suspension." },
-            { title: "Interior", desc: "Trim, lighting, bespoke finishes." },
-          ].map((p) => (
-            <div
-              key={p.title}
-              className="border border-white/10 bg-white/5 rounded-xl p-6"
-            >
-              <h3 className="text-sm font-bold uppercase tracking-[0.22em]">
-                {p.title}
-              </h3>
-              <p className="text-gray-400 text-sm mt-3">{p.desc}</p>
-              <button className="mt-6 inline-flex items-center justify-center px-5 py-3 rounded-full bg-[#FF4D00] text-black text-xs font-bold uppercase tracking-[0.2em] hover:brightness-110 transition">
-                Explore
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* BEFORE/AFTER PLACEHOLDER (since meta.gallery is empty for now) */}
-        <div className="mt-14">
-          <h2 className="font-display text-2xl md:text-3xl font-bold uppercase">
-            Before & After
-          </h2>
-
-          {meta.gallery.length === 0 ? (
-            <div className="mt-6 border border-white/10 bg-white/5 rounded-2xl p-10 text-gray-400">
-              No before/after imagery uploaded for <span className="text-white">{meta.label}</span> yet.
-              <div className="mt-4 text-sm text-gray-500">
-                You can add images later by filling the <span className="text-white">gallery</span> array in{" "}
-                <span className="text-white">getCategoryMeta()</span>.
-              </div>
-            </div>
-          ) : (
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-              {meta.gallery.map((src, i) => (
-                <div key={`${src}-${i}`} className="border border-white/10 bg-white/5 rounded-2xl overflow-hidden">
-                  <img src={src} alt="" className="w-full h-full object-cover" />
-                </div>
-              ))}
-            </div>
-          )}
         </div>
 
         {/* PRODUCTS */}

@@ -9,6 +9,7 @@ declare global {
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
+import BeforeAfterSlider from '../components/BeforeAfterSlider';
 import { 
   ShoppingBag, 
   Menu, 
@@ -108,33 +109,10 @@ const GlobalStyles = () => {
         background-color: var(--bg-dark);
         color: var(--text-main);
         overflow-x: hidden;
-        cursor: none;
       }
 
       .font-display {
         font-family: 'Syne', sans-serif;
-      }
-
-      /* --- Custom Cursor --- */
-      #cursor {
-        width: 12px;
-        height: 12px;
-        background-color: white;
-        border-radius: 50%;
-        position: fixed;
-        pointer-events: none;
-        z-index: 9999;
-        transform: translate(-50%, -50%);
-        transition: width 0.3s, height 0.3s, background-color 0.3s, opacity 0.3s;
-        mix-blend-mode: exclusion;
-      }
-
-      #cursor.hovered {
-        width: 60px;
-        height: 60px;
-        background-color: var(--accent-orange);
-        opacity: 0.8;
-        mix-blend-mode: normal;
       }
 
       /* --- Noise Overlay --- */
@@ -215,7 +193,6 @@ const GlobalStyles = () => {
       }
 
       /* --- Utility --- */
-      .hover-trigger { cursor: none; }
       .lux-input {
         background: transparent;
         border-bottom: 1px solid var(--border-color);
@@ -304,45 +281,7 @@ const GlobalStyles = () => {
 };
 
 
-// --- Mock Data ---
-const MOCK_PRODUCTS = [
-  {
-    id: 'm1',
-    name: "Carbon Splitter V2",
-    price: 1250,
-    category: "Aero",
-    image: "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=1000",
-  },
-  {
-    id: 'm2',
-    name: "Forged Monoblock 23\"",
-    price: 4800,
-    category: "Wheels",
-    image: "https://images.unsplash.com/photo-1583267746897-2cf415887172?auto=format&fit=crop&q=80&w=1000",
-  },
-  {
-    id: 'm3',
-    name: "Stealth PPF Full Kit",
-    price: 3500,
-    category: "Protection",
-    image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&q=80&w=1000",
-  },
-  {
-    id: 'm4',
-    name: "Titanium Exhaust",
-    price: 2800,
-    category: "Performance",
-    image: "https://images.unsplash.com/photo-1597687210387-e45b6f62b487?auto=format&fit=crop&q=80&w=1000",
-  },
-  {
-    id: 'm5',
-    name: "Alcantara Steering Wheel",
-    price: 950,
-    category: "Interior",
-    image: "https://images.unsplash.com/photo-1570155308259-f4633a763784?auto=format&fit=crop&q=80&w=1000",
-  }
-];
-
+// --- Data ---
 const CAROUSEL_IMAGES = [
   "https://fdlbespoke.co.uk/wp-content/uploads/2025/07/1-scaled.jpg",
   "https://fdlbespoke.co.uk/wp-content/uploads/2025/07/5B1A84851-scaled.jpg",
@@ -436,96 +375,156 @@ const Marquee = () => (
 );
 
 const ServicesGrid = () => (
-  <section className="py-24 md:py-32 px-6 md:px-16 bg-[var(--bg-dark)]">
+  <section className="py-16 md:py-32 px-6 md:px-16 bg-[var(--bg-dark)]">
     <div className="max-w-[1920px] mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-end mb-20 border-b border-white/10 pb-8">
-         <h2 className="font-display text-4xl md:text-5xl font-bold uppercase text-white">Our <span className="text-transparent" style={{ WebkitTextStroke: '1px white'}}>Expertise</span></h2>
-         <p className="text-gray-500 font-bold uppercase text-xs tracking-widest max-w-xs text-right mt-6 md:mt-0">Precision engineering for the exceptional.</p>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-20 border-b border-white/10 pb-6 md:pb-8">
+         <h2 className="font-display text-3xl md:text-5xl font-bold uppercase text-white mb-3 md:mb-0">Our <span className="text-transparent" style={{ WebkitTextStroke: '1px white'}}>Expertise</span></h2>
+         <p className="text-gray-500 font-bold uppercase text-[10px] md:text-xs tracking-widest max-w-xs md:text-right">Precision engineering for the exceptional.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mb-8 md:mb-12">
         {[
           { icon: Zap, title: "Performance", desc: "ECU tuning and exhaust systems designed to unlock your vehicle's true potential." },
           { icon: Armchair, title: "Interiors", desc: "Hand-stitched Italian leather and Alcantara re-trimming services." },
           { icon: Briefcase, title: "Sourcing", desc: "Access to rare OEM parts and limited edition aftermarket components." }
         ].map((s, i) => (
-          <div key={i} className="group border border-white/5 p-10 min-h-[340px] flex flex-col justify-between hover:bg-[#111] transition-all duration-500 hover-trigger hover:border-white/20">
+          <div key={i} className="group border border-white/5 p-6 md:p-10 min-h-[240px] md:min-h-[340px] flex flex-col justify-between hover:bg-[#111] transition-all duration-500 hover:border-white/20">
              <div className="flex justify-between items-start">
                <span className="font-mono text-xs font-bold bg-white text-black px-2 py-1">0{i+1}</span>
-               <s.icon className="w-8 h-8 text-gray-500 group-hover:text-[var(--accent-orange)] transition-colors" />
+               <s.icon className="w-6 h-6 md:w-8 md:h-8 text-gray-500 group-hover:text-[var(--accent-orange)] transition-colors" />
              </div>
              <div>
-               <h3 className="font-display text-2xl font-bold uppercase mb-4 text-white group-hover:text-[var(--accent-orange)] transition-colors">{s.title}</h3>
-               <p className="text-sm text-gray-400 leading-relaxed max-w-xs">{s.desc}</p>
+               <h3 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 md:mb-4 text-white group-hover:text-[var(--accent-orange)] transition-colors">{s.title}</h3>
+               <p className="text-xs md:text-sm text-gray-400 leading-relaxed">{s.desc}</p>
              </div>
           </div>
         ))}
+      </div>
+
+      {/* Shop CTA */}
+      <div className="flex justify-center mt-8 md:mt-12">
+        <Link href="/shop" className="group relative inline-flex items-center gap-4 bg-[var(--accent-orange)] text-white px-8 md:px-12 py-4 md:py-5 font-bold uppercase tracking-widest text-xs md:text-sm hover:bg-white hover:text-black transition-all duration-300 overflow-hidden">
+          <span className="relative z-10">Shop Premium Parts</span>
+          <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+          <div className="absolute inset-0 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+        </Link>
       </div>
     </div>
   </section>
 );
 
+const TransformationSection = () => {
+  return (
+    <section className="py-12 md:py-24 px-6 md:px-16 bg-[#030303]">
+      <div className="max-w-[1400px] mx-auto">
+        <div className="grid lg:grid-cols-5 gap-8 lg:gap-16 items-center">
+          {/* Left side text - takes up 2 columns */}
+          <div className="lg:col-span-2 order-2 lg:order-1">
+            <span className="text-[var(--accent-orange)] text-[10px] md:text-xs font-bold uppercase tracking-widest mb-3 md:mb-4 block">
+              The Transformation
+            </span>
+            <h2 className="font-display text-2xl md:text-5xl font-bold uppercase text-white leading-[0.95] mb-4 md:mb-6">
+              Before <span className="text-transparent" style={{ WebkitTextStroke: '1px var(--accent-orange)' }}>&</span> After<span className="text-[var(--accent-orange)]">.</span>
+            </h2>
+            <p className="text-gray-400 text-xs md:text-base leading-relaxed mb-6 md:mb-8">
+              Witness the precision and craftsmanship that defines FDL. Every modification is executed to perfection, transforming your vision into reality.
+            </p>
+            <Link href="/gallery" className="inline-flex items-center gap-3 text-white text-xs md:text-sm font-bold uppercase tracking-widest hover:text-[var(--accent-orange)] transition-colors group">
+              <span>View Full Gallery</span>
+              <ArrowRight size={14} className="md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          {/* Right side slider - takes up 3 columns */}
+          <div className="lg:col-span-3 order-1 lg:order-2">
+            <BeforeAfterSlider
+              beforeImage="/gallery/before.png"
+              afterImage="/gallery/after.jpg"
+              beforeLabel="Before"
+              afterLabel="After"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const ReviewsSection = () => (
-  <section className="py-24 px-6 md:px-16 bg-[#030303] border-t border-white/5">
+  <section className="py-16 md:py-24 px-6 md:px-16 bg-[#030303] border-t border-white/5">
     <div className="max-w-7xl mx-auto">
-      <div className="flex items-center gap-4 mb-16">
-         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" className="w-6 h-6" alt="Google" />
-         <span className="text-white font-bold uppercase tracking-widest text-xs">5.0 Star Rating</span>
+      <div className="flex items-center gap-3 md:gap-4 mb-10 md:mb-16">
+         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" className="w-5 h-5 md:w-6 md:h-6" alt="Google" />
+         <span className="text-white font-bold uppercase tracking-widest text-[10px] md:text-xs">5.0 Star Rating</span>
          <div className="h-[1px] flex-grow bg-white/10"></div>
       </div>
-      
-      <div className="grid md:grid-cols-3 gap-8">
+
+      <div className="grid md:grid-cols-3 gap-4 md:gap-8 mb-10 md:mb-16">
         {REVIEWS.map((review, i) => (
-          <div key={i} className="bg-[#0a0a0a] border border-white/5 p-8 relative hover:border-[var(--accent-orange)] transition-all duration-300 group">
-             <Quote className="absolute top-8 right-8 text-[var(--accent-orange)] opacity-20 w-8 h-8 group-hover:opacity-100 transition-opacity" />
-             <div className="flex text-[var(--accent-orange)] mb-6">
-               {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="currentColor" className="mr-1"/>)}
+          <div key={i} className="bg-[#0a0a0a] border border-white/5 p-6 md:p-8 relative hover:border-[var(--accent-orange)] transition-all duration-300 group">
+             <Quote className="absolute top-6 right-6 md:top-8 md:right-8 text-[var(--accent-orange)] opacity-20 w-6 h-6 md:w-8 md:h-8 group-hover:opacity-100 transition-opacity" />
+             <div className="flex text-[var(--accent-orange)] mb-4 md:mb-6">
+               {[...Array(5)].map((_, i) => <Star key={i} size={12} fill="currentColor" className="mr-1 md:w-3.5 md:h-3.5"/>)}
              </div>
-             <p className="text-gray-300 leading-relaxed mb-8 min-h-[80px]">"{review.text}"</p>
+             <p className="text-gray-300 text-xs md:text-sm leading-relaxed mb-6 md:mb-8 min-h-[60px] md:min-h-[80px]">"{review.text}"</p>
              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center font-bold text-white">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-white/10 rounded-full flex items-center justify-center font-bold text-white text-xs md:text-sm">
                   {review.name[0]}
                 </div>
                 <div>
-                  <p className="text-white font-bold text-sm">{review.name}</p>
-                  <p className="text-[var(--accent-orange)] text-xs uppercase tracking-widest">{review.role}</p>
+                  <p className="text-white font-bold text-xs md:text-sm">{review.name}</p>
+                  <p className="text-[var(--accent-orange)] text-[10px] md:text-xs uppercase tracking-widest">{review.role}</p>
                 </div>
              </div>
           </div>
         ))}
+      </div>
+
+      {/* Shop CTA after reviews */}
+      <div className="text-center border-t border-white/5 pt-10 md:pt-16">
+        <h3 className="font-display text-2xl md:text-4xl font-bold uppercase text-white mb-4 md:mb-6">
+          Ready to Transform<span className="text-[var(--accent-orange)]">?</span>
+        </h3>
+        <p className="text-gray-400 text-xs md:text-sm mb-6 md:mb-8 max-w-xl mx-auto">
+          Browse our curated collection of premium parts and accessories, trusted by enthusiasts nationwide.
+        </p>
+        <Link href="/shop" className="inline-flex items-center gap-3 bg-white text-black px-8 md:px-12 py-4 md:py-5 font-bold uppercase tracking-widest text-xs md:text-sm hover:bg-[var(--accent-orange)] hover:text-white transition-all duration-300">
+          <ShoppingBag size={16} className="md:w-5 md:h-5" />
+          <span>Browse Shop</span>
+        </Link>
       </div>
     </div>
   </section>
 );
 
 const BookingSection = () => (
-  <section className="py-24 md:py-32 px-6 md:px-16 bg-[#080808]">
-     <div className="max-w-4xl mx-auto text-center mb-16">
-        <h2 className="font-display text-4xl md:text-6xl font-bold uppercase text-white mb-6">Quote <span className="text-transparent" style={{ WebkitTextStroke: '1px white'}}>Request</span></h2>
-        <p className="text-[var(--accent-orange)] text-[10px] font-bold uppercase tracking-[0.4em]">Response within 15 minutes</p>
+  <section className="py-16 md:py-32 px-6 md:px-16 bg-[#080808]">
+     <div className="max-w-4xl mx-auto text-center mb-10 md:mb-16">
+        <h2 className="font-display text-3xl md:text-6xl font-bold uppercase text-white mb-3 md:mb-6">Quote <span className="text-transparent" style={{ WebkitTextStroke: '1px white'}}>Request</span></h2>
+        <p className="text-gray-500 text-xs md:text-sm">Get a custom quote for your project</p>
      </div>
 
-     <div className="max-w-3xl mx-auto bg-[var(--bg-card)] p-8 md:p-12 border border-white/5">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+     <div className="max-w-3xl mx-auto bg-[var(--bg-card)] p-6 md:p-12 border border-white/5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8">
            <div className="group">
               <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Make</label>
-              <input type="text" className="w-full bg-transparent border-b border-white/10 py-3 text-white focus:outline-none focus:border-[var(--accent-orange)] text-lg transition-colors" placeholder="e.g. Range Rover" />
+              <input type="text" className="w-full bg-transparent border-b border-white/10 py-2 md:py-3 text-white focus:outline-none focus:border-[var(--accent-orange)] text-base md:text-lg transition-colors" placeholder="e.g. Range Rover" />
            </div>
            <div className="group">
               <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Model</label>
-              <input type="text" className="w-full bg-transparent border-b border-white/10 py-3 text-white focus:outline-none focus:border-[var(--accent-orange)] text-lg transition-colors" placeholder="Sport SVR" />
+              <input type="text" className="w-full bg-transparent border-b border-white/10 py-2 md:py-3 text-white focus:outline-none focus:border-[var(--accent-orange)] text-base md:text-lg transition-colors" placeholder="Sport SVR" />
            </div>
         </div>
-        <div className="mb-12">
+        <div className="mb-8 md:mb-12">
            <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Requirement</label>
-           <select className="w-full bg-transparent border-b border-white/10 py-3 text-white focus:outline-none focus:border-[var(--accent-orange)] text-lg">
+           <select className="w-full bg-transparent border-b border-white/10 py-2 md:py-3 text-white focus:outline-none focus:border-[var(--accent-orange)] text-base md:text-lg">
               <option className="bg-black">Full Body Kit Installation</option>
               <option className="bg-black">Carbon Fibre Enhancement</option>
               <option className="bg-black">Alloy Wheel Upgrade</option>
               <option className="bg-black">Vehicle Wrapping</option>
            </select>
         </div>
-        <button className="w-full bg-white text-black py-5 font-bold uppercase tracking-widest text-xs hover:bg-[var(--accent-orange)] hover:text-white transition-all duration-300 hover-trigger">
+        <button className="w-full bg-white text-black py-4 md:py-5 font-bold uppercase tracking-widest text-xs md:text-sm hover:bg-[var(--accent-orange)] hover:text-white transition-all duration-300">
            Submit Inquiry
         </button>
      </div>
@@ -649,8 +648,8 @@ const HeroCarousel = () => {
   };
 
   return (
-    <div 
-      className="fdl-hero-wrapper hover-trigger" 
+    <div
+      className="fdl-hero-wrapper" 
       id="fdlHero" 
       ref={containerRef}
       onMouseDown={handleTouchStart}
@@ -671,17 +670,25 @@ const HeroCarousel = () => {
 
       <div className="fdl-overlay"></div>
 
-      <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-16 pointer-events-none z-10 pb-32 md:pb-32">
-         <div className="overflow-hidden mb-6">
+      <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-16 pointer-events-none z-10 pb-32 md:pb-40">
+         <div className="overflow-hidden mb-6 md:mb-8">
             <h1 className="font-display text-5xl md:text-8xl lg:text-9xl font-bold uppercase leading-[0.85] text-white tracking-tight">
               Bespoke<span className="text-[var(--accent-orange)]">.</span>
             </h1>
          </div>
-         <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-t border-white/20 pt-8">
-            <p className="font-display text-lg md:text-2xl uppercase font-bold leading-tight max-w-xl text-white">
-               Defined by Detail.<br/>Driven by Passion.
-            </p>
-            <div className="flex items-center gap-3 text-[var(--accent-orange)] font-bold uppercase text-xs tracking-widest mt-6 md:mt-0">
+         <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-t border-white/20 pt-6 md:pt-8 gap-6 md:gap-12">
+            <div className="max-w-2xl">
+              <p className="font-display text-lg md:text-2xl uppercase font-bold leading-tight text-white mb-6 md:mb-8">
+                 Defined by Detail.<br/>Driven by Passion.
+              </p>
+              {/* Shop CTA - visible on both mobile and desktop */}
+              <Link href="/shop" className="pointer-events-auto inline-flex items-center gap-3 bg-white text-black px-6 md:px-8 py-3 md:py-4 font-bold uppercase tracking-widest text-xs md:text-sm hover:bg-[var(--accent-orange)] hover:text-white transition-all duration-300 group">
+                <ShoppingBag size={16} className="md:w-5 md:h-5" />
+                <span>Shop Now</span>
+                <ArrowRight size={14} className="md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+            <div className="flex items-center gap-3 text-[var(--accent-orange)] font-bold uppercase text-xs tracking-widest whitespace-nowrap">
                <span className="w-2 h-2 bg-[var(--accent-orange)] rounded-full animate-pulse"></span>
                Workshop Active
             </div>
@@ -689,21 +696,21 @@ const HeroCarousel = () => {
       </div>
 
       <div className="absolute bottom-0 left-0 w-full p-6 md:p-16 flex justify-between items-end z-20 pointer-events-none">
-        <div className="flex gap-4 pointer-events-auto">
-          <button onClick={() => goToSlide(state.current.currentIndex - 1)} className="w-14 h-14 border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-black transition-all hover-trigger bg-black/20 backdrop-blur-sm">
-            <ChevronLeft size={24} />
+        <div className="flex gap-3 md:gap-4 pointer-events-auto">
+          <button onClick={() => goToSlide(state.current.currentIndex - 1)} className="w-12 h-12 md:w-14 md:h-14 border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-black transition-all bg-black/20 backdrop-blur-sm">
+            <ChevronLeft size={20} className="md:w-6 md:h-6" />
           </button>
-          <button onClick={() => goToSlide(state.current.currentIndex + 1)} className="w-14 h-14 border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-black transition-all hover-trigger bg-black/20 backdrop-blur-sm">
-            <ChevronRight size={24} />
+          <button onClick={() => goToSlide(state.current.currentIndex + 1)} className="w-12 h-12 md:w-14 md:h-14 border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-black transition-all bg-black/20 backdrop-blur-sm">
+            <ChevronRight size={20} className="md:w-6 md:h-6" />
           </button>
         </div>
 
-        <div className="flex gap-8 items-baseline pointer-events-auto">
+        <div className="flex gap-4 md:gap-8 items-baseline pointer-events-auto">
           {CAROUSEL_IMAGES.map((_, idx) => (
-            <div 
+            <div
               key={idx}
               onClick={() => goToSlide(idx)}
-              className={`cursor-pointer transition-all duration-500 font-display font-bold ${currentIndex === idx ? 'text-4xl md:text-6xl text-white' : 'text-sm text-white/30 hover:text-white/60'}`}
+              className={`cursor-pointer transition-all duration-500 font-display font-bold ${currentIndex === idx ? 'text-3xl md:text-6xl text-white' : 'text-xs md:text-sm text-white/30 hover:text-white/60'}`}
             >
               0{idx + 1}
             </div>
@@ -715,9 +722,8 @@ const HeroCarousel = () => {
 };
 
 const ProductCarousel = ({ products }) => {
-  const displayProducts = products.length > 0 ? products : MOCK_PRODUCTS;
   const trackRef = useRef(null);
-  
+
   const state = useRef({
     isDown: false,
     startX: 0,
@@ -752,51 +758,63 @@ const ProductCarousel = ({ products }) => {
     e.preventDefault();
     state.current.isDragging = true;
     const x = e.pageX - trackRef.current.offsetLeft;
-    const walk = (x - state.current.startX) * 1.5; 
+    const walk = (x - state.current.startX) * 1.5;
     trackRef.current.scrollLeft = state.current.scrollLeft - walk;
   };
 
+  const handleProductClick = (e) => {
+    // Prevent navigation if user was dragging
+    if (state.current.isDragging) {
+      e.preventDefault();
+    }
+  };
+
   return (
-    <section className="py-24 md:py-32 px-6 md:px-0 overflow-hidden bg-[var(--bg-dark)]">
+    <section className="py-16 md:py-32 px-0 overflow-hidden bg-[var(--bg-dark)]">
       <div className="max-w-[1920px] mx-auto">
-        <div className="px-6 md:px-16 mb-12 flex flex-col md:flex-row justify-between items-end">
-            <h2 className="font-display text-4xl md:text-5xl font-bold uppercase text-white">Curated <span className="text-[var(--accent-orange)]">Parts</span></h2>
+        <div className="px-6 md:px-16 mb-8 md:mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-3 md:gap-0">
+            <div>
+              <h2 className="font-display text-3xl md:text-5xl font-bold uppercase text-white mb-2 md:mb-0">Curated <span className="text-[var(--accent-orange)]">Parts</span></h2>
+              <p className="text-gray-500 text-xs md:hidden">Swipe to explore →</p>
+            </div>
             <div className="hidden md:flex gap-4 text-xs font-bold uppercase tracking-widest text-gray-500 items-center">
               <span>Drag to Explore</span>
               <div className="w-12 h-[1px] bg-[var(--accent-orange)]"></div>
             </div>
         </div>
 
-        <div 
-          className="overflow-x-auto no-scrollbar cursor-grab px-6 md:px-16 pb-12"
+        <div
+          className="overflow-x-auto no-scrollbar cursor-grab px-6 md:px-16 pb-8 md:pb-12"
           ref={trackRef}
           onMouseDown={handleMouseDown}
           onMouseLeave={handleMouseLeave}
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
         >
-           <div className="flex gap-6 w-max">
-              {displayProducts.map((p, idx) => (
-                <div 
-                  key={idx} 
-                  className="prod-carousel-item relative w-[280px] md:w-[350px] aspect-square rounded-xl overflow-hidden bg-[var(--bg-card)] group hover-trigger"
+           <div className="flex gap-4 md:gap-6 w-max">
+              {products.map((p, idx) => (
+                <Link
+                  key={p.slug || idx}
+                  href={`/product/${p.slug}`}
+                  onClick={handleProductClick}
+                  className="prod-carousel-item relative w-[240px] md:w-[350px] aspect-square rounded-lg md:rounded-xl overflow-hidden bg-[var(--bg-card)] group block flex-shrink-0"
                 >
                     <img src={p.image} alt={p.name} className="w-full h-full object-cover pointer-events-none" />
-                    <div className="prod-overlay absolute inset-0 flex flex-col justify-end p-6 pointer-events-none">
-                       <p className="text-[var(--accent-orange)] text-xs font-bold uppercase tracking-widest mb-2">{p.category}</p>
-                       <h3 className="font-display text-xl text-white font-bold leading-tight mb-1">{p.name}</h3>
-                       <p className="text-white font-medium">£{p.price}</p>
+                    <div className="prod-overlay absolute inset-0 flex flex-col justify-end p-4 md:p-6 pointer-events-none">
+                       <p className="text-[var(--accent-orange)] text-[10px] md:text-xs font-bold uppercase tracking-widest mb-1 md:mb-2">{p.category}</p>
+                       <h3 className="font-display text-base md:text-xl text-white font-bold leading-tight mb-1">{p.name}</h3>
+                       <p className="text-white font-medium text-sm md:text-base">£{p.price}</p>
                     </div>
-                </div>
+                </Link>
               ))}
-              
-              <Link 
+
+              <Link
                 href="/shop"
-                className="prod-carousel-item w-[280px] md:w-[350px] aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-[var(--accent-orange)] to-[#ff8f66] flex flex-col items-center justify-center text-center p-8 cursor-pointer hover-trigger"
+                className="prod-carousel-item w-[240px] md:w-[350px] aspect-square rounded-lg md:rounded-xl overflow-hidden bg-gradient-to-br from-[var(--accent-orange)] to-[#ff8f66] flex flex-col items-center justify-center text-center p-6 md:p-8 cursor-pointer flex-shrink-0"
               >
-                  <ArrowRight size={48} className="text-white mb-4" />
-                  <h3 className="font-display text-2xl text-white font-bold">View All</h3>
-                  <p className="text-white/90 text-sm mt-2">See full collection</p>
+                  <ShoppingBag size={40} className="text-white mb-3 md:mb-4 md:w-12 md:h-12" />
+                  <h3 className="font-display text-xl md:text-2xl text-white font-bold mb-2">Shop All</h3>
+                  <p className="text-white/90 text-xs md:text-sm">Browse the full collection</p>
               </Link>
            </div>
         </div>
@@ -1207,56 +1225,38 @@ const InteriorsPage = () => {
 // 5. Main App Component (Homepage)
 export default function HomePage() {
   const [products, setProducts] = useState([]);
-  const [user, setUser] = useState(null);
 
-  // Auth & Data
+  // Fetch featured products from WooCommerce
   useEffect(() => {
-    // 🚫 No Firebase = no auth calls
-    if (!auth) {
-      setUser({ uid: 'local-dev' } as any);
-      return;
-    }
-
-    const init = async () => {
-      const token = globalThis.__initial_auth_token;
-
-      if (token) {
-        await signInWithCustomToken(auth, token);
-      } else {
-        await signInAnonymously(auth);
+    const fetchFeaturedProducts = async () => {
+      try {
+        const res = await fetch('/api/products/featured');
+        if (res.ok) {
+          const data = await res.json();
+          setProducts(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch featured products:', error);
       }
     };
 
-    init();
-    return onAuthStateChanged(auth, setUser);
+    fetchFeaturedProducts();
   }, []);
-
-  useEffect(() => {
-    if (!user) return;
-    if (!db) return;
-
-    const ref = collection(db, 'artifacts', appId, 'public', 'data', 'products');
-    const unsub = onSnapshot(query(ref, orderBy('createdAt', 'desc')), (snap) => {
-      const items = snap.docs.map(d => ({id: d.id, ...d.data()}));
-      setProducts(items.length ? items : []);
-    });
-    return () => unsub();
-  }, [user]);
-
 
   return (
     <>
       <GlobalStyles />
-      <CustomCursor />
+      {/* <CustomCursor /> */}
       <div className="noise"></div>
-      
+
       <HeroCarousel />
       <Marquee />
       <ServicesGrid />
+      <TransformationSection />
       <ProductCarousel products={products} />
       <ReviewsSection />
       <BookingSection />
-      
+
       <Footer />
     </>
   );

@@ -5,7 +5,6 @@ const ContactPage = () => (
     <section className="py-24 md:py-32 px-6 md:px-16 bg-[#080808]">
        <div className="max-w-4xl mx-auto text-center mb-16">
           <h2 className="font-display text-4xl md:text-6xl font-bold uppercase text-white mb-6">Quote <span className="text-transparent" style={{ WebkitTextStroke: '1px white'}}>Request</span></h2>
-          <p className="text-[var(--accent-orange)] text-[10px] font-bold uppercase tracking-[0.4em]">Response within 15 minutes</p>
        </div>
 
        <div className="max-w-3xl mx-auto bg-[var(--bg-card)] p-8 md:p-12 border border-white/5">
@@ -28,7 +27,7 @@ const ContactPage = () => (
                 <option className="bg-black">Vehicle Wrapping</option>
              </select>
           </div>
-          <button className="w-full bg-white text-black py-5 font-bold uppercase tracking-widest text-xs hover:bg-[var(--accent-orange)] hover:text-white transition-all duration-300 hover-trigger">
+          <button className="w-full bg-white text-black py-5 font-bold uppercase tracking-widest text-xs hover:bg-[var(--accent-orange)] hover:text-white transition-all duration-300">
              Submit Inquiry
           </button>
        </div>

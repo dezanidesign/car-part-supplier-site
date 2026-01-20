@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { ChevronDown, Filter } from "lucide-react";
+import { ChevronDown, Filter, Search, X } from "lucide-react";
 import { SHOP_CATEGORIES } from "@/lib/shopCategories";
 import type { WooProduct, WooCategory } from "@/lib/woo";
 
@@ -56,6 +56,7 @@ export default function ShopFeed({ initialProducts, initialCategories }: Props) 
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Build category hierarchy map once
   const categoryHierarchy = useMemo(() => {
@@ -101,9 +102,23 @@ export default function ShopFeed({ initialProducts, initialCategories }: Props) 
     return map;
   }, [initialCategories]);
 
-  // Filter products based on selected category
+  // Filter products based on selected category and search query
   const filteredProducts = useMemo(() => {
     let result = [...initialProducts];
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(product => {
+        const name = product.name.toLowerCase();
+        const description = (product.description || "").toLowerCase();
+        const shortDescription = (product.short_description || "").toLowerCase();
+
+        return name.includes(query) ||
+               description.includes(query) ||
+               shortDescription.includes(query);
+      });
+    }
 
     // Filter by category
     if (selectedCategory !== "all") {
@@ -126,7 +141,7 @@ export default function ShopFeed({ initialProducts, initialCategories }: Props) 
     }
 
     return result;
-  }, [initialProducts, selectedCategory, sortBy, categoryHierarchy]);
+  }, [initialProducts, selectedCategory, sortBy, categoryHierarchy, searchQuery]);
 
   return (
     <div className="flex flex-col lg:flex-row gap-12 relative">
@@ -170,6 +185,29 @@ export default function ShopFeed({ initialProducts, initialCategories }: Props) 
 
       {/* --- MAIN CONTENT --- */}
       <div className="flex-1">
+        {/* Search Bar */}
+        <div className="mb-8">
+          <div className="relative max-w-2xl">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
+            <input
+              type="text"
+              placeholder="Search products by name, description..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-[#111] border border-white/20 text-white text-sm pl-12 pr-12 py-3 focus:outline-none focus:border-[var(--accent-orange)] placeholder:text-gray-600"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                aria-label="Clear search"
+              >
+                <X size={16} />
+              </button>
+            )}
+          </div>
+        </div>
+
         {/* Toolbar */}
         <div className="flex flex-wrap items-center justify-between mb-8 gap-4 border-b border-white/10 pb-6">
           {/* Mobile Filter Toggle */}
@@ -180,9 +218,22 @@ export default function ShopFeed({ initialProducts, initialCategories }: Props) 
             <Filter size={14} /> Filters
           </button>
 
-          <p className="text-gray-500 text-xs font-bold uppercase tracking-widest">
-            Showing {filteredProducts.length} Results
-          </p>
+          <div className="flex items-center gap-4 flex-wrap">
+            <p className="text-gray-500 text-xs font-bold uppercase tracking-widest">
+              Showing {filteredProducts.length} Results
+            </p>
+            {searchQuery && (
+              <span className="inline-flex items-center gap-2 bg-[var(--accent-orange)]/10 border border-[var(--accent-orange)]/30 text-[var(--accent-orange)] text-[10px] font-bold uppercase tracking-widest px-3 py-1">
+                Searching: {searchQuery}
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="hover:text-white transition-colors"
+                >
+                  <X size={10} />
+                </button>
+              </span>
+            )}
+          </div>
 
           {/* Sort Dropdown */}
           <div className="flex items-center gap-3">
@@ -245,9 +296,19 @@ export default function ShopFeed({ initialProducts, initialCategories }: Props) 
           </div>
         ) : (
           <div className="py-20 text-center border border-dashed border-white/10">
-            <p className="text-gray-500 text-sm uppercase tracking-widest">
-              No products found matching filters.
+            <p className="text-gray-500 text-sm uppercase tracking-widest mb-4">
+              {searchQuery
+                ? `No products found for "${searchQuery}"`
+                : "No products found matching filters."}
             </p>
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="text-xs text-[var(--accent-orange)] hover:underline uppercase tracking-widest"
+              >
+                Clear search
+              </button>
+            )}
           </div>
         )}
 

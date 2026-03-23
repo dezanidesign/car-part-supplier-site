@@ -7,6 +7,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "woocommerce-1124088-5635456.cloudwaysapps.com",
+        pathname: "/wp-content/uploads/**",
+      },
+      {
+        protocol: "https",
         hostname: "wp.fdlbespoke.co.uk",
         pathname: "/wp-content/uploads/**",
       },
@@ -18,6 +23,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
       },
     ],
     formats: ["image/avif", "image/webp"],
@@ -40,11 +49,6 @@ const nextConfig = {
       {
         source: "/about",
         destination: "/info",
-        permanent: true,
-      },
-      {
-        source: "/services",
-        destination: "/",
         permanent: true,
       },
     ];

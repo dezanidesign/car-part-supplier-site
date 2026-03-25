@@ -5,10 +5,22 @@ import Link from 'next/link';
 import { ShoppingBag, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const CAROUSEL_IMAGES = [
-  "https://woocommerce-1124088-5635456.cloudwaysapps.com/wp-content/uploads/2025/07/1-scaled.jpg",
-  "https://woocommerce-1124088-5635456.cloudwaysapps.com/wp-content/uploads/2025/07/5B1A84851-scaled.jpg",
-  "https://woocommerce-1124088-5635456.cloudwaysapps.com/wp-content/uploads/2025/07/5B1A3705-scaled.jpg",
-  "https://woocommerce-1124088-5635456.cloudwaysapps.com/wp-content/uploads/2025/10/WhatsApp-Image-2025-10-14-at-18.26.23_b9abe7de-scaled.jpg"
+  {
+    src: "/gallery/audi/1.jpg",
+    alt: "FDL Bespoke Audi detailing showcase",
+  },
+  {
+    src: "/gallery/bmw/5B1A84851.jpg",
+    alt: "FDL Bespoke BMW detailing close-up",
+  },
+  {
+    src: "/gallery/audi/5B1A3705.jpg",
+    alt: "FDL Bespoke Audi transformation feature",
+  },
+  {
+    src: "/gallery/range-rover/5B1A5031.jpg",
+    alt: "FDL Bespoke Range Rover exterior finish",
+  },
 ];
 
 export default function HeroCarousel() {
@@ -115,9 +127,9 @@ export default function HeroCarousel() {
       onTouchEnd={handleTouchEnd}
     >
       <div className="fdl-track" ref={trackRef}>
-        {CAROUSEL_IMAGES.map((src, idx) => (
+        {CAROUSEL_IMAGES.map((image, idx) => (
           <div className="fdl-slide" key={idx}>
-            <img src={src} alt={`FDL Bespoke - Slide ${idx + 1}`} draggable="false" />
+            <img src={image.src} alt={image.alt} draggable="false" />
           </div>
         ))}
       </div>

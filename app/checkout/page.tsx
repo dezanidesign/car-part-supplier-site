@@ -62,7 +62,7 @@ export default function CheckoutPage() {
           <h1 className="text-2xl font-bold mb-4">Your cart is empty</h1>
           <button
             onClick={() => router.push("/shop")}
-            className="bg-[var(--accent-orange)] text-black font-bold uppercase tracking-widest px-6 py-3 hover:brightness-110 transition text-sm"
+            className="bg-[var(--accent)] text-black font-bold uppercase tracking-widest px-6 py-3 hover:brightness-115 transition text-sm"
           >
             Continue Shopping
           </button>
@@ -72,10 +72,10 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white pt-32 pb-20 px-6">
+    <div className="min-h-screen bg-[#050505] text-white pb-20 px-6">
       <div className="max-w-6xl mx-auto">
         <h1 className="font-display text-5xl md:text-7xl font-bold uppercase tracking-tight mb-12">
-          Checkout<span className="text-[var(--accent-orange)]">.</span>
+          Checkout<span className="text-[var(--accent)]">.</span>
         </h1>
 
         <div className="grid lg:grid-cols-3 gap-10">
@@ -117,7 +117,7 @@ export default function CheckoutPage() {
 
           {/* Payment Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-[#111] border border-white/10 p-8 sticky top-32">
+            <div className="header-sticky-gap sticky bg-[#111] border border-white/10 p-8">
               <h2 className="text-xl font-bold uppercase tracking-widest mb-6 border-b border-white/10 pb-4">
                 Order Total
               </h2>
@@ -135,7 +135,7 @@ export default function CheckoutPage() {
 
                 <div className="border-t border-white/10 pt-4 flex justify-between">
                   <span className="font-bold uppercase tracking-widest">Total</span>
-                  <span className="font-display text-2xl font-bold text-[var(--accent-orange)]">
+                  <span className="font-display text-2xl font-bold text-[var(--accent)]">
                     {formatPrice(subtotal)}
                   </span>
                 </div>
@@ -150,7 +150,7 @@ export default function CheckoutPage() {
               <button
                 onClick={handleCheckout}
                 disabled={isLoading}
-                className="w-full bg-[var(--accent-orange)] text-black font-bold uppercase tracking-[0.2em] py-4 hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+                className="w-full bg-[var(--accent)] text-black font-bold uppercase tracking-[0.2em] py-4 hover:brightness-115 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
               >
                 {isLoading ? (
                   <>

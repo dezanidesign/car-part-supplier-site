@@ -5,14 +5,14 @@ export const metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-[#050505] text-white pt-32 pb-20 px-6">
+    <div className="min-h-screen bg-[#050505] text-white pb-20 px-6">
       <div className="max-w-4xl mx-auto">
         <h1 className="font-display text-5xl md:text-7xl font-bold uppercase tracking-tight mb-8">
-          Terms & Conditions<span className="text-[var(--accent-orange)]">.</span>
+          Terms & Conditions<span className="text-[var(--accent)]">.</span>
         </h1>
 
         <div className="prose prose-invert prose-sm max-w-none space-y-8">
-          <p className="text-gray-400 text-lg border-l-2 border-[var(--accent-orange)] pl-6">
+          <p className="text-gray-400 text-lg border-l-2 border-[var(--accent)] pl-6">
             Last updated: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
 
@@ -118,7 +118,7 @@ export default function TermsPage() {
               For questions about these Terms & Conditions, please contact us:
             </p>
             <div className="mt-4 text-gray-300">
-              <p>Email: <a href="mailto:info@fdlbespoke.com" className="text-[var(--accent-orange)] hover:underline">info@fdlbespoke.com</a></p>
+              <p>Email: <a href="mailto:info@fdlbespoke.com" className="text-[var(--accent)] hover:underline">info@fdlbespoke.com</a></p>
               <p className="mt-2">Address: [Your Business Address]</p>
             </div>
           </section>

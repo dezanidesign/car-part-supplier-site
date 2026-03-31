@@ -78,13 +78,13 @@ export function NewsletterPopup() {
           {!isSuccess ? (
             <>
               {/* Icon */}
-              <div className="w-12 h-12 bg-[var(--accent-orange)]/10 border border-[var(--accent-orange)]/30 flex items-center justify-center mb-6">
-                <Mail className="text-[var(--accent-orange)]" size={24} />
+              <div className="w-12 h-12 bg-[var(--accent)]/10 border border-[var(--accent)]/30 flex items-center justify-center mb-6">
+                <Mail className="text-[var(--accent)]" size={24} />
               </div>
 
               {/* Heading */}
               <h2 className="font-display text-3xl font-bold uppercase tracking-tight text-white mb-2">
-                Stay Updated<span className="text-[var(--accent-orange)]">.</span>
+                Stay Updated<span className="text-[var(--accent)]">.</span>
               </h2>
               <p className="text-gray-400 text-sm mb-6 leading-relaxed">
                 Get exclusive access to new products, special offers, and styling inspiration.
@@ -101,7 +101,7 @@ export function NewsletterPopup() {
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     placeholder="John"
-                    className="w-full bg-[#0a0a0a] border border-white/20 text-white px-4 py-3 text-sm focus:outline-none focus:border-[var(--accent-orange)] placeholder:text-gray-600"
+                    className="w-full bg-[#0a0a0a] border border-white/20 text-white px-4 py-3 text-sm focus:outline-none focus:border-[var(--accent)] placeholder:text-gray-600"
                   />
                 </div>
 
@@ -115,14 +115,14 @@ export function NewsletterPopup() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="john@example.com"
-                    className="w-full bg-[#0a0a0a] border border-white/20 text-white px-4 py-3 text-sm focus:outline-none focus:border-[var(--accent-orange)] placeholder:text-gray-600"
+                    className="w-full bg-[#0a0a0a] border border-white/20 text-white px-4 py-3 text-sm focus:outline-none focus:border-[var(--accent)] placeholder:text-gray-600"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-[var(--accent-orange)] text-black font-bold uppercase tracking-[0.2em] py-3 hover:brightness-110 transition disabled:opacity-50 text-sm"
+                  className="w-full bg-[var(--accent)] text-black font-bold uppercase tracking-[0.2em] py-3 hover:brightness-115 transition disabled:opacity-50 text-sm"
                 >
                   {isSubmitting ? "Subscribing..." : "Subscribe"}
                 </button>

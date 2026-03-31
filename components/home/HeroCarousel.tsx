@@ -6,20 +6,20 @@ import { ShoppingBag, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react
 
 const CAROUSEL_IMAGES = [
   {
-    src: "/gallery/audi/1.jpg",
+    src: "/gallery/homeSlide/defender1.jpg",
+    alt: "FDL Bespoke Defender detailing showcase",
+  },
+  {
+    src: "/gallery/homeSlide/bmw2.jpg",
+    alt: "FDL Bespoke BMW detailing showcase",
+  },
+  {
+    src: "/gallery/homeSlide/audi3.jpg",
     alt: "FDL Bespoke Audi detailing showcase",
   },
   {
-    src: "/gallery/bmw/5B1A84851.jpg",
-    alt: "FDL Bespoke BMW detailing close-up",
-  },
-  {
-    src: "/gallery/audi/5B1A3705.jpg",
-    alt: "FDL Bespoke Audi transformation feature",
-  },
-  {
-    src: "/gallery/range-rover/5B1A5031.jpg",
-    alt: "FDL Bespoke Range Rover exterior finish",
+    src: "/gallery/homeSlide/lambo4.jpg",
+    alt: "FDL Bespoke Lamborghini detailing showcase",
   },
 ];
 

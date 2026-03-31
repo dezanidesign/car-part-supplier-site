@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { getAllProducts } from "@/lib/woo";
 
+// Force dynamic rendering so products are always fetched live (never statically cached at build time)
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/products/featured
  * Returns a random selection of products for the homepage carousel

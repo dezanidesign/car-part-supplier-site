@@ -4,10 +4,10 @@ import { Layers, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 const BodykitsPage = () => (
-  <div className="min-h-screen bg-[var(--bg-dark)] pt-32 pb-24 px-6 md:px-16 animate-in fade-in duration-700">
+  <div className="min-h-screen bg-[var(--bg-dark)] pb-24 px-6 md:px-16 animate-in fade-in duration-700 [--section-bg:var(--bg-dark)]">
     <div className="max-w-[1920px] mx-auto grid lg:grid-cols-2 gap-12 lg:gap-24">
-       <div className="lg:sticky lg:top-32 h-fit order-2 lg:order-1">
-          <span className="text-[var(--accent-orange)] text-xs font-bold uppercase tracking-widest mb-6 block flex items-center"><Layers size={16} className="mr-2"/> Engineering</span>
+       <div className="header-sticky-gap h-fit order-2 lg:order-1 lg:sticky">
+          <span className="text-[var(--accent)] text-xs font-bold uppercase tracking-widest mb-6 block flex items-center"><Layers size={16} className="mr-2"/> Engineering</span>
           <h1 className="font-display text-5xl md:text-7xl font-bold uppercase text-white leading-[0.9] mb-8">
              Precision <br/> <span className="text-outline">Fitment</span>
           </h1>
@@ -31,7 +31,7 @@ const BodykitsPage = () => (
           </div>
           
           <div className="mt-16 pt-8 border-t border-white/10">
-             <Link href="/contact" className="flex items-center gap-4 text-white hover:text-[var(--accent-orange)] transition-colors group">
+             <Link href="/contact" className="flex items-center gap-4 text-white hover:text-[var(--accent)] transition-colors group">
                 <span className="font-display font-bold uppercase text-xl">Start Your Build</span>
                 <ArrowRight className="group-hover:translate-x-2 transition-transform" />
              </Link>
@@ -43,11 +43,11 @@ const BodykitsPage = () => (
              <img src="/gallery/land-rover/5B1A6489.jpg" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
           </div>
           <div className="grid grid-cols-2 gap-4">
-             <div className="aspect-square w-full bg-[#111] border border-white/5 flex flex-col justify-center items-center p-6 text-center group hover:border-[var(--accent-orange)] transition-colors">
+             <div className="aspect-square w-full bg-[#111] border border-white/5 flex flex-col justify-center items-center p-6 text-center group hover:border-[var(--accent)] transition-colors">
                 <span className="font-display text-4xl text-white font-bold mb-2 group-hover:scale-110 transition-transform">100%</span>
                 <span className="text-[10px] uppercase tracking-widest text-gray-500">Fitment Guarantee</span>
              </div>
-             <div className="aspect-square w-full bg-[#111] border border-white/5 flex flex-col justify-center items-center p-6 text-center group hover:border-[var(--accent-orange)] transition-colors">
+             <div className="aspect-square w-full bg-[#111] border border-white/5 flex flex-col justify-center items-center p-6 text-center group hover:border-[var(--accent)] transition-colors">
                 <span className="font-display text-4xl text-white font-bold mb-2 group-hover:scale-110 transition-transform">OEM+</span>
                 <span className="text-[10px] uppercase tracking-widest text-gray-500">Finish Standard</span>
              </div>

@@ -51,12 +51,12 @@ function ProductCard({ product }: { product: WooProduct }) {
           {product.name}
         </h3>
         <div className="flex items-center justify-between">
-          <span className="text-[#FF4D00] font-bold text-lg">
+          <span className="text-[#D3BF89] font-bold text-lg">
             £{parseFloat(price || "0").toFixed(2)}
           </span>
           <a
             href={`/product/${product.slug}`} // <-- Points to Next.js route
-            className="text-white/60 hover:text-[#FF4D00]..."
+            className="text-white/60 hover:text-[#D3BF89]..."
           >
             View →
           </a>
@@ -79,14 +79,14 @@ export default async function ShopCategoryPage({
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
-      <div className="max-w-[1920px] mx-auto px-6 md:px-12 pt-36 pb-20">
+      <div className="max-w-[1920px] mx-auto px-6 md:px-12 pb-20">
         {/* HERO */}
         <div className="border border-white/10 bg-white/5 rounded-2xl p-8 md:p-12 overflow-hidden relative">
           <div
             className="absolute inset-0 opacity-30 pointer-events-none"
             style={{
               background:
-                "radial-gradient(800px 400px at 20% 20%, rgba(255,77,0,0.25), transparent 60%), radial-gradient(700px 350px at 80% 0%, rgba(255,255,255,0.08), transparent 55%)",
+                "radial-gradient(800px 400px at 20% 20%, rgba(211,191,137,0.25), transparent 60%), radial-gradient(700px 350px at 80% 0%, rgba(255,255,255,0.08), transparent 55%)",
             }}
           />
           <div className="relative">
@@ -96,7 +96,7 @@ export default async function ShopCategoryPage({
 
             <h1 className="font-display text-4xl md:text-7xl font-bold uppercase tracking-tight mt-3">
               {meta.label}
-              <span className="text-[#FF4D00]">.</span>
+              <span className="text-[#D3BF89]">.</span>
             </h1>
 
             <p className="text-gray-400 mt-5 max-w-2xl">

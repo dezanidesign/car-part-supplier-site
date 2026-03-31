@@ -24,8 +24,8 @@ import {
   Loader2,
 } from "lucide-react";
 
-const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-const MAX_SIZE = 5 * 1024 * 1024;
+const ALLOWED = ["image/jpeg", "image/png", "image/webp"];
+const MAX_SIZE = 10 * 1024 * 1024;
 
 export default function TiptapEditor({
   content,
@@ -42,6 +42,7 @@ export default function TiptapEditor({
     extensions: [
       StarterKit.configure({
         heading: { levels: [2, 3] },
+        link: false,
       }),
       ImageExt.configure({ inline: false }),
       Link.configure({
@@ -79,11 +80,11 @@ export default function TiptapEditor({
       if (!file || !editor || uploadingRef.current) return;
 
       if (!ALLOWED.includes(file.type)) {
-        alert("Unsupported format. Use JPG, PNG, WebP, or GIF.");
+        alert("Unsupported format. Use JPG, PNG, or WebP.");
         return;
       }
       if (file.size > MAX_SIZE) {
-        alert(`File too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Maximum is 5MB.`);
+        alert(`File too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Maximum is 10MB.`);
         return;
       }
 
@@ -93,6 +94,7 @@ export default function TiptapEditor({
         const form = new FormData();
         form.append("file", file);
         form.append("type", "inline");
+        form.append("scope", "blog");
 
         const res = await fetch("/api/blog/upload", { method: "POST", body: form });
         const data = await res.json();
@@ -264,7 +266,7 @@ export default function TiptapEditor({
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/jpeg,image/png,image/webp,image/gif"
+        accept="image/jpeg,image/png,image/webp"
         onChange={onFileSelected}
         className="hidden"
       />

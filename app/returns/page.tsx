@@ -5,14 +5,14 @@ export const metadata = {
 
 export default function ReturnsPage() {
   return (
-    <div className="min-h-screen bg-[#050505] text-white pt-32 pb-20 px-6">
+    <div className="min-h-screen bg-[#050505] text-white pb-20 px-6">
       <div className="max-w-4xl mx-auto">
         <h1 className="font-display text-5xl md:text-7xl font-bold uppercase tracking-tight mb-8">
-          Returns & Refunds<span className="text-[var(--accent-orange)]">.</span>
+          Returns & Refunds<span className="text-[var(--accent)]">.</span>
         </h1>
 
         <div className="prose prose-invert prose-sm max-w-none space-y-8">
-          <p className="text-gray-400 text-lg border-l-2 border-[var(--accent-orange)] pl-6">
+          <p className="text-gray-400 text-lg border-l-2 border-[var(--accent)] pl-6">
             We want you to be completely satisfied with your purchase.
           </p>
 
@@ -47,7 +47,7 @@ export default function ReturnsPage() {
             <ol className="list-decimal list-inside text-gray-300 space-y-3 ml-4">
               <li>
                 <strong>Contact us:</strong> Email{' '}
-                <a href="mailto:returns@fdlbespoke.com" className="text-[var(--accent-orange)] hover:underline">
+                <a href="mailto:returns@fdlbespoke.com" className="text-[var(--accent)] hover:underline">
                   returns@fdlbespoke.com
                 </a>{' '}
                 with your order number and reason for return
@@ -109,7 +109,7 @@ export default function ReturnsPage() {
               Questions about returns? We're here to help:
             </p>
             <div className="mt-4 text-gray-300">
-              <p>Email: <a href="mailto:returns@fdlbespoke.com" className="text-[var(--accent-orange)] hover:underline">returns@fdlbespoke.com</a></p>
+              <p>Email: <a href="mailto:returns@fdlbespoke.com" className="text-[var(--accent)] hover:underline">returns@fdlbespoke.com</a></p>
               <p className="mt-2">Phone: [Your Phone Number]</p>
               <p className="mt-2">Hours: Monday-Friday, 9am-5pm GMT</p>
             </div>

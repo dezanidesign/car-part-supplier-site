@@ -47,7 +47,7 @@ export default function CartDrawer() {
           {/* HEADER */}
           <div className="flex items-center justify-between p-6 border-b border-white/10">
             <h2 className="text-xl font-display font-bold uppercase tracking-widest text-white flex items-center gap-3">
-              <ShoppingBag size={20} className="text-[#FF4D00]" />
+              <ShoppingBag size={20} className="text-[#D3BF89]" />
               Your Cart
             </h2>
             <button 
@@ -66,7 +66,7 @@ export default function CartDrawer() {
                 <p className="text-gray-500">Your cart is empty.</p>
                 <button 
                   onClick={closeCart}
-                  className="text-[#FF4D00] text-sm font-bold uppercase tracking-widest hover:text-white transition"
+                  className="text-[#D3BF89] text-sm font-bold uppercase tracking-widest hover:text-white transition"
                 >
                   Continue Shopping
                 </button>
@@ -91,7 +91,7 @@ export default function CartDrawer() {
                       <h3 className="text-sm font-bold text-white line-clamp-2 mb-1">
                         {item.name}
                       </h3>
-                      <p className="text-[#FF4D00] text-sm font-bold">
+                      <p className="text-[#D3BF89] text-sm font-bold">
                         {formatPrice(item.price)}
                       </p>
                     </div>
@@ -149,7 +149,7 @@ export default function CartDrawer() {
                 <Link
                   href="/checkout"
                   onClick={closeCart}
-                  className="block w-full bg-[#FF4D00] text-black font-bold text-center uppercase tracking-widest py-4 rounded-full hover:brightness-110 transition"
+                  className="block w-full bg-[#D3BF89] text-black font-bold text-center uppercase tracking-widest py-4 rounded-full hover:brightness-115 transition"
                 >
                   Checkout
                 </Link>

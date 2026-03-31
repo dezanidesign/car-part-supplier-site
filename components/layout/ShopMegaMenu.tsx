@@ -28,7 +28,7 @@ export default function ShopMegaMenu({ onNavigate, className = "" }: Props) {
                   
                   {/* Brand Header */}
                   <div className="flex items-center gap-3 mb-4"> {/* Reduced mb-6 to mb-4 */}
-                    <span className="h-[1px] w-4 bg-[var(--accent-orange)]"></span>
+                    <span className="h-[1px] w-4 bg-[var(--accent)]"></span>
                     <h3 className="font-display text-lg font-bold uppercase tracking-widest text-white">
                       {make.label}
                     </h3>
@@ -60,7 +60,7 @@ export default function ShopMegaMenu({ onNavigate, className = "" }: Props) {
               {/* Header Section */}
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="h-[1px] w-6 bg-[var(--accent-orange)]"></span>
+                  <span className="h-[1px] w-6 bg-[var(--accent)]"></span>
                   <h4 className="text-white font-display font-bold uppercase tracking-widest text-sm">
                     Can't Find It?
                   </h4>
@@ -71,21 +71,21 @@ export default function ShopMegaMenu({ onNavigate, className = "" }: Props) {
               </div>
 
               {/* Services Card */}
-              <div className="bg-[#0a0a0a] border border-white/5 p-6 hover:border-[var(--accent-orange)]/30 transition-all duration-300 group">
-                <p className="text-white text-xs font-bold uppercase tracking-widest mb-4 text-[var(--accent-orange)]">
+              <div className="bg-[#0a0a0a] border border-white/5 p-6 hover:border-[var(--accent)]/30 transition-all duration-300 group">
+                <p className="text-white text-xs font-bold uppercase tracking-widest mb-4 text-[var(--accent)]">
                   Specialist Sourcing
                 </p>
                 <ul className="space-y-3">
                   <li className="flex items-center gap-3 text-gray-400 text-xs group-hover:text-gray-300 transition-colors">
-                    <span className="w-1 h-1 rounded-full bg-[var(--accent-orange)]"></span>
+                    <span className="w-1 h-1 rounded-full bg-[var(--accent)]"></span>
                     <span>OEM Parts</span>
                   </li>
                   <li className="flex items-center gap-3 text-gray-400 text-xs group-hover:text-gray-300 transition-colors">
-                    <span className="w-1 h-1 rounded-full bg-[var(--accent-orange)]"></span>
+                    <span className="w-1 h-1 rounded-full bg-[var(--accent)]"></span>
                     <span>Limited Edition</span>
                   </li>
                   <li className="flex items-center gap-3 text-gray-400 text-xs group-hover:text-gray-300 transition-colors">
-                    <span className="w-1 h-1 rounded-full bg-[var(--accent-orange)]"></span>
+                    <span className="w-1 h-1 rounded-full bg-[var(--accent)]"></span>
                     <span>Bespoke Fabrication</span>
                   </li>
                 </ul>
@@ -96,7 +96,7 @@ export default function ShopMegaMenu({ onNavigate, className = "" }: Props) {
                 <Link
                   href="/contact"
                   onClick={onNavigate}
-                  className="group flex items-center justify-between text-black bg-[var(--accent-orange)] px-6 py-4 hover:bg-white transition-all duration-300 uppercase tracking-widest text-xs font-bold"
+                  className="group flex items-center justify-between text-black bg-[var(--accent)] px-6 py-4 hover:bg-white transition-all duration-300 uppercase tracking-widest text-xs font-bold"
                 >
                   <span>Request Part</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -105,7 +105,7 @@ export default function ShopMegaMenu({ onNavigate, className = "" }: Props) {
                 <Link
                   href="/shop"
                   onClick={onNavigate}
-                  className="group flex items-center justify-between text-white border border-white/20 px-6 py-4 hover:border-[var(--accent-orange)] hover:bg-[var(--accent-orange)]/10 transition-all duration-300 uppercase tracking-widest text-xs font-bold"
+                  className="group flex items-center justify-between text-white border border-white/20 px-6 py-4 hover:border-[var(--accent)] hover:bg-[var(--accent)]/10 transition-all duration-300 uppercase tracking-widest text-xs font-bold"
                 >
                   <span>View All Parts</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

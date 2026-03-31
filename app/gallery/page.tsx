@@ -81,9 +81,9 @@ export default function GalleryPage() {
   }, [lightboxOpen, goToNext, goToPrevious, closeLightbox]);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white selection:bg-[#FF4D00] selection:text-white">
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-[#D3BF89] selection:text-black [--section-bg:#050505]">
       {/* Editorial Hero Section */}
-      <header className="pt-32 pb-12 px-6 md:px-12 max-w-[1920px] mx-auto border-b border-white/5">
+      <header className="pb-12 px-6 md:px-12 max-w-[1920px] mx-auto border-b border-white/5">
         <div
           className={`transition-all duration-1000 transform ${
             isLoaded ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
@@ -91,16 +91,13 @@ export default function GalleryPage() {
         >
           <h1 className="font-display text-6xl md:text-9xl font-bold uppercase tracking-tighter leading-[0.85] mb-6">
             The <br />
-            <span
-              className="text-transparent"
-              style={{ WebkitTextStroke: "1px #FF4D00" }}
-            >
+            <span className="text-outline-accent">
               Archive
             </span>
-            <span className="text-[#FF4D00]">.</span>
+            <span className="text-[#D3BF89]">.</span>
           </h1>
 
-          <p className="text-gray-400 max-w-xl text-lg font-light leading-relaxed border-l-2 border-[#FF4D00] pl-6 mt-8">
+          <p className="text-gray-400 max-w-xl text-lg font-light leading-relaxed border-l-2 border-[#D3BF89] pl-6 mt-8">
             A curated collection of our finest automotive transformations. From full body conversions to bespoke
             interior tailoring.
           </p>
@@ -108,10 +105,10 @@ export default function GalleryPage() {
       </header>
 
       {/* Sticky Glass Filter Bar */}
-      <div className="sticky top-0 z-40 bg-[#050505]/80 backdrop-blur-md border-b border-white/5 py-4 px-6 md:px-12 mb-12">
+      <div className="header-sticky sticky z-40 bg-[#050505]/80 backdrop-blur-md border-b border-white/5 py-4 px-6 md:px-12 mb-12">
         <div className="max-w-[1920px] mx-auto flex items-center justify-between gap-6">
           <div className="flex items-center gap-4 overflow-x-auto no-scrollbar pb-2 md:pb-0">
-            <span className="text-[#FF4D00] mr-2 hidden md:block">
+            <span className="text-[#D3BF89] mr-2 hidden md:block">
               <Filter size={20} />
             </span>
 
@@ -122,7 +119,7 @@ export default function GalleryPage() {
                 className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-[0.2em] transition-all duration-300 whitespace-nowrap
                   ${
                     active === make
-                      ? "bg-[#FF4D00] text-white shadow-[0_0_20px_rgba(255,77,0,0.3)]"
+                      ? "bg-[#D3BF89] text-black shadow-[0_0_25px_rgba(211,191,137,0.4)]"
                       : "bg-white/5 text-gray-400 hover:bg-white hover:text-black hover:scale-105"
                   }`}
               >

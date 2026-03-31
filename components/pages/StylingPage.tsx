@@ -13,10 +13,10 @@ const StylingPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg-dark)] pt-32 pb-12 px-6 md:px-16 animate-in fade-in duration-700 flex flex-col">
+    <div className="min-h-screen bg-[var(--bg-dark)] pb-12 px-6 md:px-16 animate-in fade-in duration-700 flex flex-col">
        <div className="grid lg:grid-cols-12 gap-12 h-full flex-grow">
           <div className="lg:col-span-4 flex flex-col justify-center z-10 pointer-events-none">
-             <span className="text-[var(--accent-orange)] text-xs font-bold uppercase tracking-widest mb-4">Paint & Finish</span>
+             <span className="text-[var(--accent)] text-xs font-bold uppercase tracking-widest mb-4">Paint & Finish</span>
              <h1 className="font-display text-6xl md:text-8xl font-bold uppercase text-white mb-8 leading-none">Bespoke<br/>Finish</h1>
              <p className="text-gray-400 leading-relaxed mb-12 max-w-md pointer-events-auto">
                 Our paint department uses only premium systems like Spies Hecker to deliver finishes with unmatched depth. Whether it's a dramatic colour flip or a subtle OEM respray, we bring your vision to life.
@@ -40,7 +40,7 @@ const StylingPage = () => {
                style={{ filter: filter }}
              />
              <div className="absolute top-6 right-6 flex items-center gap-2 bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-                <Palette size={14} className="text-[var(--accent-orange)]" />
+                <Palette size={14} className="text-[var(--accent)]" />
                 <span className="text-[10px] font-bold uppercase text-white">Interactive Visualiser</span>
              </div>
           </div>

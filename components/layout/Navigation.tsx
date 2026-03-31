@@ -21,6 +21,7 @@ const customisationItems = [
 ];
 
 const mainNavItems = [
+  { href: "/blog", label: "Blog" },
   { href: "/gallery", label: "Gallery" },
   { href: "/info", label: "Info" },
   { href: "/contact", label: "Contact Us" },
@@ -107,7 +108,7 @@ export function Navigation() {
 
   return (
     <nav
-      className={`fixed w-full z-50 px-6 md:px-16 py-6 flex justify-between items-center transition-all duration-500 top-[36px] ${
+      className={`fixed top-[var(--topbar-height)] w-full h-[var(--nav-height)] z-50 px-6 md:px-16 py-6 flex justify-between items-center transition-all duration-500 ${
         scrolled
           ? "bg-black/90 backdrop-blur-md border-b border-white/5"
           : "bg-transparent"
@@ -118,34 +119,24 @@ export function Navigation() {
         <Image
           src="https://fdlbespoke.co.uk/wp-content/uploads/2025/06/cropped-cropped-FDL-UK-Logo-White-Sq.png"
           alt="FDL Bespoke"
-          width={85}
-          height={85}
-          className="h-[70px] w-auto md:h-[85px]"
+          width={110}
+          height={110}
+          className="h-[90px] w-auto md:h-[110px]"
           priority
         />
       </Link>
 
       {/* ======================= DESKTOP MENU ======================= */}
       <div className="hidden lg:flex gap-12 font-medium text-xs tracking-[0.2em] uppercase text-white items-center">
-        {/* Customisation Dropdown */}
-        <div
-          className="relative group h-full flex items-center"
-          onMouseEnter={() => openCustomisation(true)}
-          onMouseLeave={() => openCustomisation(false)}
-        >
-          <button className="hover:text-[var(--accent-orange)] transition-colors font-bold flex items-center gap-1 py-4">
-            CUSTOMISATION <ChevronDown size={12} />
-          </button>
-          <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-4 transition-all duration-300 ${isCustomisationOpen ? "opacity-100 translate-y-0 visible" : "opacity-0 translate-y-4 invisible"}`}>
-            <div className="bg-black border border-white/10 min-w-[260px] flex flex-col shadow-2xl backdrop-blur-xl">
-              {customisationItems.map((item) => (
-                <Link key={item.href} href={item.href} className="px-8 py-5 hover:bg-[var(--accent-orange)] hover:text-white transition-colors border-b border-white/5 last:border-b-0 text-[10px] tracking-widest font-bold uppercase">
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
+        {/* Services Link */}
+        <Link href="/services" className="hover:text-[var(--accent)] transition-colors font-bold py-4">
+          SERVICES
+        </Link>
+
+        {/* Defender Link */}
+        <Link href="/defender" className="hover:text-[var(--accent)] transition-colors font-bold py-4">
+          DEFENDER
+        </Link>
 
         {/* SHOP Dropdown (Desktop Mega Menu) */}
         <div
@@ -153,7 +144,7 @@ export function Navigation() {
           onMouseEnter={() => openShop(true)}
           onMouseLeave={() => openShop(false)}
         >
-          <button className="hover:text-[var(--accent-orange)] transition-colors font-bold flex items-center gap-1 py-4">
+          <button className="hover:text-[var(--accent)] transition-colors font-bold flex items-center gap-1 py-4">
             SHOP <ChevronDown size={12} />
           </button>
           <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-4 transition-all duration-300 ${isShopOpen ? "opacity-100 translate-y-0 visible" : "opacity-0 translate-y-4 invisible"}`}>
@@ -168,7 +159,7 @@ export function Navigation() {
 
         {/* Standard Links */}
         {mainNavItems.map((item) => (
-          <Link key={item.href} href={item.href} className="hover:text-[var(--accent-orange)] transition-colors font-bold">
+          <Link key={item.href} href={item.href} className="hover:text-[var(--accent)] transition-colors font-bold">
             {item.label}
           </Link>
         ))}
@@ -177,9 +168,9 @@ export function Navigation() {
       {/* ======================= ICONS & TOGGLE ======================= */}
       <div className="flex items-center gap-8 relative z-[250]">
         <Link href="/cart" className="relative group">
-          <ShoppingBag className="text-white group-hover:text-[var(--accent-orange)] transition-colors" size={22} />
+          <ShoppingBag className="text-white group-hover:text-[var(--accent)] transition-colors" size={22} />
           {cartItemCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-[var(--accent-orange)] text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold shadow-lg">
+            <span className="absolute -top-2 -right-2 bg-[var(--accent)] text-black text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold shadow-lg">
               {cartItemCount}
             </span>
           )}
@@ -199,14 +190,19 @@ export function Navigation() {
           {/* VIEW 1: MAIN MENU */}
           <div ref={mainMenuRef} className={`flex flex-col gap-6 transition-transform duration-500 absolute inset-0 pt-[120px] px-8 pb-8 overflow-y-auto ${mobileView === 'main' ? "translate-x-0" : "-translate-x-full"}`}>
             
-            {/* Customisation Links */}
+            {/* Services Link */}
             <div className="border-b border-white/10 pb-6">
-               <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-4 block">Customisation</span>
-               {customisationItems.map((item) => (
-                 <Link key={item.href} href={item.href} onClick={() => setIsMenuOpen(false)} className="font-display text-xl uppercase font-bold text-white hover:text-[var(--accent-orange)] block py-2 transition-colors">
-                   {item.label}
-                 </Link>
-               ))}
+               <Link href="/services" onClick={() => setIsMenuOpen(false)} className="font-display text-xl uppercase font-bold text-white hover:text-[var(--accent)] block py-2 transition-colors">
+                 Services
+               </Link>
+            </div>
+
+            {/* Defender Link */}
+            <div className="border-b border-white/10 pb-6">
+               <Link href="/defender" onClick={() => setIsMenuOpen(false)} className="font-display text-xl uppercase font-bold text-white hover:text-[var(--accent)] block py-2 transition-colors flex items-center justify-between">
+                 <span>Defender</span>
+                 <span className="text-[9px] font-mono text-[var(--accent)] bg-[var(--accent)]/10 px-2 py-1 tracking-widest">SPECIALIST</span>
+               </Link>
             </div>
 
             {/* Shop Button (Triggers Slide) */}
@@ -214,17 +210,17 @@ export function Navigation() {
               <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-4 block">Store</span>
               <button 
                 onClick={() => setMobileView('shop')}
-                className="w-full flex items-center justify-between font-display text-xl uppercase font-bold text-white hover:text-[var(--accent-orange)] py-2 group"
+                className="w-full flex items-center justify-between font-display text-xl uppercase font-bold text-white hover:text-[var(--accent)] py-2 group"
               >
                 <span>Shop Parts</span>
-                <ChevronRight size={20} className="text-white/50 group-hover:text-[var(--accent-orange)]" />
+                <ChevronRight size={20} className="text-white/50 group-hover:text-[var(--accent)]" />
               </button>
             </div>
 
             {/* Other Links */}
             <div className="flex flex-col gap-4">
               {mainNavItems.map((item) => (
-                <Link key={item.href} href={item.href} onClick={() => setIsMenuOpen(false)} className="font-display text-xl uppercase font-bold text-white hover:text-[var(--accent-orange)] transition-colors">
+                <Link key={item.href} href={item.href} onClick={() => setIsMenuOpen(false)} className="font-display text-xl uppercase font-bold text-white hover:text-[var(--accent)] transition-colors">
                   {item.label}
                 </Link>
               ))}
@@ -244,7 +240,7 @@ export function Navigation() {
             <div className="flex items-center gap-4 mb-8 border-b border-white/10 pb-4">
               <button 
                 onClick={() => setMobileView('main')}
-                className="flex items-center gap-2 text-[var(--accent-orange)] text-xs font-bold uppercase tracking-widest hover:text-white transition-colors"
+                className="flex items-center gap-2 text-[var(--accent)] text-xs font-bold uppercase tracking-widest hover:text-white transition-colors"
               >
                 <ChevronLeft size={14} /> Back
               </button>
@@ -263,12 +259,12 @@ export function Navigation() {
                  <div key={make.slug} className="border-b border-white/10">
                    <button 
                      onClick={() => toggleBrand(make.slug)}
-                     className="w-full py-4 flex items-center justify-between text-white hover:text-[var(--accent-orange)] transition-colors"
+                     className="w-full py-4 flex items-center justify-between text-white hover:text-[var(--accent)] transition-colors"
                    >
                      <span className="font-display font-bold uppercase tracking-wider">{make.label}</span>
                      <ChevronDown 
                        size={16} 
-                       className={`transition-transform duration-300 ${expandedBrand === make.slug ? "rotate-180 text-[var(--accent-orange)]" : "text-white/50"}`} 
+                       className={`transition-transform duration-300 ${expandedBrand === make.slug ? "rotate-180 text-[var(--accent)]" : "text-white/50"}`} 
                      />
                    </button>
                    

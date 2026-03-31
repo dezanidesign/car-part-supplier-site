@@ -1,12 +1,27 @@
 import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
 
+const WOO_BASE_URL =
+  process.env.WOOCOMMERCE_URL ||
+  process.env.WORDPRESS_URL ||
+  process.env.WP_URL ||
+  process.env.NEXT_PUBLIC_WOOCOMMERCE_URL ||
+  "";
+const WOO_CONSUMER_KEY =
+  process.env.WC_CONSUMER_KEY || process.env.WOOCOMMERCE_CONSUMER_KEY || "";
+const WOO_CONSUMER_SECRET =
+  process.env.WC_CONSUMER_SECRET || process.env.WOOCOMMERCE_CONSUMER_SECRET || "";
+
 // Server-side only client (uses secrets - never expose to client)
 export const wooApi = new WooCommerceRestApi({
-  url: process.env.WOOCOMMERCE_URL!,
-  consumerKey: process.env.WOOCOMMERCE_CONSUMER_KEY!,
-  consumerSecret: process.env.WOOCOMMERCE_CONSUMER_SECRET!,
+  url: WOO_BASE_URL,
+  consumerKey: WOO_CONSUMER_KEY,
+  consumerSecret: WOO_CONSUMER_SECRET,
   version: "wc/v3",
 });
+
+if (!WOO_BASE_URL || !WOO_CONSUMER_KEY || !WOO_CONSUMER_SECRET) {
+  console.warn("WooCommerce admin credentials missing. Server-side product writes may fail.");
+}
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -180,7 +195,8 @@ export interface GetProductsParams {
   search?: string;
   category?: number | string;
   tag?: number | string;
-  status?: "publish" | "draft" | "pending" | "private";
+  type?: "simple" | "variable" | "grouped" | "external";
+  status?: "publish" | "draft" | "pending" | "private" | "any";
   featured?: boolean;
   on_sale?: boolean;
   min_price?: string;
@@ -220,6 +236,84 @@ export async function getProductById(id: number): Promise<WooProduct> {
   return data;
 }
 
+export async function getAdminProducts(params: GetProductsParams = {}): Promise<{
+  products: WooProduct[];
+  totalPages: number;
+  totalProducts: number;
+}> {
+  const response = await wooApi.get("products", {
+    per_page: 20,
+    page: 1,
+    orderby: "date",
+    order: "desc",
+    status: "any",
+    type: "simple",
+    ...params,
+  });
+
+  return {
+    products: response.data,
+    totalPages: parseInt(response.headers["x-wp-totalpages"] || "1"),
+    totalProducts: parseInt(response.headers["x-wp-total"] || "0"),
+  };
+}
+
+export async function getAdminProductById(id: number): Promise<WooProduct> {
+  const { data } = await wooApi.get(`products/${id}`);
+  return data;
+}
+
+export async function getAdminProductCategories(): Promise<WooCategory[]> {
+  const { data } = await wooApi.get("products/categories", {
+    per_page: 100,
+    hide_empty: false,
+    orderby: "name",
+    order: "asc",
+  });
+
+  return data;
+}
+
+export type AdminWooProductUpsert = {
+  name: string;
+  type: "simple";
+  regular_price: string;
+  sale_price?: string;
+  description: string;
+  short_description: string;
+  status: "publish" | "draft";
+  categories: Array<{ id: number }>;
+  images: Array<{ src: string }>;
+};
+
+export async function createAdminProduct(
+  payload: AdminWooProductUpsert,
+): Promise<WooProduct> {
+  const { data } = await wooApi.post("products", payload);
+  return data;
+}
+
+export async function updateAdminProduct(
+  id: number,
+  payload: AdminWooProductUpsert,
+): Promise<WooProduct> {
+  const { data } = await wooApi.put(`products/${id}`, payload);
+  return data;
+}
+
+export async function updateAdminProductStatus(
+  id: number,
+  status: "publish" | "draft",
+): Promise<WooProduct> {
+  const { data } = await wooApi.put(`products/${id}`, { status });
+  return data;
+}
+
+export async function trashAdminProduct(id: number): Promise<WooProduct> {
+  const { data } = await wooApi.delete(`products/${id}`, { force: false });
+  return data;
+}
+
 export async function getProductVariations(productId: number): Promise<WooVariation[]> {
   const { data } = await wooApi.get(`products/${productId}/variations`, {
     per_page: 100,
@@ -244,6 +338,45 @@ export async function getCategories(): Promise<WooCategory[]> {
 export async function getCategoryBySlug(slug: string): Promise<WooCategory | null> {
   const { data } = await wooApi.get("products/categories", { slug });
   return data[0] || null;
+}
+
+export function getWooErrorMessage(error: unknown): string {
+  if (error && typeof error === "object") {
+    const maybeResponse = error as {
+      response?: {
+        data?: {
+          message?: string;
+        };
+      };
+      message?: string;
+    };
+
+    if (maybeResponse.response?.data?.message) {
+      return maybeResponse.response.data.message;
+    }
+
+    if (maybeResponse.message) {
+      return maybeResponse.message;
+    }
+  }
+
+  return "WooCommerce request failed";
+}
+
+export function getWooErrorStatus(error: unknown): number {
+  if (error && typeof error === "object") {
+    const maybeResponse = error as {
+      response?: {
+        status?: number;
+      };
+    };
+
+    if (typeof maybeResponse.response?.status === "number") {
+      return maybeResponse.response.status;
+    }
+  }
+
+  return 500;
 }
 
 // ============================================================================

@@ -1,37 +1,80 @@
 'use client';
 
-const ContactPage = () => (
-  <div className="min-h-screen bg-[var(--bg-dark)] pt-32 pb-24 px-6 md:px-16">
-    <section className="py-24 md:py-32 px-6 md:px-16 bg-[#080808]">
-       <div className="max-w-4xl mx-auto text-center mb-16">
-          <h2 className="font-display text-4xl md:text-6xl font-bold uppercase text-white mb-6">Quote <span className="text-transparent" style={{ WebkitTextStroke: '1px white'}}>Request</span></h2>
-       </div>
+import React from 'react';
+import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import QuoteForm from '../forms/QuoteForm';
 
-       <div className="max-w-3xl mx-auto bg-[var(--bg-card)] p-8 md:p-12 border border-white/5">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-             <div className="group">
-                <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Make</label>
-                <input type="text" className="w-full bg-transparent border-b border-white/10 py-3 text-white focus:outline-none focus:border-[var(--accent-orange)] text-lg transition-colors" placeholder="e.g. Range Rover" />
-             </div>
-             <div className="group">
-                <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Model</label>
-                <input type="text" className="w-full bg-transparent border-b border-white/10 py-3 text-white focus:outline-none focus:border-[var(--accent-orange)] text-lg transition-colors" placeholder="Sport SVR" />
-             </div>
+const ContactPage = () => (
+  <div className="min-h-screen bg-[var(--bg-dark)] pb-24 px-6 md:px-16 animate-in fade-in duration-700 [--section-bg:var(--bg-dark)]">
+    <div className="max-w-[1920px] mx-auto">
+      {/* Header */}
+      <div className="mb-16 md:mb-24">
+        <span className="text-[var(--accent)] text-xs font-bold uppercase tracking-widest mb-4 block">Get In Touch</span>
+        <h1 className="font-display text-5xl md:text-8xl font-bold uppercase text-white leading-[0.9] mb-6">
+          Contact <span className="text-outline-accent">Us</span>
+        </h1>
+      </div>
+
+      <div className="grid lg:grid-cols-5 gap-12 lg:gap-24">
+        {/* Left: Business Info */}
+        <div className="lg:col-span-2">
+          <div className="header-sticky-gap space-y-10 lg:sticky">
+            <div>
+              <h3 className="font-display text-2xl text-white font-bold uppercase mb-6">Visit Us</h3>
+              <div className="space-y-5">
+                <div className="flex items-start gap-4">
+                  <MapPin size={18} className="text-[var(--accent)] mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-white text-sm font-bold">Unit C3, 511 Bradford Rd</p>
+                    <p className="text-gray-400 text-sm">Batley, WF17 8LL</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <Phone size={18} className="text-[var(--accent)] flex-shrink-0" />
+                  <a href="tel:07869022673" className="text-white text-sm font-bold hover:text-[var(--accent)] transition-colors">
+                    07869 022673
+                  </a>
+                </div>
+                <div className="flex items-center gap-4">
+                  <Mail size={18} className="text-[var(--accent)] flex-shrink-0" />
+                  <a href="mailto:info@fdlbespoke.co.uk" className="text-white text-sm font-bold hover:text-[var(--accent)] transition-colors">
+                    info@fdlbespoke.co.uk
+                  </a>
+                </div>
+                <div className="flex items-center gap-4">
+                  <Clock size={18} className="text-[var(--accent)] flex-shrink-0" />
+                  <span className="text-gray-400 text-sm">Thu - Sat: 10am - Close</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t border-white/10 pt-8">
+              <h3 className="font-display text-lg text-white font-bold uppercase mb-4">Follow Us</h3>
+              <div className="flex gap-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                <a href="https://www.instagram.com/fdlbespoke" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--accent)] transition-colors">
+                  Instagram
+                </a>
+                <a href="https://www.facebook.com/fdlbespoke" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--accent)] transition-colors">
+                  Facebook
+                </a>
+                <a href="https://www.tiktok.com/@fdlbespoke" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--accent)] transition-colors">
+                  TikTok
+                </a>
+              </div>
+            </div>
           </div>
-          <div className="mb-12">
-             <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Requirement</label>
-             <select className="w-full bg-transparent border-b border-white/10 py-3 text-white focus:outline-none focus:border-[var(--accent-orange)] text-lg">
-                <option className="bg-black">Full Body Kit Installation</option>
-                <option className="bg-black">Carbon Fibre Enhancement</option>
-                <option className="bg-black">Alloy Wheel Upgrade</option>
-                <option className="bg-black">Vehicle Wrapping</option>
-             </select>
+        </div>
+
+        {/* Right: Quote Form */}
+        <div className="lg:col-span-3">
+          <div className="bg-[var(--bg-card)] p-6 md:p-12 border border-white/5">
+            <h2 className="font-display text-2xl md:text-3xl font-bold uppercase text-white mb-2">Quote Request</h2>
+            <p className="text-gray-500 text-sm mb-8">Fill in the details below and we&apos;ll get back to you with a custom quote.</p>
+            <QuoteForm />
           </div>
-          <button className="w-full bg-white text-black py-5 font-bold uppercase tracking-widest text-xs hover:bg-[var(--accent-orange)] hover:text-white transition-all duration-300">
-             Submit Inquiry
-          </button>
-       </div>
-    </section>
+        </div>
+      </div>
+    </div>
   </div>
 );
 

@@ -19,7 +19,7 @@ export default function CartPage() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-black text-white px-6 py-10">
+      <div className="min-h-screen bg-black text-white px-6 pb-10">
         <div className="max-w-5xl mx-auto">
           <h1 className="text-xl font-bold uppercase tracking-widest">Cart</h1>
           <p className="text-gray-400 mt-6">Loading...</p>
@@ -33,7 +33,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white px-6 py-10">
+    <div className="min-h-screen bg-black text-white px-6 pb-10">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-xl font-bold uppercase tracking-widest">Cart</h1>
 
@@ -94,7 +94,7 @@ export default function CartPage() {
                 Clear cart
               </button>
               <button
-                className="bg-[var(--accent-orange)] text-white px-5 py-2 text-xs font-bold uppercase tracking-widest"
+                className="bg-[var(--accent)] text-black px-5 py-2 text-xs font-bold uppercase tracking-widest"
                 onClick={goCheckout}
               >
                 Checkout

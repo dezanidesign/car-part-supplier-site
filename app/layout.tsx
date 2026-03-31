@@ -107,18 +107,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* <CustomCursor /> */}
         <div className="noise" aria-hidden="true" />
 
-        <TopBar />
-        <Navigation />
+        <div className="site-chrome-top">
+          <TopBar />
+          <Navigation />
+        </div>
 
-        <main className="flex-grow">{children}</main>
+        <main className="site-main flex-grow pt-48 md:pt-52">{children}</main>
 
-        <Footer />
-
-        {/* CART DRAWER ADDED HERE */}
-        <CartDrawer />
-
-        {/* NEWSLETTER POPUP */}
-        <NewsletterPopup /> 
+        <div className="site-chrome-bottom">
+          <Footer />
+          <CartDrawer />
+          <NewsletterPopup />
+        </div> 
 
         <script
           type="application/ld+json"

@@ -22,7 +22,7 @@ export default function AddToCartBtn({ product }: { product: WooProduct }) {
   return (
     <button
       onClick={handleAddToCart}
-      className="flex-1 bg-[#FF4D00] text-black font-bold uppercase tracking-[0.2em] py-4 px-8 rounded-full hover:brightness-110 transition active:scale-95"
+      className="flex-1 bg-[#D3BF89] text-black font-bold uppercase tracking-[0.2em] py-4 px-8 rounded-full hover:brightness-115 transition active:scale-95"
     >
       Add to Cart
     </button>

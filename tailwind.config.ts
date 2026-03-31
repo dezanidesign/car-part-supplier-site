@@ -16,8 +16,8 @@ const config: Config = {
       // ========================================================================
       colors: {
         brand: {
-          orange: "#FF4D00",
-          "orange-hover": "#ff6b2b",
+          accent: "#D3BF89",
+          "accent-hover": "#DEC99A",
         },
         dark: {
           bg: "#050505",
@@ -126,9 +126,9 @@ const config: Config = {
           color: "transparent",
           "-webkit-text-stroke": "1px rgba(255,255,255,0.8)",
         },
-        ".text-stroke-orange": {
+        ".text-stroke-accent": {
           color: "transparent",
-          "-webkit-text-stroke": "1px #FF4D00",
+          "-webkit-text-stroke": "1px #D3BF89",
         },
       });
     }),

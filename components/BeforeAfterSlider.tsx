@@ -96,15 +96,15 @@ export default function BeforeAfterSlider({
         style={{ left: `${sliderPosition}%` }}
       >
         {/* Slider Handle */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-white rounded-full shadow-lg flex items-center justify-center border-4 border-[var(--accent-orange)] cursor-ew-resize group-hover:scale-110 transition-transform">
-          <MoveHorizontal size={24} className="text-[var(--accent-orange)]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-white rounded-full shadow-lg flex items-center justify-center border-4 border-[var(--accent)] cursor-ew-resize group-hover:scale-110 transition-transform">
+          <MoveHorizontal size={24} className="text-[var(--accent)]" />
         </div>
       </div>
 
       {/* Instruction hint */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20 opacity-0 group-hover:opacity-100 transition-opacity">
         <span className="text-white text-xs font-bold uppercase tracking-widest flex items-center gap-2">
-          <MoveHorizontal size={14} className="text-[var(--accent-orange)]" />
+          <MoveHorizontal size={14} className="text-[var(--accent)]" />
           Drag to Compare
         </span>
       </div>

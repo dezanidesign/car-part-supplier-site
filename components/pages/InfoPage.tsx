@@ -4,30 +4,30 @@ import { MapPin, Phone, Clock, Target, PenTool, Briefcase, Settings } from 'luci
 
 const InfoPage = () => {
   return (
-    <div className="pt-32 pb-24 px-6 md:px-16 min-h-screen bg-[var(--bg-dark)]">
+    <div className="pb-24 px-6 md:px-16 min-h-screen bg-[var(--bg-dark)] [--section-bg:var(--bg-dark)]">
       {/* Hero */}
       <div className="max-w-[1920px] mx-auto mb-32">
          <h1 className="font-display text-5xl md:text-8xl font-bold uppercase text-white leading-[0.9] mb-12 animate-in slide-in-from-bottom-8 duration-700">
-            The Pursuit of <br/> <span className="text-transparent" style={{ WebkitTextStroke: '1px var(--accent-orange)'}}>Perfection.</span>
+            The Pursuit of <br/> <span className="text-outline-accent">Perfection.</span>
          </h1>
          <div className="grid md:grid-cols-2 gap-16 animate-in slide-in-from-bottom-8 duration-700 delay-150">
             <div className="md:col-start-2">
                <div className="space-y-8">
-                 <p className="text-xl text-gray-300 leading-relaxed font-light border-l-2 border-[var(--accent-orange)] pl-6">
+                 <p className="text-xl text-gray-300 leading-relaxed font-light border-l-2 border-[var(--accent)] pl-6">
                     "Automotive Styling Solutions. We specialise in Bodykit Transformations, Carbon Fibre Packages, Alloy Wheel Refurbishment, and Diamond Cutting Services."
                  </p>
                  <p className="text-gray-400">
                     Our expertise extends to Vehicle Wrapping, Dechroming, Window Tinting, and Vehicle Graphics. We are Accredited PPF Installers and certified fitters of Ghost Immobilisers and Tracking Systems.
                  </p>
                  <div className="flex flex-col gap-4 text-sm font-bold uppercase tracking-widest text-white mt-8">
-                    <span className="flex items-center gap-3 group hover:text-[var(--accent-orange)] transition-colors cursor-pointer">
-                        <MapPin size={20} className="text-[var(--accent-orange)]"/> Unit C3, 511 Bradford Rd, Batley WF17 8LL
+                    <span className="flex items-center gap-3 group hover:text-[var(--accent)] transition-colors cursor-pointer">
+                        <MapPin size={20} className="text-[var(--accent)]"/> Unit C3, 511 Bradford Rd, Batley WF17 8LL
                     </span>
-                    <span className="flex items-center gap-3 group hover:text-[var(--accent-orange)] transition-colors cursor-pointer">
-                        <Phone size={20} className="text-[var(--accent-orange)]"/> 07869 022673
+                    <span className="flex items-center gap-3 group hover:text-[var(--accent)] transition-colors cursor-pointer">
+                        <Phone size={20} className="text-[var(--accent)]"/> 07869 022673
                     </span>
                     <span className="flex items-center gap-3">
-                        <Clock size={20} className="text-[var(--accent-orange)]"/> Open Thu-Sat 10am - Close
+                        <Clock size={20} className="text-[var(--accent)]"/> Open Thu-Sat 10am - Close
                     </span>
                  </div>
                </div>
@@ -44,7 +44,7 @@ const InfoPage = () => {
       {/* Philosophy Grid */}
       <div className="max-w-[1920px] mx-auto grid md:grid-cols-2 gap-24 mb-32">
          <div>
-            <h3 className="text-[var(--accent-orange)] font-bold uppercase tracking-widest text-xs mb-6 flex items-center"><Target size={16} className="mr-2"/> Our Philosophy</h3>
+            <h3 className="text-[var(--accent)] font-bold uppercase tracking-widest text-xs mb-6 flex items-center"><Target size={16} className="mr-2"/> Our Philosophy</h3>
             <h2 className="font-display text-4xl text-white font-bold uppercase mb-8">No Compromise. <br/>Ever.</h2>
             <p className="text-gray-400 leading-relaxed mb-8">
                In a world of mass production, true luxury is rarity. Our workshop in Batley is dedicated to the art of individualisation. From hand-laid carbon fibre to precision ECU calibration, every bolt turned and every stitch sewn is done with an obsession for detail that borders on the fanatical.
@@ -71,7 +71,7 @@ const InfoPage = () => {
       {/* The Process */}
       <div className="max-w-[1920px] mx-auto border-t border-white/10 pt-24">
          <div className="flex justify-between items-end mb-16">
-            <h2 className="font-display text-4xl text-white font-bold uppercase">The <span className="text-[var(--accent-orange)]">Standard</span></h2>
+            <h2 className="font-display text-4xl text-white font-bold uppercase">The <span className="text-[var(--accent)]">Standard</span></h2>
          </div>
          <div className="grid md:grid-cols-3 gap-0 border border-white/10">
             {[
@@ -81,7 +81,7 @@ const InfoPage = () => {
             ].map((step, i) => (
                <div key={i} className="p-12 border-r border-white/10 last:border-r-0 hover:bg-[#0a0a0a] transition-colors group">
                   <div className="flex justify-between items-start mb-6">
-                     <span className="text-[var(--accent-orange)] font-mono text-sm">/{step.num}</span>
+                     <span className="text-[var(--accent)] font-mono text-sm">/{step.num}</span>
                      <step.icon className="text-gray-600 group-hover:text-white transition-colors" size={24}/>
                   </div>
                   <h3 className="font-display text-2xl text-white font-bold uppercase mb-4">{step.title}</h3>

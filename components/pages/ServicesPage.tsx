@@ -16,6 +16,7 @@ import {
   ChevronDown,
   CheckCircle,
 } from 'lucide-react';
+import { SERVICE_MEDIA } from '@/lib/curatedMedia';
 
 // ============================================================================
 // SERVICE DATA
@@ -34,7 +35,7 @@ const SERVICES = [
       { name: 'Carbon Fibre', desc: 'Genuine carbon fibre components — bonnets, mirrors, spoilers, and trim.' },
       { name: 'Facelift Conversions', desc: 'Factory-level upgrades to bring your vehicle up to latest-model specification.' },
     ],
-    image: '/gallery/land-rover/5B1A1215.jpg',
+    image: SERVICE_MEDIA.bodykits.src,
   },
   {
     id: 'alloy-refurb',
@@ -48,7 +49,7 @@ const SERVICES = [
       { name: 'Custom Coatings', desc: 'Bespoke colour matching and multi-tone finishes.' },
       { name: 'Buckles & Welding Repairs', desc: 'Structural repairs including buckle straightening and alloy welding.' },
     ],
-    image: '/gallery/range-rover/5B1A4836.jpg',
+    image: SERVICE_MEDIA["alloy-refurb"].src,
   },
   {
     id: 'privacy-glass',
@@ -60,7 +61,7 @@ const SERVICES = [
       { name: 'Window Tints', desc: 'Automotive tinting in a range of shades from light to limo black.' },
       { name: 'Commercial Tinting', desc: 'Building and office window films for privacy, heat reduction, and branding.' },
     ],
-    image: '/gallery/bmw/5B1A8485.jpg',
+    image: SERVICE_MEDIA["privacy-glass"].src,
     faq: [
       { q: 'Is window tinting legal in the UK?', a: 'Front windscreen must allow 75% light through, front sides 70%. Rear windows have no restriction. We ensure all tints meet legal requirements.' },
       { q: 'How long does tinting take?', a: 'A full vehicle typically takes 2-4 hours. We remove panels for a flawless finish with no visible edges.' },
@@ -78,7 +79,7 @@ const SERVICES = [
       { name: 'Headlight Tinting', desc: 'Light smoke to medium tint options that maintain brightness and legality.' },
       { name: 'Taillight Tinting', desc: 'Full blackout or tinted finishes for a sleek, murdered-out aesthetic.' },
     ],
-    image: '/gallery/bmw/5B1A9735.jpg',
+    image: SERVICE_MEDIA["light-tinting"].src,
   },
   {
     id: 'wrapping',
@@ -92,7 +93,7 @@ const SERVICES = [
       { name: 'Dechroming', desc: 'Black-out or colour-match chrome trim for a cleaner, modern aesthetic.' },
       { name: 'Fleet Branding', desc: 'Commercial vehicle livery and fleet graphics for businesses.' },
     ],
-    image: '/gallery/range-rover/5B1A4837.jpg',
+    image: SERVICE_MEDIA.wrapping.src,
   },
   {
     id: 'detailing-ppf',
@@ -104,7 +105,7 @@ const SERVICES = [
       { name: 'Ceramic Coatings', desc: 'Multi-layer ceramic protection for paint, wheels, and glass. Hydrophobic and UV resistant.' },
       { name: 'Paint Protection Film', desc: 'Self-healing PPF applied to high-impact areas or full vehicle coverage.' },
     ],
-    image: '/gallery/audi/5B1A3705.jpg',
+    image: SERVICE_MEDIA["detailing-ppf"].src,
   },
   {
     id: 'security',
@@ -119,7 +120,7 @@ const SERVICES = [
       { name: 'Dashcams', desc: 'Front and rear dashcam installation with hardwired parking mode.' },
       { name: 'Reverse Cameras & Sensors', desc: 'OEM-style reversing cameras and parking sensors fitted to any vehicle.' },
     ],
-    image: '/gallery/bmw/5B1A9745.jpg',
+    image: SERVICE_MEDIA.security.src,
   },
   {
     id: 'accident-repair',
@@ -132,7 +133,7 @@ const SERVICES = [
       { name: 'Panel Repair & Replacement', desc: 'Dent removal, panel beating, and full panel replacement.' },
       { name: 'Paint Refinishing', desc: 'Colour-matched resprays using Spies Hecker premium paint systems.' },
     ],
-    image: '/gallery/land-rover/5B1A6489.jpg',
+    image: SERVICE_MEDIA["accident-repair"].src,
     badge: 'Insurance Approved',
   },
   {
@@ -146,7 +147,7 @@ const SERVICES = [
       { name: 'Wheel Spacers', desc: 'Precision hub-centric spacers for wider stance and improved fitment.' },
       { name: 'TPMS Sensors', desc: 'OEM tyre pressure monitoring sensors programmed and fitted.' },
     ],
-    image: '/gallery/range-rover/5B1A4865.jpg',
+    image: SERVICE_MEDIA["alloy-packages"].src,
   },
 ];
 

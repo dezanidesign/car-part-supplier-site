@@ -1,5 +1,6 @@
 import { prisma } from "./prisma";
-import type { PostStatus } from "@prisma/client";
+
+type PostStatus = "DRAFT" | "PUBLISHED";
 
 function slugify(text: string): string {
   return text

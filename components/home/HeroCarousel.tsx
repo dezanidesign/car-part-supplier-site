@@ -3,25 +3,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { ShoppingBag, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { HOME_HERO_MEDIA } from '@/lib/curatedMedia';
 
-const CAROUSEL_IMAGES = [
-  {
-    src: "/gallery/homeSlide/defender1.jpg",
-    alt: "FDL Bespoke Defender detailing showcase",
-  },
-  {
-    src: "/gallery/homeSlide/bmw2.jpg",
-    alt: "FDL Bespoke BMW detailing showcase",
-  },
-  {
-    src: "/gallery/homeSlide/audi3.jpg",
-    alt: "FDL Bespoke Audi detailing showcase",
-  },
-  {
-    src: "/gallery/homeSlide/lambo4.jpg",
-    alt: "FDL Bespoke Lamborghini detailing showcase",
-  },
-];
+const CAROUSEL_IMAGES = HOME_HERO_MEDIA.map((item) => ({
+  src: item.src,
+  alt: item.title,
+}));
 
 export default function HeroCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);

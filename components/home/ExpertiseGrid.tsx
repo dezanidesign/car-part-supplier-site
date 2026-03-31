@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Wrench, Shield, RefreshCw, ArrowRight } from 'lucide-react';
+import { HOME_EXPERTISE_MEDIA } from '@/lib/curatedMedia';
 
 const EXPERTISE_ITEMS = [
   {
@@ -59,8 +60,8 @@ export default function ExpertiseGrid() {
         {/* Row 2: Full-width DEFENDER showcase */}
         <div className="relative overflow-hidden min-h-[320px] md:min-h-[500px] border border-white/5 group">
           <img
-            src="/gallery/land-rover/5B1A6489.jpg"
-            alt="Land Rover Defender"
+            src={HOME_EXPERTISE_MEDIA.src}
+            alt={HOME_EXPERTISE_MEDIA.title}
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />

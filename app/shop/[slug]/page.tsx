@@ -3,6 +3,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { getCategoryMeta } from "@/lib/shopCategories";
 import { fetchProductsByCategorySlug } from "@/lib/woo";
+import { getShopCategoryMedia } from "@/lib/curatedMedia";
 import type { WooProduct } from "@/lib/woo";
 
 // Generate dynamic metadata for SEO
@@ -76,6 +77,7 @@ export default async function ShopCategoryPage({
 
   // Fetch products server-side
   const products = await fetchProductsByCategorySlug(params.slug);
+  const curatedMedia = getShopCategoryMedia(params.slug);
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
@@ -104,6 +106,78 @@ export default async function ShopCategoryPage({
             </p>
           </div>
         </div>
+
+        {curatedMedia.length > 0 && (
+          <div className="mt-12 md:mt-14">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 mb-6">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#D3BF89] mb-2">
+                  Project Media
+                </p>
+                <h2 className="font-display text-2xl md:text-4xl font-bold uppercase leading-tight">
+                  Recent {meta.label} Work
+                </h2>
+              </div>
+              <p className="text-gray-500 text-sm max-w-md leading-relaxed">
+                Curated stills and clips from our latest {meta.brandLabel} content library, chosen to match this model and nearby build themes.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+              <div className="md:col-span-7 border border-white/10 overflow-hidden bg-white/5">
+                {curatedMedia[0].type === "video" ? (
+                  <video
+                    className="w-full aspect-[16/10] object-cover"
+                    src={curatedMedia[0].src}
+                    poster={curatedMedia[0].poster}
+                    muted
+                    playsInline
+                    loop
+                    autoPlay
+                    preload="metadata"
+                  />
+                ) : (
+                  <img
+                    src={curatedMedia[0].src}
+                    alt={curatedMedia[0].title}
+                    className="w-full aspect-[16/10] object-cover"
+                  />
+                )}
+              </div>
+
+              <div className="md:col-span-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
+                {curatedMedia.slice(1).map((item) => (
+                  <div key={item.id} className="border border-white/10 overflow-hidden bg-white/5">
+                    {item.type === "video" ? (
+                      <video
+                        className="w-full aspect-[16/10] object-cover"
+                        src={item.src}
+                        poster={item.poster}
+                        muted
+                        playsInline
+                        loop
+                        autoPlay
+                        preload="metadata"
+                      />
+                    ) : (
+                      <img
+                        src={item.src}
+                        alt={item.title}
+                        className="w-full aspect-[16/10] object-cover"
+                      />
+                    )}
+                    <div className="p-4 border-t border-white/10">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#D3BF89] mb-2">
+                        {item.projectLabel}
+                      </p>
+                      <p className="text-white text-sm font-medium leading-snug">{item.title}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* PRODUCTS */}
         <div className="mt-14">

@@ -2,62 +2,97 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Wrench, Shield, RefreshCw, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { HOME_EXPERTISE_MEDIA } from '@/lib/curatedMedia';
+import { HOME_SERVICE_TILES } from '@/lib/serviceContent';
+import { CONVERSION_COPY } from '@/lib/siteContent';
 
-const EXPERTISE_ITEMS = [
-  {
-    icon: Wrench,
-    title: "Bespoke Conversions",
-    desc: "Full vehicle transformations tailored to your exact specification — bodykits, carbon fibre, and complete builds."
-  },
-  {
-    icon: Shield,
-    title: "Vehicle Security",
-    desc: "Ghost immobilisers, tracking systems, dashcams, and reverse cameras to protect your investment."
-  },
-  {
-    icon: RefreshCw,
-    title: "Facelift Conversions",
-    desc: "Factory-level facelift upgrades that bring your vehicle up to the latest model specification."
-  }
-];
+function ServiceTile({ tile }: { tile: (typeof HOME_SERVICE_TILES)[number] }) {
+  return (
+    <Link
+      href={tile.href}
+      className="group relative border border-white/5 min-h-[320px] md:min-h-[420px] overflow-hidden"
+    >
+      <div className="absolute inset-0 bg-black">
+        {tile.media.type === 'video' ? (
+          <video
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            src={tile.media.src}
+            poster={tile.media.poster}
+            muted
+            playsInline
+            loop
+            autoPlay
+            preload="metadata"
+          />
+        ) : (
+          <img
+            src={tile.media.src}
+            alt={tile.title}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            loading="lazy"
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
+      </div>
+
+      <div className="relative z-10 h-full p-6 md:p-8 flex flex-col justify-end">
+        {tile.chips && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {tile.chips.map((chip) => (
+              <span
+                key={chip}
+                className="border border-white/15 bg-black/35 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.22em] text-white/85"
+              >
+                {chip}
+              </span>
+            ))}
+          </div>
+        )}
+
+        <h3 className="font-display text-2xl md:text-3xl font-bold uppercase text-white mb-3 leading-[0.95]">
+          {tile.title}
+        </h3>
+        <p className="text-gray-300 text-sm leading-relaxed mb-5 max-w-sm">
+          {tile.description}
+        </p>
+        <span className="inline-flex items-center gap-3 text-[var(--accent)] text-[10px] font-bold uppercase tracking-[0.22em]">
+          <span>{CONVERSION_COPY.likeWhatYouSee}</span>
+          <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+        </span>
+      </div>
+    </Link>
+  );
+}
 
 export default function ExpertiseGrid() {
   return (
     <section className="py-16 md:py-32 px-6 md:px-16 bg-[var(--bg-dark)] [--section-bg:var(--bg-dark)]">
       <div className="max-w-[1920px] mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-20 border-b border-white/10 pb-6 md:pb-8">
-          <h2 className="font-display text-3xl md:text-5xl font-bold uppercase text-white mb-3 md:mb-0">
-            Our <span className="text-outline-strong">Expertise</span>
-          </h2>
-          <p className="text-gray-500 font-bold uppercase text-[10px] md:text-xs tracking-widest max-w-xs md:text-right">
-            Precision engineering for the exceptional.
-          </p>
+          <div>
+            <h2 className="font-display text-3xl md:text-5xl font-bold uppercase text-white mb-3 md:mb-0">
+              Our <span className="text-outline-strong">Expertise</span>
+            </h2>
+            <p className="text-gray-500 font-bold uppercase text-[10px] md:text-xs tracking-widest mt-3 max-w-sm">
+              Visual entry points into the work people ask for most.
+            </p>
+          </div>
+          <Link
+            href="/services"
+            className="mt-6 md:mt-0 inline-flex items-center gap-3 text-[var(--accent)] text-[10px] font-bold uppercase tracking-[0.22em] hover:text-white transition-colors"
+          >
+            <span>View Services</span>
+            <ArrowRight size={12} />
+          </Link>
         </div>
 
-        {/* Row 1: 3 equal cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mb-4 md:mb-8">
-          {EXPERTISE_ITEMS.map((s, i) => (
-            <div
-              key={i}
-              className="group border border-white/5 p-6 md:p-10 min-h-[240px] md:min-h-[340px] flex flex-col justify-between hover:bg-[#111] transition-all duration-500 hover:border-white/20"
-            >
-              <div className="flex justify-between items-start">
-                <span className="font-mono text-xs font-bold bg-white text-black px-2 py-1">0{i + 1}</span>
-                <s.icon className="w-6 h-6 md:w-8 md:h-8 text-gray-500 group-hover:text-[var(--accent)] transition-colors" />
-              </div>
-              <div>
-                <h3 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 md:mb-4 text-white group-hover:text-[var(--accent)] transition-colors">
-                  {s.title}
-                </h3>
-                <p className="text-xs md:text-sm text-gray-400 leading-relaxed">{s.desc}</p>
-              </div>
-            </div>
+          {HOME_SERVICE_TILES.map((tile) => (
+            <ServiceTile key={tile.key} tile={tile} />
           ))}
         </div>
 
-        {/* Row 2: Full-width DEFENDER showcase */}
         <div className="relative overflow-hidden min-h-[320px] md:min-h-[500px] border border-white/5 group">
           <img
             src={HOME_EXPERTISE_MEDIA.src}

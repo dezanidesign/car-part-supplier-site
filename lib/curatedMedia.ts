@@ -617,6 +617,19 @@ const CURATED_MEDIA_ITEMS: CuratedMediaItem[] = [
     featuredArea: ["gallery"],
   },
   {
+    id: "collection-delivery",
+    type: "video",
+    src: "/media/fdl/misc/collection-delivery.m4v",
+    poster: "/media/fdl/branding/amarok-01.jpg",
+    brand: "branding",
+    brandLabel: "FDL Bespoke",
+    project: "collection-delivery",
+    projectLabel: "Collection & Delivery",
+    title: "Nationwide collection and delivery",
+    relatedSlugs: [],
+    featuredArea: ["services", "contact"],
+  },
+  {
     id: "ford-ranger-bodykit-wheels",
     type: "video",
     src: "/media/fdl/ford/ranger-bodykit-wheels.m4v",
@@ -694,16 +707,25 @@ export const DEFENDER_VIDEO_MEDIA = [
 ];
 
 export const SERVICE_MEDIA: Record<string, CuratedMediaItem> = {
-  bodykits: findMediaById("defender-black-110-01"),
+  bodykits: findMediaById("bmw-x5m-carbon-02"),
   "alloy-refurb": findMediaById("bmw-x5-lci-02"),
   "privacy-glass": findMediaById("mercedes-gle-01"),
   "light-tinting": findMediaById("defender-v8-black-01"),
   wrapping: findMediaById("porsche-taycan-01"),
   "detailing-ppf": findMediaById("audi-r8-02"),
-  security: findMediaById("mercedes-gle-02"),
+  security: findMediaById("range-rover-sport-bodykit-black"),
   "accident-repair": findMediaById("range-rover-sport-lm-01"),
   "alloy-packages": findMediaById("range-rover-sport-satin-02"),
+  branding: findMediaById("branding-amarok-europa"),
 };
+
+export const SERVICE_ENTRY_MEDIA = {
+  bespokeConversions: findMediaById("bmw-x5m-carbon-02"),
+  vehicleSecurity: findMediaById("range-rover-sport-bodykit-black"),
+  faceliftConversions: findMediaById("bmw-x5-g05-facelift-blue"),
+};
+
+export const COLLECTION_DELIVERY_MEDIA = findMediaById("collection-delivery");
 
 export const GALLERY_FILTER_LABELS: Record<string, string> = {
   all: "All",

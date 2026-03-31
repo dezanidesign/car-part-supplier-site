@@ -3,10 +3,19 @@
 import React from 'react';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import QuoteForm from '../forms/QuoteForm';
+import CollectionDeliverySection from '@/components/shared/CollectionDeliverySection';
+import {
+  SITE_ADDRESS,
+  SITE_EMAIL,
+  SITE_HOURS,
+  SITE_LOCATION,
+  SITE_PHONE_DISPLAY,
+  SITE_PHONE_LINK,
+} from '@/lib/siteContent';
 
 const ContactPage = () => (
-  <div className="min-h-screen bg-[var(--bg-dark)] pb-24 px-6 md:px-16 animate-in fade-in duration-700 [--section-bg:var(--bg-dark)]">
-    <div className="max-w-[1920px] mx-auto">
+  <div className="min-h-screen bg-[var(--bg-dark)] pb-24 animate-in fade-in duration-700 [--section-bg:var(--bg-dark)]">
+    <div className="max-w-[1920px] mx-auto px-6 md:px-16">
       {/* Header */}
       <div className="mb-16 md:mb-24">
         <span className="text-[var(--accent)] text-xs font-bold uppercase tracking-widest mb-4 block">Get In Touch</span>
@@ -25,25 +34,29 @@ const ContactPage = () => (
                 <div className="flex items-start gap-4">
                   <MapPin size={18} className="text-[var(--accent)] mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-white text-sm font-bold">Unit C3, 511 Bradford Rd</p>
-                    <p className="text-gray-400 text-sm">Batley, WF17 8LL</p>
+                    <p className="text-white text-sm font-bold">{SITE_LOCATION}</p>
+                    <p className="text-gray-400 text-sm">{SITE_ADDRESS}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <Phone size={18} className="text-[var(--accent)] flex-shrink-0" />
-                  <a href="tel:07869022673" className="text-white text-sm font-bold hover:text-[var(--accent)] transition-colors">
-                    07869 022673
+                  <a href={SITE_PHONE_LINK} className="text-white text-sm font-bold hover:text-[var(--accent)] transition-colors">
+                    {SITE_PHONE_DISPLAY}
                   </a>
                 </div>
                 <div className="flex items-center gap-4">
                   <Mail size={18} className="text-[var(--accent)] flex-shrink-0" />
-                  <a href="mailto:info@fdlbespoke.co.uk" className="text-white text-sm font-bold hover:text-[var(--accent)] transition-colors">
-                    info@fdlbespoke.co.uk
+                  <a href={`mailto:${SITE_EMAIL}`} className="text-white text-sm font-bold hover:text-[var(--accent)] transition-colors">
+                    {SITE_EMAIL}
                   </a>
                 </div>
-                <div className="flex items-center gap-4">
-                  <Clock size={18} className="text-[var(--accent)] flex-shrink-0" />
-                  <span className="text-gray-400 text-sm">Thu - Sat: 10am - Close</span>
+                <div className="flex items-start gap-4">
+                  <Clock size={18} className="text-[var(--accent)] flex-shrink-0 mt-0.5" />
+                  <div className="text-gray-400 text-sm leading-relaxed">
+                    {SITE_HOURS.map((entry) => (
+                      <div key={entry}>{entry}</div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -75,6 +88,7 @@ const ContactPage = () => (
         </div>
       </div>
     </div>
+    <CollectionDeliverySection className="mt-16 md:mt-24" />
   </div>
 );
 

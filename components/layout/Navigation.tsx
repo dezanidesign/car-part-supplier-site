@@ -7,6 +7,7 @@ import { ShoppingBag, Menu, X, ChevronDown, ChevronRight, ChevronLeft } from "lu
 import { useCartStore } from "@/lib/store";
 import ShopMegaMenu from "./ShopMegaMenu";
 import { SHOP_CATEGORIES } from "@/lib/shopCategories"; // Ensure you import your data
+import { SITE_LOGO_PATH } from "@/lib/siteContent";
 
 // ============================================================================
 // NAV ITEMS
@@ -117,7 +118,7 @@ export function Navigation() {
       {/* ======================= LOGO ======================= */}
       <Link href="/" className="relative z-[250]">
         <Image
-          src="https://fdlbespoke.co.uk/wp-content/uploads/2025/06/cropped-cropped-FDL-UK-Logo-White-Sq.png"
+          src={SITE_LOGO_PATH}
           alt="FDL Bespoke"
           width={110}
           height={110}

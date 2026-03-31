@@ -7,6 +7,15 @@ import {
   ApplePayIcon,
   ContactlessIcon,
 } from "../icons/PaymentIcons";
+import {
+  SITE_ADDRESS,
+  SITE_EMAIL,
+  SITE_HOURS,
+  SITE_LOCATION,
+  SITE_LOGO_PATH,
+  SITE_PHONE_DISPLAY,
+  SITE_PHONE_LINK,
+} from "@/lib/siteContent";
 
 // ============================================================================
 // FOOTER COMPONENT
@@ -21,7 +30,7 @@ export function Footer() {
         {/* Top: Logo */}
         <div className="mb-12 md:mb-16">
           <Image
-            src="https://fdlbespoke.co.uk/wp-content/uploads/2025/06/cropped-cropped-FDL-UK-Logo-White-Sq.png"
+            src={SITE_LOGO_PATH}
             alt="FDL Bespoke"
             width={64}
             height={64}
@@ -41,24 +50,28 @@ export function Footer() {
             </h4>
             <div className="flex flex-col gap-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">
               <span className="normal-case text-xs text-gray-300 font-normal leading-relaxed">
-                Unit C3, 511 Bradford Rd,
+                Located in: {SITE_LOCATION}
                 <br />
-                Batley, WF17 8LL
+                {SITE_ADDRESS}
               </span>
-              <span className="normal-case text-xs text-gray-400 font-normal">
-                Thu - Sat: 10am - Close
+              <span className="normal-case text-xs text-gray-400 font-normal leading-relaxed">
+                {SITE_HOURS[0]}
+                <br />
+                {SITE_HOURS[1]}
+                <br />
+                {SITE_HOURS[2]}
               </span>
               <a
-                href="tel:07869022673"
+                href={SITE_PHONE_LINK}
                 className="hover:text-[var(--accent)] transition-colors"
               >
-                07869 022673
+                {SITE_PHONE_DISPLAY}
               </a>
               <a
-                href="mailto:info@fdlbespoke.co.uk"
+                href={`mailto:${SITE_EMAIL}`}
                 className="hover:text-[var(--accent)] transition-colors normal-case"
               >
-                info@fdlbespoke.co.uk
+                {SITE_EMAIL}
               </a>
             </div>
           </div>
@@ -159,7 +172,7 @@ export function Footer() {
             &copy; {currentYear} FDL Bespoke. All rights reserved.
           </span>
           <span className="text-gray-800">
-            Unit C3, 511 Bradford Rd, Batley WF17 8LL
+            {SITE_LOCATION} · {SITE_ADDRESS}
           </span>
         </div>
       </div>

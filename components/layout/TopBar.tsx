@@ -1,7 +1,10 @@
 'use client';
 
 import { Phone, Mail, Facebook, Instagram, Music2, Camera } from 'lucide-react';
-import Link from 'next/link';
+import {
+  SITE_EMAIL,
+  SITE_PHONE_INTL_DISPLAY,
+} from "@/lib/siteContent";
 
 const TopBar = () => {
   return (
@@ -14,15 +17,15 @@ const TopBar = () => {
             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors group text-xs"
           >
             <Phone size={12} className="text-[var(--accent)] group-hover:rotate-12 transition-transform" />
-            <span className="hidden md:inline">+44 7869 022673</span>
+            <span className="hidden md:inline">{SITE_PHONE_INTL_DISPLAY}</span>
           </a>
           <div className="hidden md:block w-[1px] h-3 bg-white/10"></div>
           <a
-            href="mailto:Fdlbespokeuk@gmail.com"
+            href={`mailto:${SITE_EMAIL}`}
             className="hidden md:flex items-center gap-2 text-gray-400 hover:text-white transition-colors group text-xs"
           >
             <Mail size={12} className="text-[var(--accent)] group-hover:scale-110 transition-transform" />
-            <span>Fdlbespokeuk@gmail.com</span>
+            <span>{SITE_EMAIL}</span>
           </a>
         </div>
 

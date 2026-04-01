@@ -10,8 +10,8 @@ const CAROUSEL_IMAGES = [
     alt: 'Land Rover Defender by FDL Bespoke',
   },
   {
-    src: '/home-slider/bmw2.jpg',
-    alt: 'BMW styling project by FDL Bespoke',
+    src: '/home-slider/porsche2.jpg',
+    alt: 'Porsche Taycan wrap and wheels by FDL Bespoke',
   },
   {
     src: '/home-slider/audi3.jpg',

@@ -109,26 +109,26 @@ export function Navigation() {
 
   return (
     <nav
-      className={`fixed top-[var(--topbar-height)] w-full h-[var(--nav-height)] z-50 px-6 md:px-16 py-6 flex justify-between items-center transition-all duration-500 ${
+      className={`fixed top-[var(--topbar-height)] w-full h-[var(--nav-height)] z-50 px-6 md:px-10 xl:px-16 py-6 flex items-center justify-between gap-4 lg:grid lg:grid-cols-[100px_minmax(0,1fr)_auto] xl:grid-cols-[120px_minmax(0,1fr)_auto] lg:gap-8 transition-all duration-500 ${
         scrolled
           ? "bg-black/90 backdrop-blur-md border-b border-white/5"
           : "bg-transparent"
       }`}
     >
       {/* ======================= LOGO ======================= */}
-      <Link href="/" className="relative z-[250]">
+      <Link href="/" className="relative z-[250] block shrink-0 w-[60px] h-[20px] sm:w-[72px] sm:h-[24px] lg:w-[100px] lg:h-[32px] xl:w-[120px] xl:h-[40px] overflow-hidden lg:justify-self-start">
         <Image
           src={SITE_LOGO_PATH}
           alt="FDL Bespoke"
-          width={110}
-          height={110}
-          className="h-[90px] w-auto md:h-[110px]"
+          fill
+          sizes="(min-width: 1280px) 120px, (min-width: 1024px) 100px, (min-width: 640px) 72px, 60px"
+          className="object-contain object-left"
           priority
         />
       </Link>
 
       {/* ======================= DESKTOP MENU ======================= */}
-      <div className="hidden lg:flex gap-12 font-medium text-xs tracking-[0.2em] uppercase text-white items-center">
+      <div className="hidden lg:flex min-w-0 justify-center gap-6 xl:gap-10 font-medium text-[11px] xl:text-xs tracking-[0.18em] uppercase text-white items-center justify-self-center">
         {/* Services Link */}
         <Link href="/services" className="hover:text-[var(--accent)] transition-colors font-bold py-4">
           SERVICES
@@ -167,7 +167,7 @@ export function Navigation() {
       </div>
 
       {/* ======================= ICONS & TOGGLE ======================= */}
-      <div className="flex items-center gap-8 relative z-[250]">
+      <div className="flex items-center gap-6 xl:gap-8 relative z-[250] shrink-0 lg:justify-self-end">
         <Link href="/cart" className="relative group">
           <ShoppingBag className="text-white group-hover:text-[var(--accent)] transition-colors" size={22} />
           {cartItemCount > 0 && (

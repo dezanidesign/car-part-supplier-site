@@ -34,7 +34,7 @@ html, body {
 
   /* Fixed header sizing */
   --topbar-height: 36px;
-  --nav-height: 138px;
+  --nav-height: 70px;
   --header-offset: calc(var(--topbar-height) + var(--nav-height));
   
   /* Text Colors */
@@ -55,7 +55,7 @@ html, body {
 
 @media (min-width: 768px) {
   :root {
-    --nav-height: 158px;
+    --nav-height: 70px;
   }
 }
 

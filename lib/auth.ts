@@ -5,6 +5,10 @@ import { cookies } from "next/headers";
 const COOKIE_NAME = "fdl-admin-token";
 const JWT_EXPIRY = "7d";
 
+function readRuntimeEnv(name: string) {
+  return process.env[name] || "";
+}
+
 export type CredentialValidationResult = {
   submittedEmail: string;
   adminEmail: string;
@@ -18,7 +22,7 @@ export type CredentialValidationResult = {
 };
 
 function getSecret() {
-  const secret = process.env.JWT_SECRET;
+  const secret = readRuntimeEnv("JWT_SECRET");
   if (!secret) throw new Error("JWT_SECRET is not set");
   return new TextEncoder().encode(secret);
 }
@@ -45,8 +49,8 @@ export async function validateCredentials(
   password: string,
 ): Promise<CredentialValidationResult> {
   const submittedEmail = email.trim().toLowerCase();
-  const adminEmail = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
-  const passwordHash = process.env.ADMIN_PASSWORD_HASH || "";
+  const adminEmail = readRuntimeEnv("ADMIN_EMAIL").trim().toLowerCase();
+  const passwordHash = readRuntimeEnv("ADMIN_PASSWORD_HASH");
 
   const hasAdminEmail = Boolean(adminEmail);
   const hasPasswordHash = Boolean(passwordHash);

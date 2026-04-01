@@ -17,28 +17,8 @@ export async function POST(request: NextRequest) {
     const validation = await validateCredentials(email, password);
 
     if (!validation.isValid) {
-      console.warn("[auth/login] credential validation failed", {
-        hasAdminEmail: validation.hasAdminEmail,
-        hasPasswordHash: validation.hasPasswordHash,
-        submittedEmailNormalized: validation.submittedEmail,
-        adminEmailNormalized: validation.adminEmail,
-        emailMatches: validation.emailMatches,
-        passwordHashLength: validation.passwordHashLength,
-        passwordCheckRan: validation.passwordCheckRan,
-        passwordMatches: validation.passwordMatches,
-      });
-
       return NextResponse.json(
-        {
-          hasAdminEmail: validation.hasAdminEmail,
-          hasAdminPasswordHash: validation.hasPasswordHash,
-          submittedEmailNormalized: validation.submittedEmail,
-          adminEmailNormalized: validation.adminEmail,
-          emailMatches: validation.emailMatches,
-          passwordHashLength: validation.passwordHashLength,
-          passwordCheckRan: validation.passwordCheckRan,
-          passwordMatches: validation.passwordMatches,
-        },
+        { error: "Invalid credentials" },
         { status: 401 }
       );
     }

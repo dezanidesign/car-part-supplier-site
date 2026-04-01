@@ -6,7 +6,6 @@ export const runtime = "nodejs";
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
-    const debugAuth = request.headers.get("x-debug-auth") === "1";
 
     if (typeof email !== "string" || typeof password !== "string" || !email || !password) {
       return NextResponse.json(
@@ -18,31 +17,6 @@ export async function POST(request: NextRequest) {
     const validation = await validateCredentials(email, password);
 
     if (!validation.isValid) {
-      console.warn("[auth/login] invalid credentials", {
-        hasAdminEmail: validation.hasAdminEmail,
-        hasPasswordHash: validation.hasPasswordHash,
-        emailMatches: validation.emailMatches,
-        passwordHashLength: validation.passwordHashLength,
-        passwordCheckRan: validation.passwordCheckRan,
-        passwordMatches: validation.passwordMatches,
-      });
-
-      if (debugAuth) {
-        return NextResponse.json(
-          {
-            hasAdminEmail: validation.hasAdminEmail,
-            hasAdminPasswordHash: validation.hasPasswordHash,
-            submittedEmailNormalized: validation.submittedEmail,
-            adminEmailNormalized: validation.adminEmail,
-            emailMatches: validation.emailMatches,
-            passwordHashLength: validation.passwordHashLength,
-            passwordCheckRan: validation.passwordCheckRan,
-            passwordMatches: validation.passwordMatches,
-          },
-          { status: 401 }
-        );
-      }
-
       return NextResponse.json(
         { error: "Invalid credentials" },
         { status: 401 }

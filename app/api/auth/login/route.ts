@@ -17,6 +17,15 @@ export async function POST(request: NextRequest) {
     const validation = await validateCredentials(email, password);
 
     if (!validation.isValid) {
+      console.warn("[auth/login] invalid credentials", {
+        hasAdminEmail: validation.hasAdminEmail,
+        hasPasswordHash: validation.hasPasswordHash,
+        emailMatches: validation.emailMatches,
+        passwordHashLength: validation.passwordHashLength,
+        passwordCheckRan: validation.passwordCheckRan,
+        passwordMatches: validation.passwordMatches,
+      });
+
       return NextResponse.json(
         { error: "Invalid credentials" },
         { status: 401 }

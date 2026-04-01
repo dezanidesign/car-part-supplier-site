@@ -50,7 +50,9 @@ export async function validateCredentials(
 ): Promise<CredentialValidationResult> {
   const submittedEmail = email.trim().toLowerCase();
   const adminEmail = readRuntimeEnv("ADMIN_EMAIL").trim().toLowerCase();
-  const passwordHash = readRuntimeEnv("ADMIN_PASSWORD_HASH");
+  const passwordHash =
+    readRuntimeEnv("ADMIN_PASSWORD_HASH_V2") ||
+    readRuntimeEnv("ADMIN_PASSWORD_HASH");
 
   const hasAdminEmail = Boolean(adminEmail);
   const hasPasswordHash = Boolean(passwordHash);

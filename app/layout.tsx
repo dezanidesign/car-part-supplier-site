@@ -112,7 +112,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Navigation />
         </div>
 
-        <main className="site-main flex-grow pt-[106px]">{children}</main>
+        <main className="site-main flex-grow">{children}</main>
 
         <div className="site-chrome-bottom">
           <Footer />

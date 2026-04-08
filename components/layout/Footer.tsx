@@ -29,12 +29,12 @@ export function Footer() {
       <div className="max-w-[1920px] mx-auto">
         {/* Top: Logo */}
         <div className="mb-12 md:mb-16">
-          <div className="relative w-[340px] h-[112px] md:w-[460px] md:h-[150px] overflow-hidden mb-5">
+          <div className="relative w-[170px] h-[56px] md:w-[230px] md:h-[75px] overflow-hidden mb-5">
             <Image
               src={SITE_LOGO_PATH}
               alt="FDL Bespoke"
               fill
-              sizes="(min-width: 768px) 460px, 340px"
+              sizes="(min-width: 768px) 230px, 170px"
               className="object-contain object-left"
             />
           </div>

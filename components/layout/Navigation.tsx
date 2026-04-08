@@ -109,26 +109,26 @@ export function Navigation() {
 
   return (
     <nav
-      className={`fixed top-[var(--topbar-height)] w-full h-[var(--nav-height)] z-50 px-6 md:px-10 xl:px-16 py-4 lg:py-4 xl:py-5 flex items-center justify-between gap-4 lg:grid lg:grid-cols-[220px_minmax(0,1fr)_auto] xl:grid-cols-[260px_minmax(0,1fr)_auto] lg:gap-6 xl:gap-8 transition-all duration-500 ${
+      className={`fixed top-[var(--topbar-height)] w-full h-[var(--nav-height)] z-50 px-6 md:px-10 xl:px-16 py-4 lg:py-3 xl:py-4 flex items-center justify-between gap-4 lg:grid lg:grid-cols-[110px_minmax(0,1fr)_auto] xl:grid-cols-[130px_minmax(0,1fr)_auto] lg:gap-5 xl:gap-6 transition-all duration-500 ${
         scrolled
           ? "bg-black/90 backdrop-blur-md border-b border-white/5"
           : "bg-transparent"
       }`}
     >
       {/* ======================= LOGO ======================= */}
-      <Link href="/" className="relative z-[250] block shrink-0 w-[60px] h-[20px] sm:w-[72px] sm:h-[24px] lg:w-[220px] lg:h-[72px] xl:w-[260px] xl:h-[84px] overflow-hidden lg:justify-self-start">
+      <Link href="/" className="relative z-[250] block shrink-0 w-[60px] h-[20px] sm:w-[72px] sm:h-[24px] lg:w-[110px] lg:h-[36px] xl:w-[130px] xl:h-[42px] overflow-hidden lg:justify-self-start">
         <Image
           src={SITE_LOGO_PATH}
           alt="FDL Bespoke"
           fill
-          sizes="(min-width: 1280px) 260px, (min-width: 1024px) 220px, (min-width: 640px) 72px, 60px"
+          sizes="(min-width: 1280px) 130px, (min-width: 1024px) 110px, (min-width: 640px) 72px, 60px"
           className="object-contain object-left"
           priority
         />
       </Link>
 
       {/* ======================= DESKTOP MENU ======================= */}
-      <div className="hidden lg:flex min-w-0 justify-center gap-5 xl:gap-7 font-medium text-[10px] xl:text-[11px] tracking-[0.18em] uppercase text-white items-center justify-self-center">
+      <div className="hidden lg:flex min-w-0 justify-center gap-6 xl:gap-8 font-medium text-[11px] xl:text-xs tracking-[0.18em] uppercase text-white items-center justify-self-center">
         {/* Services Link */}
         <Link href="/services" className="hover:text-[var(--accent)] transition-colors font-bold py-4">
           SERVICES

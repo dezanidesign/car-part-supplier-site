@@ -55,13 +55,13 @@ html, body {
 
 @media (min-width: 1024px) {
   :root {
-    --nav-height: 112px;
+    --nav-height: 82px;
   }
 }
 
 @media (min-width: 1280px) {
   :root {
-    --nav-height: 124px;
+    --nav-height: 88px;
   }
 }
 

@@ -17,6 +17,7 @@ import {
   MessageSquare,
 } from 'lucide-react';
 import QuoteForm from '@/components/forms/QuoteForm';
+import ExpandableVideo from '@/components/shared/ExpandableVideo';
 import type { WooProduct } from '@/lib/woo';
 import {
   DEFENDER_GALLERY_MEDIA,
@@ -489,15 +490,12 @@ export default function DefenderPage({ products }: { products: WooProduct[] }) {
                   className="border border-white/5 bg-black/20 overflow-hidden group"
                 >
                   <div className="aspect-[4/3] overflow-hidden">
-                    <video
-                      className="w-full h-full object-cover"
+                    <ExpandableVideo
                       src={item.src}
                       poster={item.poster}
-                      muted
-                      playsInline
-                      loop
-                      autoPlay
-                      preload="metadata"
+                      title={item.title}
+                      className="h-full w-full"
+                      videoClassName="w-full h-full object-cover"
                     />
                   </div>
                   <div className="p-4 md:p-5 border-t border-white/5">

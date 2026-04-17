@@ -10,16 +10,14 @@ import {
 import {
   SITE_ADDRESS,
   SITE_EMAIL,
+  SITE_EMAIL_LINK,
   SITE_HOURS,
   SITE_LOCATION,
   SITE_LOGO_PATH,
   SITE_PHONE_DISPLAY,
   SITE_PHONE_LINK,
+  SITE_SOCIALS,
 } from "@/lib/siteContent";
-
-// ============================================================================
-// FOOTER COMPONENT
-// ============================================================================
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -27,7 +25,6 @@ export function Footer() {
   return (
     <footer className="bg-black py-16 md:py-20 px-6 md:px-16 border-t border-white/10 text-white">
       <div className="max-w-[1920px] mx-auto">
-        {/* Top: Logo */}
         <div className="mb-12 md:mb-16">
           <div className="relative w-[170px] h-[56px] md:w-[230px] md:h-[75px] overflow-hidden mb-5">
             <Image
@@ -43,9 +40,7 @@ export function Footer() {
           </p>
         </div>
 
-        {/* Main Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-12 mb-12 md:mb-16">
-          {/* General Info */}
           <div>
             <h4 className="text-white text-[10px] font-bold uppercase tracking-widest mb-5">
               General Info
@@ -70,7 +65,7 @@ export function Footer() {
                 {SITE_PHONE_DISPLAY}
               </a>
               <a
-                href={`mailto:${SITE_EMAIL}`}
+                href={SITE_EMAIL_LINK}
                 className="hover:text-[var(--accent)] transition-colors normal-case"
               >
                 {SITE_EMAIL}
@@ -78,7 +73,6 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Legal */}
           <div>
             <h4 className="text-white text-[10px] font-bold uppercase tracking-widest mb-5">
               Legal
@@ -111,7 +105,6 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Company Info */}
           <div>
             <h4 className="text-white text-[10px] font-bold uppercase tracking-widest mb-5">
               Company
@@ -127,11 +120,11 @@ export function Footer() {
                 <span className="font-bold uppercase tracking-widest block mb-1">
                   VAT No.
                 </span>
-                <span className="text-gray-500 font-mono">&mdash;</span>
+                <span className="text-gray-500 font-mono">TBC</span>
               </div>
               <div className="flex gap-3 mt-2">
                 <a
-                  href="https://www.instagram.com/fdlbespoke"
+                  href={SITE_SOCIALS.instagram.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-bold uppercase tracking-widest hover:text-white transition-colors"
@@ -139,7 +132,7 @@ export function Footer() {
                   Instagram
                 </a>
                 <a
-                  href="https://www.facebook.com/fdlbespoke"
+                  href={SITE_SOCIALS.facebook.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-bold uppercase tracking-widest hover:text-white transition-colors"
@@ -150,7 +143,6 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Payment Methods */}
           <div>
             <h4 className="text-white text-[10px] font-bold uppercase tracking-widest mb-5">
               Payment
@@ -168,13 +160,12 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Bottom */}
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-gray-700 uppercase tracking-widest">
           <span>
             &copy; {currentYear} FDL Bespoke. All rights reserved.
           </span>
           <span className="text-gray-800">
-            {SITE_LOCATION} · {SITE_ADDRESS}
+            {SITE_LOCATION} | {SITE_ADDRESS}
           </span>
         </div>
       </div>

@@ -10,6 +10,7 @@ import {
   ArrowLeft,
   X,
 } from "lucide-react";
+import { SITE_LOGO_PATH } from "@/lib/siteContent";
 
 const NAV_ITEMS = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -50,11 +51,11 @@ export default function AdminSidebar({
         <div className="h-16 flex items-center justify-between px-5 border-b border-white/5">
           <div className="flex items-center gap-3">
             <Image
-              src="https://fdlbespoke.co.uk/wp-content/uploads/2025/06/cropped-cropped-FDL-UK-Logo-White-Sq.png"
+              src={SITE_LOGO_PATH}
               alt="FDL"
-              width={28}
+              width={84}
               height={28}
-              className="h-7 w-auto opacity-70"
+              className="h-6 w-auto opacity-70"
             />
             <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
               Admin

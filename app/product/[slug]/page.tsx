@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { fetchProductBySlug, fetchRelatedProducts } from "@/lib/woo";
 import AddToCartBtn from "@/components/product/AddToCartBtn";
 
@@ -29,21 +30,25 @@ export default async function ProductPage({ params }: { params: { slug: string }
   const relatedProducts = await fetchRelatedProducts(product);
   const mainImage = product.images[0]?.src || "/placeholder-product.jpg";
   const currentPrice = product.sale_price || product.price;
+  const enquiryHref = `/contact?${new URLSearchParams({
+    makeModel: product.name,
+    message: `Hi FDL Bespoke,\n\nI'm interested in ${product.name}. Please let me know about availability, fitting, and pricing.`,
+  }).toString()}`;
 
   return (
     <div className="min-h-screen bg-[#050505] text-white pb-20">
       <div className="max-w-[1400px] mx-auto px-6 md:px-12">
         <div className="text-sm text-gray-500 mb-8 uppercase tracking-widest">
-          <a href="/" className="hover:text-white transition">
+          <Link href="/" className="hover:text-white transition">
             Home
-          </a>
+          </Link>
           <span className="mx-2">/</span>
-          <a
+          <Link
             href={`/shop/${product.categories[0]?.slug}`}
             className="hover:text-white transition"
           >
             {product.categories[0]?.name || "Shop"}
-          </a>
+          </Link>
           <span className="mx-2">/</span>
           <span className="text-[#D3BF89]">{product.name}</span>
         </div>
@@ -96,9 +101,12 @@ export default async function ProductPage({ params }: { params: { slug: string }
 
             <div className="flex flex-col sm:flex-row gap-4 mb-10 border-b border-white/10 pb-10">
               <AddToCartBtn product={product} />
-              <button className="flex-1 border border-white/20 text-white font-bold uppercase tracking-[0.2em] py-4 px-8 rounded-full hover:bg-white hover:text-black transition">
+              <Link
+                href={enquiryHref}
+                className="flex-1 border border-white/20 text-white font-bold uppercase tracking-[0.2em] py-4 px-8 rounded-full hover:bg-white hover:text-black transition text-center"
+              >
                 Enquire
-              </button>
+              </Link>
             </div>
 
             <div className="space-y-2 text-sm text-gray-500">
@@ -142,7 +150,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedProducts.map((relatedProduct) => (
-                <a
+                <Link
                   href={`/product/${relatedProduct.slug}`}
                   key={relatedProduct.id}
                   className="group block"
@@ -162,7 +170,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
                   <p className="text-gray-500 mt-1">
                     {formatPrice(relatedProduct.sale_price || relatedProduct.price)}
                   </p>
-                </a>
+                </Link>
               ))}
             </div>
           </div>

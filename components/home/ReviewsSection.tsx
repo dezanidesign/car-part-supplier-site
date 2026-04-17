@@ -30,14 +30,16 @@ export default function ReviewsSection() {
     <section className="py-16 md:py-24 px-6 md:px-16 bg-[#030303] border-t border-white/5">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center gap-3 md:gap-4 mb-10 md:mb-16">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" className="w-5 h-5 md:w-6 md:h-6" alt="Google" />
+          <span className="inline-flex items-center rounded-full border border-white/10 bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-black md:text-xs">
+            Google Reviews
+          </span>
           <span className="text-white font-bold uppercase tracking-widest text-[10px] md:text-xs">5.0 Star Rating</span>
           <div className="h-[1px] flex-grow bg-white/10"></div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-4 md:gap-8 mb-10 md:mb-16">
           {REVIEWS.map((review, i) => (
-            <div key={i} className="bg-[#0a0a0a] border border-white/5 p-6 md:p-8 relative hover:border-[var(--accent)] transition-all duration-300 group">
+            <div key={review.name} className="bg-[#0a0a0a] border border-white/5 p-6 md:p-8 relative hover:border-[var(--accent)] transition-all duration-300 group">
               <Quote className="absolute top-6 right-6 md:top-8 md:right-8 text-[var(--accent)] opacity-20 w-6 h-6 md:w-8 md:h-8 group-hover:opacity-100 transition-opacity" />
               <div className="flex text-[var(--accent)] mb-4 md:mb-6">
                 {[...Array(5)].map((_, j) => <Star key={j} size={12} fill="currentColor" className="mr-1 md:w-3.5 md:h-3.5" />)}

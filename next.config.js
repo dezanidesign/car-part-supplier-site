@@ -35,17 +35,15 @@ const nextConfig = {
   },
 
   // ============================================================================
-  // REDIRECTS (Old WordPress URLs → New Structure)
+  // REDIRECTS (Old WordPress URLs -> New Structure)
   // ============================================================================
   async redirects() {
     return [
-      // Category URLs
       {
         source: "/product-category/:slug",
         destination: "/shop?category=:slug",
         permanent: true,
       },
-      // Old page redirects (if any)
       {
         source: "/about",
         destination: "/info",
@@ -60,7 +58,6 @@ const nextConfig = {
   async headers() {
     return [
       {
-        // Apply to all routes
         source: "/(.*)",
         headers: [
           {
@@ -78,7 +75,6 @@ const nextConfig = {
         ],
       },
       {
-        // Cache static assets aggressively
         source: "/(.*)\\.(ico|png|jpg|jpeg|svg|webp|avif|woff|woff2)",
         headers: [
           {
@@ -94,14 +90,12 @@ const nextConfig = {
   // EXPERIMENTAL FEATURES
   // ============================================================================
   experimental: {
-    // Enable optimized package imports
     optimizePackageImports: ["lucide-react", "framer-motion"],
   },
 
   // ============================================================================
   // BUILD CONFIGURATION
   // ============================================================================
-  // Suppress punycode deprecation warning
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
@@ -112,13 +106,8 @@ const nextConfig = {
     return config;
   },
 
-  // Generate source maps in production for debugging
   productionBrowserSourceMaps: false,
-
-  // Strict mode for React
   reactStrictMode: true,
-
-  // Output standalone build (useful for Docker deployments)
   // output: 'standalone',
 };
 

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Layers,
   CircleDot,
@@ -18,6 +19,7 @@ import {
   Type,
 } from 'lucide-react';
 import CollectionDeliverySection from '@/components/shared/CollectionDeliverySection';
+import ExpandableVideo from '@/components/shared/ExpandableVideo';
 import { SERVICES } from '@/lib/serviceContent';
 import { CONVERSION_COPY } from '@/lib/siteContent';
 
@@ -81,22 +83,21 @@ function ServiceVisual({
   return (
     <div className="aspect-[4/3] w-full overflow-hidden border border-white/5 relative group bg-black">
       {media.type === 'video' ? (
-        <video
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        <ExpandableVideo
           src={media.src}
           poster={media.poster}
-          muted
-          playsInline
-          loop
-          autoPlay
-          preload="metadata"
+          title={title}
+          className="h-full w-full"
+          videoClassName="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          buttonClassName="group-hover:border-white/20"
         />
       ) : (
-        <img
+        <Image
           src={media.src}
           alt={title}
-          className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-          loading="lazy"
+          fill
+          sizes="(min-width: 1024px) 45vw, 100vw"
+          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
         />
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />

@@ -3,7 +3,9 @@
 import { Phone, Mail, Facebook, Instagram, Music2, Camera } from 'lucide-react';
 import {
   SITE_EMAIL,
+  SITE_EMAIL_LINK,
   SITE_PHONE_INTL_DISPLAY,
+  SITE_SOCIALS,
 } from "@/lib/siteContent";
 
 const TopBar = () => {
@@ -21,7 +23,7 @@ const TopBar = () => {
           </a>
           <div className="hidden md:block w-[1px] h-3 bg-white/10"></div>
           <a
-            href={`mailto:${SITE_EMAIL}`}
+            href={SITE_EMAIL_LINK}
             className="hidden md:flex items-center gap-2 text-gray-400 hover:text-white transition-colors group text-xs"
           >
             <Mail size={12} className="text-[var(--accent)] group-hover:scale-110 transition-transform" />
@@ -34,7 +36,7 @@ const TopBar = () => {
           <span className="text-[10px] text-gray-500 uppercase tracking-widest mr-2 hidden md:inline">Follow</span>
 
           <a
-            href="https://www.facebook.com/fdlbespokeuk/"
+            href={SITE_SOCIALS.facebook.href}
             target="_blank"
             rel="noopener noreferrer"
             className="w-7 h-7 flex items-center justify-center rounded-full border border-white/10 text-gray-400 hover:border-[var(--accent)] hover:text-[var(--accent)] transition-all duration-300 hover:scale-110"
@@ -44,7 +46,7 @@ const TopBar = () => {
           </a>
 
           <a
-            href="https://www.instagram.com/explore/locations/337310238/fdl-bespoke-uk/"
+            href={SITE_SOCIALS.instagram.href}
             target="_blank"
             rel="noopener noreferrer"
             className="w-7 h-7 flex items-center justify-center rounded-full border border-white/10 text-gray-400 hover:border-[var(--accent)] hover:text-[var(--accent)] transition-all duration-300 hover:scale-110"
@@ -54,7 +56,7 @@ const TopBar = () => {
           </a>
 
           <a
-            href="https://www.tiktok.com/@fdl.uk"
+            href={SITE_SOCIALS.tiktok.href}
             target="_blank"
             rel="noopener noreferrer"
             className="w-7 h-7 flex items-center justify-center rounded-full border border-white/10 text-gray-400 hover:border-[var(--accent)] hover:text-[var(--accent)] transition-all duration-300 hover:scale-110"
@@ -64,7 +66,7 @@ const TopBar = () => {
           </a>
 
           <a
-            href="https://www.snapchat.com/add/Feefy-DesignLtd"
+            href={SITE_SOCIALS.snapchat.href}
             target="_blank"
             rel="noopener noreferrer"
             className="w-7 h-7 flex items-center justify-center rounded-full border border-white/10 text-gray-400 hover:border-[var(--accent)] hover:text-[var(--accent)] transition-all duration-300 hover:scale-110"

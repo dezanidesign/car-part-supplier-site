@@ -2,35 +2,32 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
+import ExpandableVideo from '@/components/shared/ExpandableVideo';
 import { HOME_EXPERTISE_MEDIA } from '@/lib/curatedMedia';
 import { HOME_SERVICE_TILES } from '@/lib/serviceContent';
 import { CONVERSION_COPY } from '@/lib/siteContent';
 
 function ServiceTile({ tile }: { tile: (typeof HOME_SERVICE_TILES)[number] }) {
   return (
-    <Link
-      href={tile.href}
-      className="group relative border border-white/5 min-h-[320px] md:min-h-[420px] overflow-hidden"
-    >
+    <div className="group relative border border-white/5 min-h-[320px] md:min-h-[420px] overflow-hidden bg-black">
       <div className="absolute inset-0 bg-black">
         {tile.media.type === 'video' ? (
-          <video
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          <ExpandableVideo
             src={tile.media.src}
             poster={tile.media.poster}
-            muted
-            playsInline
-            loop
-            autoPlay
-            preload="metadata"
+            title={tile.title}
+            className="h-full w-full"
+            videoClassName="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         ) : (
-          <img
+          <Image
             src={tile.media.src}
             alt={tile.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            loading="lazy"
+            fill
+            sizes="(min-width: 768px) 33vw, 100vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
@@ -56,12 +53,15 @@ function ServiceTile({ tile }: { tile: (typeof HOME_SERVICE_TILES)[number] }) {
         <p className="text-gray-300 text-sm leading-relaxed mb-5 max-w-sm">
           {tile.description}
         </p>
-        <span className="inline-flex items-center gap-3 text-[var(--accent)] text-[10px] font-bold uppercase tracking-[0.22em]">
+        <Link
+          href={tile.href}
+          className="inline-flex w-fit items-center gap-3 text-[var(--accent)] text-[10px] font-bold uppercase tracking-[0.22em] hover:text-white transition-colors"
+        >
           <span>{CONVERSION_COPY.likeWhatYouSee}</span>
           <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-        </span>
+        </Link>
       </div>
-    </Link>
+    </div>
   );
 }
 
@@ -94,10 +94,12 @@ export default function ExpertiseGrid() {
         </div>
 
         <div className="relative overflow-hidden min-h-[320px] md:min-h-[500px] border border-white/5 group">
-          <img
+          <Image
             src={HOME_EXPERTISE_MEDIA.src}
             alt={HOME_EXPERTISE_MEDIA.title}
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            fill
+            sizes="100vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
           <div className="relative z-10 flex flex-col justify-center h-full p-8 md:p-16">

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ShoppingBag, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const CAROUSEL_IMAGES = [
@@ -10,8 +11,8 @@ const CAROUSEL_IMAGES = [
     alt: 'Land Rover Defender by FDL Bespoke',
   },
   {
-    src: '/home-slider/porsche2.jpg',
-    alt: 'Porsche Taycan wrap and wheels by FDL Bespoke',
+    src: '/home-slider/bmw2.jpg',
+    alt: 'BMW styling project by FDL Bespoke',
   },
   {
     src: '/home-slider/audi3.jpg',
@@ -129,7 +130,14 @@ export default function HeroCarousel() {
       <div className="fdl-track" ref={trackRef}>
         {CAROUSEL_IMAGES.map((image, idx) => (
           <div className="fdl-slide" key={idx}>
-            <img src={image.src} alt={image.alt} draggable="false" />
+            <Image
+              src={image.src}
+              alt={image.alt}
+              fill
+              sizes="100vw"
+              priority={idx === 0}
+              draggable={false}
+            />
           </div>
         ))}
       </div>

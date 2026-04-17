@@ -1,7 +1,10 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
-import { Upload, X, Check, Loader2 } from 'lucide-react';
+import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Upload, X, Mail, Loader2 } from 'lucide-react';
+import { SITE_EMAIL, SITE_EMAIL_LINK } from '@/lib/siteContent';
+import type { ReadonlyURLSearchParams } from 'next/navigation';
 
 interface FormData {
   name: string;
@@ -12,6 +15,8 @@ interface FormData {
   message: string;
 }
 
+type FormErrors = Partial<Record<keyof FormData | 'photo', string>>;
+
 const initialFormData: FormData = {
   name: '',
   phone: '',
@@ -21,35 +26,64 @@ const initialFormData: FormData = {
   message: '',
 };
 
-export default function QuoteForm({ defaultMakeModel }: { defaultMakeModel?: string } = {}) {
-  const [formData, setFormData] = useState<FormData>({
-    ...initialFormData,
-    makeModel: defaultMakeModel ?? '',
-  });
-  const [photo, setPhoto] = useState<File | null>(null);
-  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
-  const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+function QuoteFormContent({
+  defaultMakeModel,
+  searchParams,
+}: {
+  defaultMakeModel?: string;
+  searchParams?: ReadonlyURLSearchParams | null;
+}) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name as keyof FormData]) {
-      setErrors(prev => ({ ...prev, [name]: undefined }));
+  const defaultValues = useMemo(() => {
+    const searchMakeModel = searchParams?.get('makeModel') || searchParams?.get('product') || '';
+    const searchMessage = searchParams?.get('message') || '';
+
+    return {
+      ...initialFormData,
+      makeModel: defaultMakeModel || searchMakeModel,
+      message: searchMessage,
+    };
+  }, [defaultMakeModel, searchParams]);
+
+  const [formData, setFormData] = useState<FormData>(defaultValues);
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'opened'>('idle');
+  const [lastSubmissionHadPhoto, setLastSubmissionHadPhoto] = useState(false);
+
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      makeModel: prev.makeModel || defaultValues.makeModel,
+      message: prev.message || defaultValues.message,
+    }));
+  }, [defaultValues]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (errors[name as keyof FormErrors]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (file.size > 10 * 1024 * 1024) {
-      setErrors(prev => ({ ...prev, photo: 'File must be under 10MB' } as any));
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
       return;
     }
 
+    if (file.size > 10 * 1024 * 1024) {
+      setErrors((prev) => ({ ...prev, photo: 'File must be under 10MB.' }));
+      return;
+    }
+
+    setErrors((prev) => ({ ...prev, photo: undefined }));
     setPhoto(file);
+
     const reader = new FileReader();
     reader.onloadend = () => setPhotoPreview(reader.result as string);
     reader.readAsDataURL(file);
@@ -58,54 +92,124 @@ export default function QuoteForm({ defaultMakeModel }: { defaultMakeModel?: str
   const removePhoto = () => {
     setPhoto(null);
     setPhotoPreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
+    setErrors((prev) => ({ ...prev, photo: undefined }));
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
-  const validate = (): boolean => {
-    const newErrors: Partial<Record<keyof FormData, string>> = {};
+  const validate = () => {
+    const newErrors: FormErrors = {};
 
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
-    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
+    if (!formData.name.trim()) newErrors.name = 'Name is required.';
+    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required.';
+
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = 'Email is required.';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Invalid email address';
+      newErrors.email = 'Please enter a valid email address.';
     }
-    if (!formData.makeModel.trim()) newErrors.makeModel = 'Car make & model is required';
-    if (!formData.message.trim()) newErrors.message = 'Please describe your requirements';
+
+    if (!formData.makeModel.trim()) newErrors.makeModel = 'Car make and model is required.';
+    if (!formData.message.trim()) newErrors.message = 'Please describe your requirements.';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
+  const buildMailtoHref = () => {
+    const subject = `FDL Bespoke enquiry - ${formData.makeModel}`;
+    const bodyLines = [
+      'Hi FDL Bespoke,',
+      '',
+      'I would like to make an enquiry.',
+      '',
+      `Name: ${formData.name}`,
+      `Phone: ${formData.phone}`,
+      `Email: ${formData.email}`,
+      `Registration: ${formData.registration || 'Not provided'}`,
+      `Vehicle: ${formData.makeModel}`,
+      '',
+      'Requirements:',
+      formData.message,
+    ];
+
+    if (photo) {
+      bodyLines.push(
+        '',
+        `Photo selected locally: ${photo.name}`,
+        'Please attach this photo manually in your email app before sending.'
+      );
+    }
+
+    return `${SITE_EMAIL_LINK}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+      bodyLines.join('\n')
+    )}`;
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!validate()) {
+      return;
+    }
 
     setStatus('submitting');
 
-    // UI-only for now — simulate submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setStatus('success');
-    setFormData(initialFormData);
-    setPhoto(null);
-    setPhotoPreview(null);
+    try {
+      window.location.href = buildMailtoHref();
+      setLastSubmissionHadPhoto(Boolean(photo));
+      setStatus('opened');
+      setFormData(defaultValues);
+      setPhoto(null);
+      setPhotoPreview(null);
+      setErrors({});
+    } catch {
+      setStatus('idle');
+      setErrors((prev) => ({
+        ...prev,
+        email: 'We could not open your email app. Please email us directly instead.',
+      }));
+    }
   };
 
-  if (status === 'success') {
+  if (status === 'opened') {
     return (
       <div className="text-center py-12">
         <div className="w-16 h-16 bg-[var(--accent)] rounded-full flex items-center justify-center mx-auto mb-6">
-          <Check size={32} className="text-black" />
+          <Mail size={28} className="text-black" />
         </div>
-        <h3 className="font-display text-2xl md:text-3xl font-bold uppercase text-white mb-3">Quote Requested</h3>
-        <p className="text-gray-400 text-sm mb-8">We&apos;ll be in touch shortly with your custom quote.</p>
-        <button
-          onClick={() => setStatus('idle')}
-          className="text-[var(--accent)] text-sm font-bold uppercase tracking-widest hover:text-white transition-colors"
-        >
-          Submit Another
-        </button>
+        <h3 className="font-display text-2xl md:text-3xl font-bold uppercase text-white mb-3">
+          Your enquiry is ready
+        </h3>
+        <p className="text-gray-400 text-sm mb-4">
+          Your email app should open with your enquiry pre-filled.
+        </p>
+        {lastSubmissionHadPhoto && (
+          <p className="text-gray-500 text-xs max-w-md mx-auto mb-6 leading-relaxed">
+            Your photo is not attached automatically. Please add it inside your email app before sending.
+          </p>
+        )}
+        <div className="flex flex-col items-center gap-4">
+          <a
+            href={SITE_EMAIL_LINK}
+            className="text-[var(--accent)] text-sm font-bold uppercase tracking-widest hover:text-white transition-colors"
+          >
+            Email {SITE_EMAIL}
+          </a>
+          <button
+            type="button"
+            onClick={() => {
+              setStatus('idle');
+              setFormData(defaultValues);
+              setLastSubmissionHadPhoto(false);
+            }}
+            className="text-gray-400 text-xs font-bold uppercase tracking-widest hover:text-white transition-colors"
+          >
+            Start another enquiry
+          </button>
+        </div>
       </div>
     );
   }
@@ -113,7 +217,6 @@ export default function QuoteForm({ defaultMakeModel }: { defaultMakeModel?: str
   return (
     <form onSubmit={handleSubmit} noValidate>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8">
-        {/* Name */}
         <div>
           <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Name *</label>
           <input
@@ -127,7 +230,6 @@ export default function QuoteForm({ defaultMakeModel }: { defaultMakeModel?: str
           {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
         </div>
 
-        {/* Phone */}
         <div>
           <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Phone Number *</label>
           <input
@@ -141,7 +243,6 @@ export default function QuoteForm({ defaultMakeModel }: { defaultMakeModel?: str
           {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone}</p>}
         </div>
 
-        {/* Email */}
         <div>
           <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Email *</label>
           <input
@@ -155,7 +256,6 @@ export default function QuoteForm({ defaultMakeModel }: { defaultMakeModel?: str
           {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
         </div>
 
-        {/* Registration */}
         <div>
           <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Registration</label>
           <input
@@ -169,7 +269,6 @@ export default function QuoteForm({ defaultMakeModel }: { defaultMakeModel?: str
         </div>
       </div>
 
-      {/* Car Make & Model */}
       <div className="mb-6 md:mb-8">
         <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Car Make & Model *</label>
         <input
@@ -183,7 +282,6 @@ export default function QuoteForm({ defaultMakeModel }: { defaultMakeModel?: str
         {errors.makeModel && <p className="text-red-400 text-xs mt-1">{errors.makeModel}</p>}
       </div>
 
-      {/* Message */}
       <div className="mb-6 md:mb-8">
         <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Message / Details *</label>
         <textarea
@@ -197,7 +295,6 @@ export default function QuoteForm({ defaultMakeModel }: { defaultMakeModel?: str
         {errors.message && <p className="text-red-400 text-xs mt-1">{errors.message}</p>}
       </div>
 
-      {/* Photo Upload */}
       <div className="mb-8 md:mb-12">
         <label className="block text-[10px] font-bold uppercase text-gray-500 mb-3">Attach Car Photo</label>
         <input
@@ -215,10 +312,14 @@ export default function QuoteForm({ defaultMakeModel }: { defaultMakeModel?: str
               type="button"
               onClick={removePhoto}
               className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center"
+              aria-label="Remove selected photo"
             >
               <X size={12} className="text-white" />
             </button>
             <p className="text-gray-500 text-xs mt-2">{photo?.name}</p>
+            <p className="text-gray-600 text-[11px] mt-1 max-w-[14rem] leading-relaxed">
+              We&apos;ll ask you to attach this manually after your email app opens.
+            </p>
           </div>
         ) : (
           <button
@@ -230,9 +331,13 @@ export default function QuoteForm({ defaultMakeModel }: { defaultMakeModel?: str
             <span>Choose Photo</span>
           </button>
         )}
+        {errors.photo && <p className="text-red-400 text-xs mt-2">{errors.photo}</p>}
       </div>
 
-      {/* Submit */}
+      <p className="text-gray-500 text-xs leading-relaxed mb-6">
+        Submitting this opens your email app with your enquiry pre-filled. No details are sent until you send the email yourself.
+      </p>
+
       <button
         type="submit"
         disabled={status === 'submitting'}
@@ -241,12 +346,30 @@ export default function QuoteForm({ defaultMakeModel }: { defaultMakeModel?: str
         {status === 'submitting' ? (
           <>
             <Loader2 size={16} className="animate-spin" />
-            <span>Sending...</span>
+            <span>Opening email...</span>
           </>
         ) : (
-          <span>Submit Inquiry</span>
+          <span>Open Email Inquiry</span>
         )}
       </button>
     </form>
+  );
+}
+
+function QuoteFormWithSearchParams({ defaultMakeModel }: { defaultMakeModel?: string }) {
+  const searchParams = useSearchParams();
+
+  return <QuoteFormContent defaultMakeModel={defaultMakeModel} searchParams={searchParams} />;
+}
+
+function QuoteFormFallback({ defaultMakeModel }: { defaultMakeModel?: string }) {
+  return <QuoteFormContent defaultMakeModel={defaultMakeModel} searchParams={null} />;
+}
+
+export default function QuoteForm({ defaultMakeModel }: { defaultMakeModel?: string } = {}) {
+  return (
+    <Suspense fallback={<QuoteFormFallback defaultMakeModel={defaultMakeModel} />}>
+      <QuoteFormWithSearchParams defaultMakeModel={defaultMakeModel} />
+    </Suspense>
   );
 }

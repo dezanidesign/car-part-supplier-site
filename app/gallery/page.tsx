@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { Filter, Play, X, ChevronLeft, ChevronRight } from "lucide-react";
+import ExpandableVideo from "@/components/shared/ExpandableVideo";
 import {
   GALLERY_FILTERS,
   GALLERY_FILTER_LABELS,
@@ -197,17 +198,14 @@ export default function GalleryPage() {
                     <div className="relative aspect-[4/3] overflow-hidden bg-black">
                       {item.type === "video" ? (
                         <>
-                          <video
-                            className="w-full h-full object-cover"
+                          <ExpandableVideo
                             src={item.src}
                             poster={item.poster}
-                            muted
-                            playsInline
-                            loop
-                            autoPlay
-                            preload="metadata"
+                            title={item.title}
+                            className="h-full w-full"
+                            videoClassName="w-full h-full object-cover"
                           />
-                          <div className="absolute top-4 right-4 bg-black/60 text-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.25em] flex items-center gap-2">
+                          <div className="absolute top-4 left-4 bg-black/60 text-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.25em] flex items-center gap-2">
                             <Play size={10} />
                             Video
                           </div>

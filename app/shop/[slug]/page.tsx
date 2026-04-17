@@ -2,10 +2,12 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { ArrowRight } from "lucide-react";
 import { getCategoryMeta } from "@/lib/shopCategories";
 import { fetchProductsByCategorySlug } from "@/lib/woo";
 import { getShopCategoryMedia } from "@/lib/curatedMedia";
 import type { WooProduct } from "@/lib/woo";
+import ExpandableVideo from "@/components/shared/ExpandableVideo";
 import { CONVERSION_COPY } from "@/lib/siteContent";
 
 export async function generateMetadata({
@@ -58,9 +60,10 @@ function ProductCard({ product }: { product: WooProduct }) {
           </span>
           <Link
             href={`/product/${product.slug}`}
-            className="text-white/60 hover:text-[#D3BF89] transition-colors text-sm font-medium"
+            className="inline-flex items-center gap-2 text-white/60 hover:text-[#D3BF89] transition-colors text-sm font-medium"
           >
-            View →
+            <span>View Product</span>
+            <ArrowRight size={12} />
           </Link>
         </div>
       </div>
@@ -120,30 +123,30 @@ export default async function ShopCategoryPage({
                 </h2>
               </div>
               <p className="text-gray-500 text-sm max-w-md leading-relaxed">
-                Curated stills and clips from our latest {meta.brandLabel} content library, chosen to match this model and nearby build themes.
+                Curated stills and clips chosen to match this exact model from our latest {meta.brandLabel} project library.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
               <div className="md:col-span-7 border border-white/10 overflow-hidden bg-white/5">
                 {curatedMedia[0].type === "video" ? (
-                  <video
-                    className="w-full aspect-[16/10] object-cover"
+                  <ExpandableVideo
                     src={curatedMedia[0].src}
                     poster={curatedMedia[0].poster}
-                    muted
-                    playsInline
-                    loop
-                    autoPlay
-                    preload="metadata"
+                    title={curatedMedia[0].title}
+                    className="aspect-[16/10] w-full"
+                    videoClassName="w-full h-full object-cover"
                   />
                 ) : (
-                  <img
-                    src={curatedMedia[0].src}
-                    alt={curatedMedia[0].title}
-                    className="w-full aspect-[16/10] object-cover"
-                    loading="lazy"
-                  />
+                  <div className="relative aspect-[16/10] w-full">
+                    <Image
+                      src={curatedMedia[0].src}
+                      alt={curatedMedia[0].title}
+                      fill
+                      sizes="(min-width: 768px) 58vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
                 )}
               </div>
 
@@ -151,23 +154,23 @@ export default async function ShopCategoryPage({
                 {curatedMedia.slice(1).map((item) => (
                   <div key={item.id} className="border border-white/10 overflow-hidden bg-white/5">
                     {item.type === "video" ? (
-                      <video
-                        className="w-full aspect-[16/10] object-cover"
+                      <ExpandableVideo
                         src={item.src}
                         poster={item.poster}
-                        muted
-                        playsInline
-                        loop
-                        autoPlay
-                        preload="metadata"
+                        title={item.title}
+                        className="aspect-[16/10] w-full"
+                        videoClassName="w-full h-full object-cover"
                       />
                     ) : (
-                      <img
-                        src={item.src}
-                        alt={item.title}
-                        className="w-full aspect-[16/10] object-cover"
-                        loading="lazy"
-                      />
+                      <div className="relative aspect-[16/10] w-full">
+                        <Image
+                          src={item.src}
+                          alt={item.title}
+                          fill
+                          sizes="(min-width: 768px) 30vw, 100vw"
+                          className="object-cover"
+                        />
+                      </div>
                     )}
                     <div className="p-4 border-t border-white/10">
                       <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#D3BF89] mb-2">

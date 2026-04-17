@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import CollectionDeliverySection from "@/components/shared/CollectionDeliverySection";
+import ExpandableVideo from "@/components/shared/ExpandableVideo";
 import { getServiceBySlug } from "@/lib/serviceContent";
 import { CONVERSION_COPY } from "@/lib/siteContent";
 
@@ -72,21 +74,20 @@ export default function ServiceDetailPage({
           <div className="border border-white/10 overflow-hidden bg-black/30">
             <div className="aspect-[4/5]">
               {media.type === "video" ? (
-                <video
-                  className="w-full h-full object-cover"
+                <ExpandableVideo
                   src={media.src}
                   poster={media.poster}
-                  muted
-                  playsInline
-                  loop
-                  autoPlay
-                  preload="metadata"
+                  title={service.title}
+                  className="h-full w-full"
+                  videoClassName="w-full h-full object-cover"
                 />
               ) : (
-                <img
+                <Image
                   src={media.src}
                   alt={service.title}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(min-width: 1024px) 520px, 100vw"
+                  className="object-cover"
                 />
               )}
             </div>

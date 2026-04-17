@@ -1,3 +1,9 @@
+import {
+  SITE_ADDRESS,
+  SITE_EMAIL,
+  SITE_EMAIL_LINK,
+} from "@/lib/siteContent";
+
 export const metadata = {
   title: "Privacy Policy | FDL Bespoke",
   description: "Our privacy policy and how we handle your data.",
@@ -13,7 +19,7 @@ export default function PrivacyPage() {
 
         <div className="prose prose-invert prose-sm max-w-none space-y-8">
           <p className="text-gray-400 text-lg border-l-2 border-[var(--accent)] pl-6">
-            Last updated: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+            Last updated: {new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
           </p>
 
           <section className="border-t border-white/10 pt-8">
@@ -22,14 +28,14 @@ export default function PrivacyPage() {
               We collect information you provide directly to us when you:
             </p>
             <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
-              <li>Create an account or place an order</li>
-              <li>Subscribe to our newsletter</li>
+              <li>Place an order</li>
+              <li>Submit an enquiry or quote request</li>
               <li>Contact us for support</li>
-              <li>Participate in surveys or promotions</li>
+              <li>Request updates about a build or product</li>
             </ul>
             <p className="text-gray-300 leading-relaxed mt-4">
-              This information may include: name, email address, phone number, shipping address,
-              billing address, and payment information.
+              This information may include your name, email address, phone number, vehicle details,
+              shipping address, billing address, and payment information where relevant.
             </p>
           </section>
 
@@ -39,11 +45,11 @@ export default function PrivacyPage() {
               We use the information we collect to:
             </p>
             <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
-              <li>Process and fulfill your orders</li>
-              <li>Send you order confirmations and shipping updates</li>
-              <li>Respond to your comments and questions</li>
-              <li>Send you marketing communications (with your consent)</li>
-              <li>Improve our products and services</li>
+              <li>Process and fulfil your orders</li>
+              <li>Respond to enquiries and quote requests</li>
+              <li>Send you order confirmations and progress updates</li>
+              <li>Provide customer support</li>
+              <li>Improve our products, services, and website experience</li>
               <li>Protect against fraudulent transactions</li>
             </ul>
           </section>
@@ -51,21 +57,18 @@ export default function PrivacyPage() {
           <section className="border-t border-white/10 pt-8">
             <h2 className="text-2xl font-bold uppercase tracking-wider mb-4">3. Information Sharing</h2>
             <p className="text-gray-300 leading-relaxed">
-              We do not sell your personal information. We may share your information with:
+              We do not sell your personal information. We may share your information with payment
+              processors, delivery partners, service providers that help us run the website, and
+              legal authorities where required by law.
             </p>
-            <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4 mt-4">
-              <li><strong>Service providers:</strong> Payment processors, shipping companies, and email service providers</li>
-              <li><strong>Legal requirements:</strong> When required by law or to protect our rights</li>
-              <li><strong>Business transfers:</strong> In connection with a merger, sale, or acquisition</li>
-            </ul>
           </section>
 
           <section className="border-t border-white/10 pt-8">
             <h2 className="text-2xl font-bold uppercase tracking-wider mb-4">4. Data Security</h2>
             <p className="text-gray-300 leading-relaxed">
-              We implement appropriate security measures to protect your personal information. However,
-              no method of transmission over the Internet is 100% secure. We use SSL encryption for
-              all transactions and store sensitive data securely.
+              We take appropriate technical and organisational measures to protect your information.
+              No method of online transmission is completely secure, but we work to keep your data
+              protected and access-limited.
             </p>
           </section>
 
@@ -75,10 +78,10 @@ export default function PrivacyPage() {
               You have the right to:
             </p>
             <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
-              <li>Access the personal information we hold about you</li>
+              <li>Request access to the personal information we hold about you</li>
               <li>Request correction of inaccurate information</li>
-              <li>Request deletion of your information</li>
-              <li>Object to processing of your information</li>
+              <li>Request deletion of your information where appropriate</li>
+              <li>Object to certain processing activities</li>
               <li>Withdraw consent for marketing communications</li>
             </ul>
           </section>
@@ -86,8 +89,8 @@ export default function PrivacyPage() {
           <section className="border-t border-white/10 pt-8">
             <h2 className="text-2xl font-bold uppercase tracking-wider mb-4">6. Cookies</h2>
             <p className="text-gray-300 leading-relaxed">
-              We use cookies and similar technologies to improve your browsing experience, analyze
-              site traffic, and personalize content. You can control cookies through your browser settings.
+              We use cookies and similar technologies to improve browsing performance, remember cart
+              and preference data, and understand how the site is used.
             </p>
           </section>
 
@@ -97,8 +100,8 @@ export default function PrivacyPage() {
               If you have questions about this Privacy Policy, please contact us at:
             </p>
             <div className="mt-4 text-gray-300">
-              <p>Email: <a href="mailto:privacy@fdlbespoke.com" className="text-[var(--accent)] hover:underline">privacy@fdlbespoke.com</a></p>
-              <p className="mt-2">Address: [Your Business Address]</p>
+              <p>Email: <a href={SITE_EMAIL_LINK} className="text-[var(--accent)] hover:underline">{SITE_EMAIL}</a></p>
+              <p className="mt-2">Address: {SITE_ADDRESS}</p>
             </div>
           </section>
         </div>

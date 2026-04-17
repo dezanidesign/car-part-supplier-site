@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import ExpandableVideo from "@/components/shared/ExpandableVideo";
 import { COLLECTION_DELIVERY_SECTION } from "@/lib/serviceContent";
 import { CONVERSION_COPY } from "@/lib/siteContent";
 
@@ -34,15 +35,12 @@ export default function CollectionDeliverySection({ className = "" }: Props) {
 
         <div className="border border-white/10 bg-black/30 overflow-hidden">
           <div className="aspect-[4/5]">
-            <video
-              className="w-full h-full object-cover"
+            <ExpandableVideo
               src={media.src}
               poster={media.poster}
-              muted
-              playsInline
-              loop
-              autoPlay
-              preload="metadata"
+              title={COLLECTION_DELIVERY_SECTION.title}
+              className="h-full w-full"
+              videoClassName="w-full h-full object-cover"
             />
           </div>
         </div>

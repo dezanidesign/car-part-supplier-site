@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { SITE_EMAIL, SITE_LOGO_PATH } from "@/lib/siteContent";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -51,11 +52,11 @@ export default function AdminLoginPage() {
         {/* Logo */}
         <div className="flex justify-center mb-10">
           <Image
-            src="https://fdlbespoke.co.uk/wp-content/uploads/2025/06/cropped-cropped-FDL-UK-Logo-White-Sq.png"
+            src={SITE_LOGO_PATH}
             alt="FDL Bespoke"
-            width={80}
-            height={80}
-            className="h-16 w-auto opacity-60"
+            width={140}
+            height={46}
+            className="h-12 w-auto opacity-70"
           />
         </div>
 
@@ -72,7 +73,7 @@ export default function AdminLoginPage() {
               required
               autoComplete="email"
               className="w-full bg-[#0F0F0F] border border-white/10 text-white px-4 py-3 text-sm focus:border-[var(--accent)] focus:outline-none transition-colors rounded-none"
-              placeholder="admin@fdlbespoke.co.uk"
+              placeholder={SITE_EMAIL}
             />
           </div>
 

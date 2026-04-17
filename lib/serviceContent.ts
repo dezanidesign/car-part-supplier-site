@@ -40,7 +40,7 @@ export const SERVICES: ServiceItem[] = [
     subServices: [
       { name: "Performance Bodykits", desc: "Full wide-body and aero packages from leading manufacturers." },
       { name: "Exterior Splitter Kits", desc: "Front splitters, side skirts, and rear diffusers for aggressive stance." },
-      { name: "Carbon Fibre", desc: "Genuine carbon fibre components — bonnets, mirrors, spoilers, and trim." },
+      { name: "Carbon Fibre", desc: "Genuine carbon fibre components - bonnets, mirrors, spoilers, and trim." },
       { name: "Facelift Conversions", desc: "Factory-level upgrades to bring your vehicle up to latest-model specification." },
     ],
     media: SERVICE_MEDIA.bodykits,
@@ -66,7 +66,7 @@ export const SERVICES: ServiceItem[] = [
     num: "03",
     title: "Privacy Glass",
     description:
-      "Premium window tinting with Enkahnz ceramic films — 99% UV rejection, heat reduction, and enhanced privacy. Full panel disassembly for flawless, edge-to-edge coverage.",
+      "Premium window tinting with Enkahnz ceramic films - 99% UV rejection, heat reduction, and enhanced privacy. Full panel disassembly for flawless, edge-to-edge coverage.",
     subServices: [
       { name: "Window Tints", desc: "Automotive tinting in a range of shades from light to limo black." },
       { name: "Commercial Tinting", desc: "Building and office window films for privacy, heat reduction, and branding." },
@@ -129,7 +129,7 @@ export const SERVICES: ServiceItem[] = [
     description:
       "Certified installation of leading vehicle security systems. From immobilisers to tracking, we provide complete peace of mind for your vehicle.",
     subServices: [
-      { name: "Ghost Immobiliser", desc: "Autowatch Ghost II — the ultimate aftermarket immobiliser. Undetectable and insurance approved." },
+      { name: "Ghost Immobiliser", desc: "Autowatch Ghost II - the ultimate aftermarket immobiliser. Undetectable and insurance approved." },
       { name: "Trackers", desc: "GPS tracking systems with 24/7 monitoring and smartphone alerts." },
       { name: "Dashcams", desc: "Front and rear dashcam installation with hardwired parking mode." },
       { name: "Reverse Cameras & Sensors", desc: "OEM-style reversing cameras and parking sensors fitted to any vehicle." },

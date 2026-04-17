@@ -7,10 +7,12 @@ import CollectionDeliverySection from '@/components/shared/CollectionDeliverySec
 import {
   SITE_ADDRESS,
   SITE_EMAIL,
+  SITE_EMAIL_LINK,
   SITE_HOURS,
   SITE_LOCATION,
   SITE_PHONE_DISPLAY,
   SITE_PHONE_LINK,
+  SITE_SOCIALS,
 } from '@/lib/siteContent';
 
 const ContactPage = () => (
@@ -46,7 +48,7 @@ const ContactPage = () => (
                 </div>
                 <div className="flex items-center gap-4">
                   <Mail size={18} className="text-[var(--accent)] flex-shrink-0" />
-                  <a href={`mailto:${SITE_EMAIL}`} className="text-white text-sm font-bold hover:text-[var(--accent)] transition-colors">
+                  <a href={SITE_EMAIL_LINK} className="text-white text-sm font-bold hover:text-[var(--accent)] transition-colors">
                     {SITE_EMAIL}
                   </a>
                 </div>
@@ -64,14 +66,14 @@ const ContactPage = () => (
             <div className="border-t border-white/10 pt-8">
               <h3 className="font-display text-lg text-white font-bold uppercase mb-4">Follow Us</h3>
               <div className="flex gap-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">
-                <a href="https://www.instagram.com/fdlbespoke" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--accent)] transition-colors">
-                  Instagram
+                <a href={SITE_SOCIALS.instagram.href} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--accent)] transition-colors">
+                  {SITE_SOCIALS.instagram.label}
                 </a>
-                <a href="https://www.facebook.com/fdlbespoke" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--accent)] transition-colors">
-                  Facebook
+                <a href={SITE_SOCIALS.facebook.href} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--accent)] transition-colors">
+                  {SITE_SOCIALS.facebook.label}
                 </a>
-                <a href="https://www.tiktok.com/@fdlbespoke" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--accent)] transition-colors">
-                  TikTok
+                <a href={SITE_SOCIALS.tiktok.href} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--accent)] transition-colors">
+                  {SITE_SOCIALS.tiktok.label}
                 </a>
               </div>
             </div>

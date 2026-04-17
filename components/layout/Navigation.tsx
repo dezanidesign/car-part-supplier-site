@@ -7,19 +7,7 @@ import { ShoppingBag, Menu, X, ChevronDown, ChevronRight, ChevronLeft } from "lu
 import { useCartStore } from "@/lib/store";
 import ShopMegaMenu from "./ShopMegaMenu";
 import { SHOP_CATEGORIES } from "@/lib/shopCategories"; // Ensure you import your data
-import { SITE_LOGO_PATH } from "@/lib/siteContent";
-
-// ============================================================================
-// NAV ITEMS
-// ============================================================================
-
-const customisationItems = [
-  { href: "/customisation/bodykits", label: "Bodykits" },
-  { href: "/customisation/alloys", label: "Alloy Wheels" },
-  { href: "/customisation/styling", label: "Styling" },
-  { href: "/customisation/tints", label: "Tints & Privacy" },
-  { href: "/customisation/interiors", label: "Interior Conversions" },
-];
+import { SITE_EMAIL, SITE_LOGO_PATH } from "@/lib/siteContent";
 
 const mainNavItems = [
   { href: "/blog", label: "Blog" },
@@ -41,7 +29,6 @@ export function Navigation() {
   // NEW: Track which brand is expanded in mobile shop view
   const [expandedBrand, setExpandedBrand] = useState<string | null>(null);
 
-  const [isCustomisationOpen, setIsCustomisationOpen] = useState(false);
   const [isShopOpen, setIsShopOpen] = useState(false);
 
   const cartItemCount = useCartStore((state) => state.getItemCount());
@@ -94,13 +81,8 @@ export function Navigation() {
   }, [isMenuOpen]);
 
   // Desktop Hover Handlers
-  const openCustomisation = (open: boolean) => {
-    setIsCustomisationOpen(open);
-    if (open) setIsShopOpen(false);
-  };
   const openShop = (open: boolean) => {
     setIsShopOpen(open);
-    if (open) setIsCustomisationOpen(false);
   };
 
   const toggleBrand = (slug: string) => {
@@ -230,6 +212,9 @@ export function Navigation() {
             {/* Footer Contact */}
             <div className="mt-auto pt-8 pb-12">
                <a href="tel:07869022673" className="text-white text-lg font-bold">07869 022673</a>
+               <a href={`mailto:${SITE_EMAIL}`} className="block text-gray-400 text-sm mt-3 hover:text-white transition-colors">
+                 {SITE_EMAIL}
+               </a>
                <p className="text-gray-500 text-sm mt-2">Unit C3, 511 Bradford Rd, Batley</p>
             </div>
           </div>

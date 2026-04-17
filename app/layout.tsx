@@ -3,7 +3,13 @@ import TopBar from "@/components/layout/TopBar";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import CartDrawer from "@/components/cart/CartDrawer";
-import { NewsletterPopup } from "@/components/NewsletterPopup";
+import {
+  SITE_ADDRESS,
+  SITE_EMAIL,
+  SITE_HOURS,
+  SITE_LOCATION,
+  SITE_SOCIALS,
+} from "@/lib/siteContent";
 // import { CustomCursor } from "@/components/layout/CustomCursor";
 import "../styles/globals.css";
 import { Syne, Space_Grotesk } from "next/font/google";
@@ -89,6 +95,16 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.fdlbespoke.co.uk",
   },
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    shortcut: ["/icon.svg"],
+    apple: [{ url: "/icon.svg", type: "image/svg+xml" }],
+  },
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    title: "FDL Bespoke",
+    statusBarStyle: "black-translucent",
+  },
 };
 
 export const viewport: Viewport = {
@@ -117,8 +133,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="site-chrome-bottom">
           <Footer />
           <CartDrawer />
-          <NewsletterPopup />
-        </div> 
+        </div>
 
         <script
           type="application/ld+json"
@@ -130,6 +145,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               description: "Premium automotive styling solutions",
               url: "https://www.fdlbespoke.co.uk",
               telephone: "+447869022673",
+              email: SITE_EMAIL,
               address: {
                 "@type": "PostalAddress",
                 streetAddress: "Unit C3, 511 Bradford Rd",
@@ -146,17 +162,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               openingHoursSpecification: [
                 {
                   "@type": "OpeningHoursSpecification",
-                  dayOfWeek: ["Thursday", "Friday", "Saturday"],
+                  dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
                   opens: "10:00",
-                  closes: "18:00",
+                  closes: "17:00",
                 },
               ],
-              priceRange: "£££",
+              priceRange: "GBP",
               image: "https://www.fdlbespoke.co.uk/og-image.jpg",
               sameAs: [
-                "https://www.instagram.com/fdlbespoke",
-                "https://www.facebook.com/fdlbespoke",
+                SITE_SOCIALS.instagram.href,
+                SITE_SOCIALS.facebook.href,
+                SITE_SOCIALS.tiktok.href,
               ],
+              areaServed: "GB",
+              openingHours: SITE_HOURS,
+              location: {
+                "@type": "Place",
+                name: SITE_LOCATION,
+                address: SITE_ADDRESS,
+              },
             }),
           }}
         />

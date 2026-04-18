@@ -202,6 +202,7 @@ export default function GalleryPage() {
                             src={item.src}
                             poster={item.poster}
                             title={item.title}
+                            autoPlay={false}
                             className="h-full w-full"
                             videoClassName="w-full h-full object-cover"
                           />
@@ -226,14 +227,6 @@ export default function GalleryPage() {
                       )}
                     </div>
 
-                    <div className="p-4 md:p-5 border-t border-white/5">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#D3BF89] mb-2">
-                        {item.brandLabel} / {item.projectLabel}
-                      </p>
-                      <h3 className="font-display text-sm md:text-base font-bold uppercase text-white leading-snug">
-                        {item.title}
-                      </h3>
-                    </div>
                   </div>
                 ))}
               </div>
@@ -250,12 +243,12 @@ export default function GalleryPage() {
 
       {lightboxOpen && filteredImages.length > 0 && (
         <div
-          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 md:p-8"
+          className="fixed inset-0 z-[140] bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 md:p-8"
           onClick={closeLightbox}
         >
           <button
             onClick={closeLightbox}
-            className="absolute top-4 right-4 md:top-8 md:right-8 z-10 w-10 h-10 md:w-12 md:h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110"
+            className="fixed right-4 top-[max(1rem,env(safe-area-inset-top))] z-[160] flex h-12 w-12 items-center justify-center rounded-full bg-white text-black shadow-2xl shadow-black/40 transition-all duration-300 hover:scale-105 hover:bg-[#D3BF89] md:right-8 md:h-12 md:w-12"
             aria-label="Close lightbox"
           >
             <X size={24} className="md:w-6 md:h-6" />

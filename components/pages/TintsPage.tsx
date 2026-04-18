@@ -1,12 +1,10 @@
 'use client';
 
-import { useState } from 'react';
 import { Shield, Sun, Lock, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import TintPreviewSlider from '@/components/shared/TintPreviewSlider';
 
 const TintsPage = () => {
-  const [tintLevel, setTintLevel] = useState(50);
-
   return (
     <div className="min-h-screen bg-[var(--bg-dark)] animate-in fade-in duration-700">
        {/* Hero Section */}
@@ -32,38 +30,8 @@ const TintsPage = () => {
                 Our specialist window films do more than transform the look of your vehicle—they deliver a host of practical advantages. Installed in-house by trained experts, Enkahnz privacy glass enhances both style and performance with a finish indistinguishable from factory standards.
              </p>
 
-             {/* Interactive Tint Visualizer */}
-             <div className="relative w-full h-[50vh] md:h-[60vh] bg-[#111] border border-white/5 overflow-hidden group mb-16">
-                <img src="/gallery/audi/5B1A3695.jpg" className="w-full h-full object-cover" alt="Vehicle Privacy Glass" />
-
-                <div
-                   className="absolute inset-0 bg-black pointer-events-none transition-opacity duration-100"
-                   style={{ opacity: tintLevel / 100 }}
-                ></div>
-
-                <div className="absolute top-6 left-6 bg-black/60 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
-                   <span className="text-white text-xs font-bold uppercase tracking-widest">Interactive Preview</span>
-                </div>
-
-                <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 bg-gradient-to-t from-black via-black/80 to-transparent">
-                   <div className="max-w-2xl mx-auto bg-black/40 backdrop-blur-md border border-white/10 p-6 md:p-8 rounded-xl">
-                      <div className="flex justify-between text-white mb-6 text-xs font-bold uppercase tracking-widest">
-                         <span>Clear (0%)</span>
-                         <span className="text-[var(--accent)]">Limo Black ({tintLevel}%)</span>
-                      </div>
-                      <input
-                         type="range"
-                         min="0"
-                         max="95"
-                         value={tintLevel}
-                         onChange={(e) => setTintLevel(Number(e.target.value))}
-                         className="w-full"
-                      />
-                      <p className="text-gray-400 text-xs mt-4 text-center">
-                         Drag the slider to preview different tint levels
-                      </p>
-                   </div>
-                </div>
+             <div className="mb-16">
+                <TintPreviewSlider imageAlt="Vehicle Privacy Glass" />
              </div>
 
              {/* Key Benefits Grid */}

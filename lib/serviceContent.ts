@@ -3,6 +3,7 @@ import {
   COLLECTION_DELIVERY_MEDIA,
   SERVICE_ENTRY_MEDIA,
   SERVICE_MEDIA,
+  SERVICE_MEDIA_GROUPS,
 } from "@/lib/curatedMedia";
 
 export type ServiceFaqItem = {
@@ -15,6 +16,8 @@ export type ServiceSubItem = {
   desc: string;
 };
 
+export type ServiceVisualType = "media" | "tint-slider" | "pending";
+
 export type ServiceItem = {
   id: string;
   slug: string;
@@ -24,7 +27,9 @@ export type ServiceItem = {
   description: string;
   subServices: ServiceSubItem[];
   badge?: string;
-  media: CuratedMediaItem;
+  media?: CuratedMediaItem | null;
+  mediaItems?: CuratedMediaItem[];
+  visualType?: ServiceVisualType;
   faq?: ServiceFaqItem[];
   chips?: string[];
 };
@@ -44,6 +49,7 @@ export const SERVICES: ServiceItem[] = [
       { name: "Facelift Conversions", desc: "Factory-level upgrades to bring your vehicle up to latest-model specification." },
     ],
     media: SERVICE_MEDIA.bodykits,
+    mediaItems: SERVICE_MEDIA_GROUPS.bodykits,
   },
   {
     id: "alloy-refurb",
@@ -51,7 +57,7 @@ export const SERVICES: ServiceItem[] = [
     num: "02",
     title: "Alloy Wheels Refurbishment",
     description:
-      "Restore or completely transform your alloys with our expert refurbishment services. From kerb damage repair to full custom finishes.",
+      "Restore or completely transform your alloys with expert refurbishment services, from kerb damage repair to full custom finishes.",
     subServices: [
       { name: "Powdercoating", desc: "Durable, high-quality colour finishes with industry-standard powder coating." },
       { name: "Diamond Cutting", desc: "CNC precision diamond-cut finish for a factory-fresh look." },
@@ -59,6 +65,7 @@ export const SERVICES: ServiceItem[] = [
       { name: "Buckles & Welding Repairs", desc: "Structural repairs including buckle straightening and alloy welding." },
     ],
     media: SERVICE_MEDIA["alloy-refurb"],
+    mediaItems: SERVICE_MEDIA_GROUPS["alloy-refurb"],
   },
   {
     id: "privacy-glass",
@@ -71,7 +78,9 @@ export const SERVICES: ServiceItem[] = [
       { name: "Window Tints", desc: "Automotive tinting in a range of shades from light to limo black." },
       { name: "Commercial Tinting", desc: "Building and office window films for privacy, heat reduction, and branding." },
     ],
+    visualType: "tint-slider",
     media: SERVICE_MEDIA["privacy-glass"],
+    mediaItems: SERVICE_MEDIA_GROUPS["privacy-glass"],
     faq: [
       { q: "Is window tinting legal in the UK?", a: "Front windscreen must allow 75% light through, front sides 70%. Rear windows have no restriction. We ensure all tints meet legal requirements." },
       { q: "How long does tinting take?", a: "A full vehicle typically takes 2-4 hours. We remove panels for a flawless finish with no visible edges." },
@@ -85,12 +94,13 @@ export const SERVICES: ServiceItem[] = [
     num: "04",
     title: "Headlight & Taillight Tinting",
     description:
-      "Subtle smoke or full blackout tinting for headlights and taillights. Precision-applied film that transforms the look of your vehicle while maintaining light output.",
+      "Subtle smoke or full blackout tinting for headlights and taillights. Precision-applied film transforms the look of your vehicle while maintaining usable light output.",
     subServices: [
       { name: "Headlight Tinting", desc: "Light smoke to medium tint options that maintain brightness and legality." },
       { name: "Taillight Tinting", desc: "Full blackout or tinted finishes for a sleek, murdered-out aesthetic." },
     ],
     media: SERVICE_MEDIA["light-tinting"],
+    mediaItems: SERVICE_MEDIA_GROUPS["light-tinting"],
   },
   {
     id: "wrapping",
@@ -106,6 +116,7 @@ export const SERVICES: ServiceItem[] = [
       { name: "Fleet Branding", desc: "Commercial vehicle livery and fleet graphics for businesses." },
     ],
     media: SERVICE_MEDIA.wrapping,
+    mediaItems: SERVICE_MEDIA_GROUPS.wrapping,
   },
   {
     id: "detailing-ppf",
@@ -113,12 +124,14 @@ export const SERVICES: ServiceItem[] = [
     num: "06",
     title: "Detailing & PPF",
     description:
-      "Protect your paintwork with the latest in ceramic coatings and paint protection film. Our accredited installers deliver showroom finishes that last.",
+      "Protect your paintwork with the latest ceramic coatings and paint protection film. Our installers deliver refined, showroom-level finishes that last.",
     subServices: [
       { name: "Ceramic Coatings", desc: "Multi-layer ceramic protection for paint, wheels, and glass. Hydrophobic and UV resistant." },
       { name: "Paint Protection Film", desc: "Self-healing PPF applied to high-impact areas or full vehicle coverage." },
+      { name: "Detailing", desc: "Paint correction and finishing work for high-impact presentation." },
     ],
     media: SERVICE_MEDIA["detailing-ppf"],
+    mediaItems: SERVICE_MEDIA_GROUPS["detailing-ppf"],
   },
   {
     id: "security",
@@ -135,6 +148,7 @@ export const SERVICES: ServiceItem[] = [
       { name: "Reverse Cameras & Sensors", desc: "OEM-style reversing cameras and parking sensors fitted to any vehicle." },
     ],
     media: SERVICE_MEDIA.security,
+    mediaItems: SERVICE_MEDIA_GROUPS.security,
     chips: ["Autowatch Ghost", "Scorpion", "Road Angel"],
   },
   {
@@ -149,7 +163,9 @@ export const SERVICES: ServiceItem[] = [
       { name: "Panel Repair & Replacement", desc: "Dent removal, panel beating, and full panel replacement." },
       { name: "Paint Refinishing", desc: "Colour-matched resprays using Spies Hecker premium paint systems." },
     ],
-    media: SERVICE_MEDIA["accident-repair"],
+    visualType: "pending",
+    media: null,
+    mediaItems: [],
     badge: "Insurance Approved",
   },
   {
@@ -158,13 +174,14 @@ export const SERVICES: ServiceItem[] = [
     num: "09",
     title: "Alloy Wheel Packages",
     description:
-      "Complete alloy wheel and tyre packages sourced, fitted, and balanced in-house. From 18\" to 24\", we supply premium wheels for all makes and models.",
+      "Complete alloy wheel and tyre packages sourced, fitted, and balanced in-house. From 18 inch to 24 inch, we supply premium wheels for all makes and models.",
     subServices: [
       { name: "Alloy Wheel & Tyre Packages", desc: "Complete wheel and tyre sets supplied, fitted, and balanced." },
       { name: "Wheel Spacers", desc: "Precision hub-centric spacers for wider stance and improved fitment." },
       { name: "TPMS Sensors", desc: "OEM tyre pressure monitoring sensors programmed and fitted." },
     ],
     media: SERVICE_MEDIA["alloy-packages"],
+    mediaItems: SERVICE_MEDIA_GROUPS["alloy-packages"],
   },
   {
     id: "branding",
@@ -173,13 +190,14 @@ export const SERVICES: ServiceItem[] = [
     title: "Branding",
     subtitle: "Distinct Visual Identity",
     description:
-      "Commercial branding, wraps, and visual identity packages designed to make working vehicles and business fleets look as considered as the rest of our builds.",
+      "We create vehicle graphics and commercial branding that help your company stand out, with clean artwork, premium vinyl, and fitting that looks intentional on the road.",
     subServices: [
       { name: "Commercial Branding", desc: "High-impact graphics packages tailored to your business and vehicle shape." },
-      { name: "Amarok Build Branding", desc: "Project-led branding visuals inspired by our Amarok Europa work." },
+      { name: "Amarok Visuals", desc: "Amarok-specific livery and identity work inspired by our Europa project." },
       { name: "Fleet Wrap Packages", desc: "Consistent multi-vehicle branding with premium vinyl and clean installation." },
     ],
     media: SERVICE_MEDIA.branding,
+    mediaItems: SERVICE_MEDIA_GROUPS.branding,
   },
 ];
 

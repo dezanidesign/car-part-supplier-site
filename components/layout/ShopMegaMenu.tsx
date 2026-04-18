@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight } from "lucide-react"; 
-import { SHOP_CATEGORIES } from "@/lib/shopCategories";
+import { SHOP_NAV_CATEGORIES } from "@/lib/shopCategories";
 
 type Props = {
   onNavigate?: () => void;
@@ -23,7 +23,7 @@ export default function ShopMegaMenu({ onNavigate, className = "" }: Props) {
           <div className="w-3/4 pr-12">
             {/* Reduced gap-y-12 to gap-y-10 to pull groups closer together */}
             <div className="grid grid-cols-4 gap-x-8 gap-y-10">
-              {SHOP_CATEGORIES.map((make) => (
+              {SHOP_NAV_CATEGORIES.map((make) => (
                 <div key={make.slug} className="group flex flex-col items-start">
                   
                   {/* Brand Header */}

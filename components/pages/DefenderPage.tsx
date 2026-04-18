@@ -17,12 +17,11 @@ import {
   MessageSquare,
 } from 'lucide-react';
 import QuoteForm from '@/components/forms/QuoteForm';
-import ExpandableVideo from '@/components/shared/ExpandableVideo';
+import VehicleMediaShowcase from '@/components/shop/VehicleMediaShowcase';
 import type { WooProduct } from '@/lib/woo';
 import {
-  DEFENDER_GALLERY_MEDIA,
+  DEFENDER_ALL_MEDIA,
   DEFENDER_HERO_IMAGE,
-  DEFENDER_VIDEO_MEDIA,
 } from '@/lib/curatedMedia';
 
 // ============================================================================
@@ -336,6 +335,39 @@ export default function DefenderPage({ products }: { products: WooProduct[] }) {
       </section>
 
       {/* ==================================================================
+          SECTION 4: GALLERY / BUILDS
+          ================================================================== */}
+      <section id="builds" className="py-20 md:py-28 bg-[#080808] [--section-bg:#080808] border-y border-white/5">
+        <div className="px-6 md:px-16 max-w-[1920px] mx-auto mb-12 md:mb-16">
+          <p className="text-[var(--accent)] text-[10px] font-bold uppercase tracking-[0.35em] mb-4">
+            Our Work
+          </p>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+            <h2 className="font-display text-3xl md:text-5xl font-bold uppercase leading-tight">
+              Defender Builds<br />
+              <span className="text-outline">From Our Workshop</span>
+            </h2>
+            <Link
+              href="/gallery"
+              className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors font-bold uppercase tracking-widest"
+            >
+              Full Gallery <ArrowRight size={14} />
+            </Link>
+          </div>
+        </div>
+
+        <div className="px-6 md:px-16 max-w-[1920px] mx-auto">
+          <VehicleMediaShowcase
+            media={DEFENDER_ALL_MEDIA}
+            categoryLabel="Defender"
+            brandLabel="Land Rover"
+            intro="All Defender stills and clips from the source archive, ordered image carousel first and video reels below."
+          />
+        </div>
+      </section>
+
+
+      {/* ==================================================================
           SECTION 3: UPGRADE CATEGORIES
           ================================================================== */}
       <section className="px-6 md:px-16 py-20 md:py-28 bg-[var(--bg-dark)]">
@@ -391,128 +423,6 @@ export default function DefenderPage({ products }: { products: WooProduct[] }) {
           </div>
         </div>
       </section>
-
-      {/* ==================================================================
-          SECTION 4: GALLERY / BUILDS
-          ================================================================== */}
-      <section id="builds" className="py-20 md:py-28 bg-[#080808] [--section-bg:#080808] border-y border-white/5">
-        <div className="px-6 md:px-16 max-w-[1920px] mx-auto mb-12 md:mb-16">
-          <p className="text-[var(--accent)] text-[10px] font-bold uppercase tracking-[0.35em] mb-4">
-            Our Work
-          </p>
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-            <h2 className="font-display text-3xl md:text-5xl font-bold uppercase leading-tight">
-              Defender Builds<br />
-              <span className="text-outline">From Our Workshop</span>
-            </h2>
-            <Link
-              href="/gallery"
-              className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors font-bold uppercase tracking-widest"
-            >
-              Full Gallery <ArrowRight size={14} />
-            </Link>
-          </div>
-        </div>
-
-        {/* Editorial grid */}
-        <div className="px-6 md:px-16 max-w-[1920px] mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-12 gap-3 md:gap-4">
-            {/* Large featured — 2/2 mobile, 8/12 desktop */}
-            <div className="col-span-2 md:col-span-8 aspect-[16/10] overflow-hidden border border-white/5 group">
-              <img
-                src={DEFENDER_GALLERY_MEDIA[0].src}
-                alt={DEFENDER_GALLERY_MEDIA[0].title}
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-              />
-            </div>
-            {/* Right stack — 2/2 mobile (stacks below), 4/12 desktop */}
-            <div className="col-span-2 md:col-span-4 grid grid-cols-2 md:grid-cols-1 gap-3 md:gap-4">
-              <div className="aspect-[4/3] overflow-hidden border border-white/5 group">
-                <img
-                  src={DEFENDER_GALLERY_MEDIA[1].src}
-                  alt={DEFENDER_GALLERY_MEDIA[1].title}
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                />
-              </div>
-              <div className="aspect-[4/3] overflow-hidden border border-white/5 group">
-                <img
-                  src={DEFENDER_GALLERY_MEDIA[2].src}
-                  alt={DEFENDER_GALLERY_MEDIA[2].title}
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                />
-              </div>
-            </div>
-            {/* Bottom left — 1/2 mobile, 4/12 desktop */}
-            <div className="col-span-1 md:col-span-4 aspect-[4/3] overflow-hidden border border-white/5 group">
-              <img
-                src={DEFENDER_GALLERY_MEDIA[3].src}
-                alt={DEFENDER_GALLERY_MEDIA[3].title}
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-              />
-            </div>
-            {/* Bottom right — 1/2 mobile, 8/12 desktop, CTA overlay */}
-            <div className="col-span-1 md:col-span-8 aspect-[4/3] md:aspect-[16/7] overflow-hidden border border-white/5 group relative">
-              <img
-                src={DEFENDER_GALLERY_MEDIA[4].src}
-                alt={DEFENDER_GALLERY_MEDIA[4].title}
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-              />
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
-                <Link
-                  href="/gallery"
-                  className="bg-[var(--accent)] text-black font-bold uppercase tracking-widest px-6 py-3 text-xs rounded-full flex items-center gap-2"
-                >
-                  Full Gallery <ArrowRight size={12} />
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-10 md:mt-12">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
-              <div>
-                <p className="text-[var(--accent)] text-[10px] font-bold uppercase tracking-[0.3em] mb-2">
-                  Product Clips
-                </p>
-                <h3 className="font-display text-xl md:text-3xl font-bold uppercase leading-tight">
-                  Defender Upgrade Videos
-                </h3>
-              </div>
-              <p className="text-gray-500 text-sm max-w-md leading-relaxed">
-                Quick-cut clips from the same content library, focused on the upgrade details and finishing touches that shape our Defender builds.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {DEFENDER_VIDEO_MEDIA.map((item) => (
-                <div
-                  key={item.id}
-                  className="border border-white/5 bg-black/20 overflow-hidden group"
-                >
-                  <div className="aspect-[4/3] overflow-hidden">
-                    <ExpandableVideo
-                      src={item.src}
-                      poster={item.poster}
-                      title={item.title}
-                      className="h-full w-full"
-                      videoClassName="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-4 md:p-5 border-t border-white/5">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--accent)] mb-2">
-                      {item.projectLabel}
-                    </p>
-                    <h4 className="font-display text-sm md:text-base font-bold uppercase text-white">
-                      {item.title}
-                    </h4>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ==================================================================
           SECTION 5: WHY FDL
           ================================================================== */}

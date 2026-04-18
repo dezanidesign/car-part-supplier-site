@@ -5,9 +5,9 @@ import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 import { getCategoryMeta } from "@/lib/shopCategories";
 import { fetchProductsByCategorySlug } from "@/lib/woo";
-import { getShopCategoryMedia } from "@/lib/curatedMedia";
+import { getShopCategoryMedia, type CuratedMediaItem } from "@/lib/curatedMedia";
 import type { WooProduct } from "@/lib/woo";
-import ExpandableVideo from "@/components/shared/ExpandableVideo";
+import VehicleMediaShowcase from "@/components/shop/VehicleMediaShowcase";
 import { CONVERSION_COPY } from "@/lib/siteContent";
 
 export async function generateMetadata({
@@ -26,7 +26,14 @@ export async function generateMetadata({
   return {
     title: `${meta.label} - ${meta.brandLabel}`,
     description: `Shop premium ${meta.label} parts and accessories for ${meta.brandLabel}. High-quality automotive styling products with expert support.`,
-    keywords: [meta.label, meta.brandLabel, "car parts", "automotive accessories", "OEM parts", "aftermarket parts"],
+    keywords: [
+      meta.label,
+      meta.brandLabel,
+      "car parts",
+      "automotive accessories",
+      "OEM parts",
+      "aftermarket parts",
+    ],
   };
 }
 
@@ -39,36 +46,66 @@ function ProductCard({ product }: { product: WooProduct }) {
       : product.price;
 
   return (
-    <div className="border border-white/10 bg-white/5 rounded-xl overflow-hidden hover:border-white/20 transition-colors group">
-      <div className="aspect-square relative overflow-hidden bg-black/20">
+    <Link
+      href={`/product/${product.slug}`}
+      className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 transition-colors hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-[#D3BF89]/70"
+      aria-label={`View ${product.name}`}
+    >
+      <div className="relative aspect-square overflow-hidden bg-black/20">
         <Image
           src={imageSrc}
           alt={imageAlt}
           width={400}
           height={400}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           unoptimized
         />
       </div>
       <div className="p-4">
-        <h3 className="text-white font-bold text-sm uppercase tracking-wide mb-2 line-clamp-2">
+        <h3 className="mb-2 line-clamp-2 text-sm font-bold uppercase tracking-wide text-white">
           {product.name}
         </h3>
         <div className="flex items-center justify-between gap-4">
-          <span className="text-[#D3BF89] font-bold text-lg">
-            £{parseFloat(price || "0").toFixed(2)}
+          <span className="text-lg font-bold text-[#D3BF89]">
+            &pound;{parseFloat(price || "0").toFixed(2)}
           </span>
-          <Link
-            href={`/product/${product.slug}`}
-            className="inline-flex items-center gap-2 text-white/60 hover:text-[#D3BF89] transition-colors text-sm font-medium"
-          >
+          <span className="inline-flex items-center gap-2 text-sm font-medium text-white/60 transition-colors group-hover:text-[#D3BF89]">
             <span>View Product</span>
             <ArrowRight size={12} />
-          </Link>
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
+}
+
+function getProductImageMedia(products: WooProduct[]): CuratedMediaItem[] {
+  const seen = new Set<string>();
+  const media: CuratedMediaItem[] = [];
+
+  for (const product of products) {
+    for (const [imageIndex, image] of (product.images || []).entries()) {
+      const src = image.src?.trim();
+      if (!src || seen.has(src)) continue;
+
+      seen.add(src);
+      media.push({
+        id: `x5-g05-product-${product.id}-${image.id || imageIndex}`,
+        type: "image",
+        src,
+        brand: "bmw",
+        brandLabel: "BMW",
+        project: "x5-g05-product-images",
+        projectLabel: "X5 G05",
+        title: image.alt || image.name || product.name,
+        relatedSlugs: ["x5-g05"],
+        featuredArea: ["shop-category"],
+        sourceFolder: "WooCommerce product imagery",
+      });
+    }
+  }
+
+  return media;
 }
 
 export default async function ShopCategoryPage({
@@ -81,15 +118,19 @@ export default async function ShopCategoryPage({
 
   const products = await fetchProductsByCategorySlug(params.slug);
   const curatedMedia = getShopCategoryMedia(params.slug);
+  const isX5G05Page = params.slug === "x5-g05";
+  const productImageMedia = isX5G05Page ? getProductImageMedia(products) : [];
   const hasProducts = products.length > 0;
-  const hasMedia = curatedMedia.length > 0;
+  const hasMedia = isX5G05Page
+    ? productImageMedia.length > 0 || curatedMedia.length > 0
+    : curatedMedia.length > 0;
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
-      <div className="max-w-[1920px] mx-auto px-6 md:px-12 pb-20">
-        <div className="border border-white/10 bg-white/5 rounded-2xl p-8 md:p-12 overflow-hidden relative">
+      <div className="mx-auto max-w-[1920px] px-6 pb-20 md:px-12">
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-8 md:p-12">
           <div
-            className="absolute inset-0 opacity-30 pointer-events-none"
+            className="pointer-events-none absolute inset-0 opacity-30"
             style={{
               background:
                 "radial-gradient(800px 400px at 20% 20%, rgba(211,191,137,0.25), transparent 60%), radial-gradient(700px 350px at 80% 0%, rgba(255,255,255,0.08), transparent 55%)",
@@ -100,119 +141,78 @@ export default async function ShopCategoryPage({
               {meta.brandLabel}
             </p>
 
-            <h1 className="font-display text-4xl md:text-7xl font-bold uppercase tracking-tight mt-3">
+            <h1 className="font-display mt-3 text-4xl font-bold uppercase tracking-tight md:text-7xl">
               {meta.label}
               <span className="text-[#D3BF89]">.</span>
             </h1>
 
-            <p className="text-gray-400 mt-5 max-w-2xl">
-              Browse our curated selection of premium parts for this vehicle model.
-            </p>
+            <p className="mt-5 max-w-2xl text-gray-400">{meta.description}</p>
           </div>
         </div>
 
         {hasMedia && (
-          <div className="mt-12 md:mt-14">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 mb-6">
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#D3BF89] mb-2">
-                  Project Media
-                </p>
-                <h2 className="font-display text-2xl md:text-4xl font-bold uppercase leading-tight">
-                  Recent {meta.label} Work
-                </h2>
-              </div>
-              <p className="text-gray-500 text-sm max-w-md leading-relaxed">
-                Curated stills and clips chosen to match this exact model from our latest {meta.brandLabel} project library.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-              <div className="md:col-span-7 border border-white/10 overflow-hidden bg-white/5">
-                {curatedMedia[0].type === "video" ? (
-                  <ExpandableVideo
-                    src={curatedMedia[0].src}
-                    poster={curatedMedia[0].poster}
-                    title={curatedMedia[0].title}
-                    className="aspect-[16/10] w-full"
-                    videoClassName="w-full h-full object-cover"
+          <>
+            {isX5G05Page ? (
+              <>
+                {productImageMedia.length > 0 && (
+                  <VehicleMediaShowcase
+                    media={productImageMedia}
+                    categoryLabel="X5 G05"
+                    brandLabel="BMW"
+                    eyebrow="X5 G05"
+                    title="X5 G05"
+                    intro="Product-associated X5 G05 imagery pulled directly from the WooCommerce products shown below."
                   />
-                ) : (
-                  <div className="relative aspect-[16/10] w-full">
-                    <Image
-                      src={curatedMedia[0].src}
-                      alt={curatedMedia[0].title}
-                      fill
-                      sizes="(min-width: 768px) 58vw, 100vw"
-                      className="object-cover"
-                    />
-                  </div>
                 )}
-              </div>
 
-              <div className="md:col-span-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
-                {curatedMedia.slice(1).map((item) => (
-                  <div key={item.id} className="border border-white/10 overflow-hidden bg-white/5">
-                    {item.type === "video" ? (
-                      <ExpandableVideo
-                        src={item.src}
-                        poster={item.poster}
-                        title={item.title}
-                        className="aspect-[16/10] w-full"
-                        videoClassName="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="relative aspect-[16/10] w-full">
-                        <Image
-                          src={item.src}
-                          alt={item.title}
-                          fill
-                          sizes="(min-width: 768px) 30vw, 100vw"
-                          className="object-cover"
-                        />
-                      </div>
-                    )}
-                    <div className="p-4 border-t border-white/10">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#D3BF89] mb-2">
-                        {item.projectLabel}
-                      </p>
-                      <p className="text-white text-sm font-medium leading-snug">{item.title}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border border-white/10 bg-white/5 rounded-2xl p-5 md:p-6">
-              <p className="text-sm text-gray-300 max-w-xl">
+                {curatedMedia.length > 0 && (
+                  <VehicleMediaShowcase
+                    media={curatedMedia}
+                    categoryLabel="X5 G05 LCI facelift"
+                    brandLabel={meta.brandLabel}
+                    eyebrow="Current recent X5 G05"
+                    title="X5 G05 LCI facelift"
+                    intro="Recent X5 G05 facelift images and videos from the matched FDL project folders."
+                  />
+                )}
+              </>
+            ) : (
+              <VehicleMediaShowcase
+                media={curatedMedia}
+                categoryLabel={meta.label}
+                brandLabel={meta.brandLabel}
+              />
+            )}
+            <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 md:flex-row md:items-center md:justify-between md:p-6">
+              <p className="max-w-xl text-sm text-gray-300">
                 {hasProducts
                   ? CONVERSION_COPY.likeWhatYouSee
                   : CONVERSION_COPY.makeYourCarLookLikeThis}
               </p>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-3 bg-[var(--accent)] text-black px-5 py-3 font-bold uppercase tracking-[0.18em] text-[10px] hover:brightness-110 transition-all self-start md:self-auto"
+                className="inline-flex items-center gap-3 self-start bg-[var(--accent)] px-5 py-3 text-[10px] font-bold uppercase tracking-[0.18em] text-black transition-all hover:brightness-110 md:self-auto"
               >
                 <span>Contact Us</span>
               </Link>
             </div>
-          </div>
+          </>
         )}
 
         {!hasProducts && !hasMedia ? (
-          <div className="mt-14 border border-white/10 bg-white/5 rounded-2xl p-10 text-center">
-            <h2 className="font-display text-2xl md:text-3xl font-bold uppercase text-white mb-4">
+          <div className="mt-14 rounded-2xl border border-white/10 bg-white/5 p-10 text-center">
+            <h2 className="font-display mb-4 text-2xl font-bold uppercase text-white md:text-3xl">
               {meta.label}
             </h2>
             <p className="text-gray-400">{CONVERSION_COPY.comingSoon}</p>
           </div>
         ) : hasProducts ? (
           <div className="mt-14">
-            <h2 className="font-display text-2xl md:text-3xl font-bold uppercase">
+            <h2 className="font-display text-2xl font-bold uppercase md:text-3xl">
               Products
             </h2>
 
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

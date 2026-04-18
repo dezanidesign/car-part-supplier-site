@@ -117,7 +117,7 @@ export default function ExpandableVideo({
 
       {isModalOpen && (
         <div
-          className="fixed inset-0 z-[120] bg-black/95 backdrop-blur-sm"
+          className="fixed inset-0 z-[140] bg-black/95 backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
           aria-label={`${title} expanded video`}
@@ -127,7 +127,7 @@ export default function ExpandableVideo({
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-black/60 text-white transition-colors hover:bg-black/80 md:right-8 md:top-8"
+              className="fixed right-4 top-[max(1rem,env(safe-area-inset-top))] z-[160] inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white text-black shadow-2xl shadow-black/40 transition-colors hover:bg-[#D3BF89] md:right-8"
               aria-label="Close expanded video"
             >
               <X size={18} />

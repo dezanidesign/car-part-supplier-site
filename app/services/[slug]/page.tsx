@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import CollectionDeliverySection from "@/components/shared/CollectionDeliverySection";
 import ExpandableVideo from "@/components/shared/ExpandableVideo";
+import TintPreviewSlider from "@/components/shared/TintPreviewSlider";
 import { getServiceBySlug } from "@/lib/serviceContent";
 import { CONVERSION_COPY } from "@/lib/siteContent";
 
@@ -38,7 +39,7 @@ export default function ServiceDetailPage({
     notFound();
   }
 
-  const media = service.media;
+  const media = service.mediaItems?.[0] || service.media;
 
   return (
     <div className="min-h-screen bg-[var(--bg-dark)] text-white">
@@ -71,9 +72,22 @@ export default function ServiceDetailPage({
             </div>
           </div>
 
-          <div className="border border-white/10 overflow-hidden bg-black/30">
-            <div className="aspect-[4/5]">
-              {media.type === "video" ? (
+          <div className="overflow-hidden border border-white/10 bg-black/30">
+            <div className="relative aspect-[4/5]">
+              {service.visualType === "tint-slider" ? (
+                <TintPreviewSlider compact imageAlt={`${service.title} preview`} />
+              ) : service.visualType === "pending" || !media ? (
+                <div className="flex h-full w-full items-center justify-center bg-white/[0.03] p-8 text-center">
+                  <div>
+                    <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.3em] text-[var(--accent)]">
+                      Media Pending
+                    </p>
+                    <p className="text-sm leading-relaxed text-gray-500">
+                      Confirmed project media will be added here soon.
+                    </p>
+                  </div>
+                </div>
+              ) : media.type === "video" ? (
                 <ExpandableVideo
                   src={media.src}
                   poster={media.poster}

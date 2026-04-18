@@ -6,6 +6,7 @@ import TransformationSection from "@/components/home/TransformationSection";
 import ProductCarousel from "@/components/home/ProductCarousel";
 import ReviewsSection from "@/components/home/ReviewsSection";
 import QuoteSection from "@/components/home/QuoteSection";
+import { HOME_HERO_SLIDES } from "@/lib/curatedMedia";
 
 export const metadata: Metadata = {
   title: "FDL Bespoke | Automotive Styling & Bodykit Specialists",
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      <HeroCarousel />
+      <HeroCarousel slides={HOME_HERO_SLIDES} />
       <Marquee />
       <ExpertiseGrid />
       <TransformationSection />

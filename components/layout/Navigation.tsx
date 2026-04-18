@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { ShoppingBag, Menu, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
 import { useCartStore } from "@/lib/store";
 import ShopMegaMenu from "./ShopMegaMenu";
-import { SHOP_CATEGORIES } from "@/lib/shopCategories"; // Ensure you import your data
+import { SHOP_NAV_CATEGORIES } from "@/lib/shopCategories";
 import { SITE_EMAIL, SITE_LOGO_PATH } from "@/lib/siteContent";
 
 const mainNavItems = [
@@ -241,7 +241,7 @@ export function Navigation() {
                </Link>
 
                {/* Categories from Data */}
-               {SHOP_CATEGORIES.map((make) => (
+               {SHOP_NAV_CATEGORIES.map((make) => (
                  <div key={make.slug} className="border-b border-white/10">
                    <button 
                      onClick={() => toggleBrand(make.slug)}

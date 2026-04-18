@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import CollectionDeliverySection from '@/components/shared/CollectionDeliverySection';
 import ExpandableVideo from '@/components/shared/ExpandableVideo';
+import TintPreviewSlider from '@/components/shared/TintPreviewSlider';
 import { SERVICES } from '@/lib/serviceContent';
 import { CONVERSION_COPY } from '@/lib/siteContent';
 
@@ -73,39 +74,94 @@ function FAQSection({ items }: { items: { q: string; a: string }[] }) {
   );
 }
 
-function ServiceVisual({
-  title,
-  media,
-}: {
-  title: string;
-  media: (typeof SERVICES)[number]['media'];
-}) {
-  return (
-    <div className="aspect-[4/3] w-full overflow-hidden border border-white/5 relative group bg-black">
-      {media.type === 'video' ? (
-        <ExpandableVideo
-          src={media.src}
-          poster={media.poster}
-          title={title}
-          className="h-full w-full"
-          videoClassName="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          buttonClassName="group-hover:border-white/20"
-        />
-      ) : (
-        <Image
-          src={media.src}
-          alt={title}
-          fill
-          sizes="(min-width: 1024px) 45vw, 100vw"
-          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-        />
-      )}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
-      <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-sm px-3 py-1.5 border border-white/10">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-white">
-          {title}
-        </span>
+function ServiceVisual({ service }: { service: (typeof SERVICES)[number] }) {
+  const mediaItems = service.mediaItems?.length
+    ? service.mediaItems
+    : service.media
+      ? [service.media]
+      : [];
+  const primaryMedia = mediaItems[0];
+
+  if (service.visualType === 'tint-slider') {
+    return <TintPreviewSlider compact imageAlt={`${service.title} preview`} />;
+  }
+
+  if (service.visualType === 'pending' || !primaryMedia) {
+    return (
+      <div className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden border border-dashed border-white/15 bg-white/[0.03] p-8">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(211,191,137,0.14),transparent_42%)]" />
+        <div className="relative max-w-sm text-center">
+          <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.28em] text-[var(--accent)]">
+            Media Pending
+          </p>
+          <h3 className="font-display text-2xl font-bold uppercase text-white">
+            {service.title}
+          </h3>
+          <p className="mt-3 text-sm leading-relaxed text-gray-500">
+            Confirmed project media will be added here without forcing an unrelated placeholder.
+          </p>
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="aspect-[4/3] w-full overflow-hidden border border-white/5 relative group bg-black">
+        {primaryMedia.type === 'video' ? (
+          <ExpandableVideo
+            src={primaryMedia.src}
+            poster={primaryMedia.poster}
+            title={service.title}
+            autoPlay={false}
+            className="h-full w-full"
+            videoClassName="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            buttonClassName="group-hover:border-white/20"
+          />
+        ) : (
+          <Image
+            src={primaryMedia.src}
+            alt={service.title}
+            fill
+            sizes="(min-width: 1024px) 45vw, 100vw"
+            className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent pointer-events-none" />
+        <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-sm px-3 py-1.5 border border-white/10">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-white">
+            {primaryMedia.type === 'video' ? 'Video' : service.title}
+          </span>
+        </div>
+      </div>
+
+      {mediaItems.length > 1 && (
+        <div className="grid grid-cols-2 gap-3">
+          {mediaItems.slice(1, 3).map((item) => (
+            <div key={item.id} className="relative aspect-[16/10] overflow-hidden border border-white/5 bg-black">
+              {item.type === 'video' ? (
+                <ExpandableVideo
+                  src={item.src}
+                  poster={item.poster}
+                  title={item.title}
+                  autoPlay={false}
+                  className="h-full w-full"
+                  videoClassName="h-full w-full object-cover"
+                  buttonClassName="!px-2 !py-2 [&_span]:hidden"
+                />
+              ) : (
+                <Image
+                  src={item.src}
+                  alt={item.title}
+                  fill
+                  sizes="(min-width: 1024px) 22vw, 50vw"
+                  className="object-cover grayscale transition-all duration-700 hover:grayscale-0"
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -213,7 +269,7 @@ export default function ServicesPage() {
                   </div>
 
                   <div className={isReversed ? 'lg:order-1' : 'lg:order-2'}>
-                    <ServiceVisual title={service.title} media={service.media} />
+                    <ServiceVisual service={service} />
                   </div>
                 </div>
               </div>

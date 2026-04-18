@@ -12,6 +12,11 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "*.cloudwaysapps.com",
+        pathname: "/wp-content/uploads/**",
+      },
+      {
+        protocol: "https",
         hostname: "wp.fdlbespoke.co.uk",
         pathname: "/wp-content/uploads/**",
       },

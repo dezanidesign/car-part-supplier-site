@@ -1,8 +1,18 @@
 "use client";
 
-import { useCartStore } from "@/lib/store";
+import {
+  getCartItemLineTotal,
+  getCartItemUnitTotal,
+  useCartStore,
+} from "@/lib/store";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
+const formatPrice = (price: number) =>
+  price.toLocaleString("en-GB", {
+    style: "currency",
+    currency: "GBP",
+  });
 
 export default function CartPage() {
   const router = useRouter();
@@ -51,19 +61,37 @@ export default function CartPage() {
           <p className="text-gray-400 mt-6">Your cart is empty.</p>
         ) : (
           <div className="mt-8 grid gap-4">
-            {items.map((i) => (
-              <div key={i.id} className="border border-white/10 bg-[#111] p-4 flex gap-4">
+            {items.map((item) => (
+              <div key={item.id} className="border border-white/10 bg-[#111] p-4 flex gap-4">
                 <div className="w-20 h-24 bg-[#0a0a0a] overflow-hidden flex-shrink-0">
-                  {i.image ? <img src={i.image} alt={i.name} className="w-full h-full object-cover opacity-90" /> : null}
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover opacity-90"
+                    />
+                  ) : null}
                 </div>
 
                 <div className="flex-1">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <div className="text-xs font-bold uppercase tracking-widest">{i.name}</div>
-                      <div className="text-gray-400 text-xs mt-1">£{i.price.toFixed(2)} each</div>
+                      <div className="text-xs font-bold uppercase tracking-widest">
+                        {item.name}
+                      </div>
+                      <div className="text-gray-400 text-xs mt-1">
+                        {formatPrice(getCartItemUnitTotal(item))} each
+                      </div>
+                      {item.fitting ? (
+                        <div className="text-[11px] uppercase tracking-[0.16em] text-[#D3BF89] mt-1">
+                          Includes fitting +{formatPrice(item.fitting.price)}
+                        </div>
+                      ) : null}
                     </div>
-                    <button className="text-xs text-gray-400 hover:text-white" onClick={() => removeItem(i.id)}>
+                    <button
+                      className="text-xs text-gray-400 hover:text-white"
+                      onClick={() => removeItem(item.id)}
+                    >
                       Remove
                     </button>
                   </div>
@@ -72,12 +100,14 @@ export default function CartPage() {
                     <input
                       type="number"
                       min={1}
-                      value={i.quantity}
-                      onChange={(e) => updateQuantity(i.id, Number(e.target.value))}
+                      value={item.quantity}
+                      onChange={(event) =>
+                        updateQuantity(item.id, Number(event.target.value))
+                      }
                       className="w-20 bg-black border border-white/10 px-2 py-1 text-sm"
                     />
                     <div className="text-sm font-bold ml-auto">
-                      £{(i.price * i.quantity).toFixed(2)}
+                      {formatPrice(getCartItemLineTotal(item))}
                     </div>
                   </div>
                 </div>
@@ -86,11 +116,14 @@ export default function CartPage() {
 
             <div className="border border-white/10 bg-[#111] p-4 flex items-center justify-between">
               <div className="text-sm text-gray-400">Subtotal</div>
-              <div className="text-lg font-bold">£{subtotal.toFixed(2)}</div>
+              <div className="text-lg font-bold">{formatPrice(subtotal)}</div>
             </div>
 
             <div className="flex gap-3 justify-end">
-              <button className="border border-white/10 px-4 py-2 text-xs uppercase tracking-widest" onClick={clearCart}>
+              <button
+                className="border border-white/10 px-4 py-2 text-xs uppercase tracking-widest"
+                onClick={clearCart}
+              >
                 Clear cart
               </button>
               <button

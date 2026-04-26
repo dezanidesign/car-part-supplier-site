@@ -1,6 +1,10 @@
 "use client";
 
-import { useCartStore } from "@/lib/store";
+import {
+  getCartItemLineTotal,
+  getCartItemUnitTotal,
+  useCartStore,
+} from "@/lib/store";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
@@ -29,11 +33,25 @@ export default function CheckoutPage() {
     setError("");
 
     try {
+      const checkoutItems = Array.from(
+        items.reduce((lines, item) => {
+          const mainQuantity = lines.get(item.productId) || 0;
+          lines.set(item.productId, mainQuantity + item.quantity);
+
+          if (item.fitting) {
+            const fittingQuantity = lines.get(item.fitting.productId) || 0;
+            lines.set(item.fitting.productId, fittingQuantity + item.quantity);
+          }
+
+          return lines;
+        }, new Map<number, number>()),
+      ).map(([productId, quantity]) => ({ productId, quantity }));
+
       const res = await fetch("/api/checkout/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          items: items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
+          items: checkoutItems,
         }),
       });
 
@@ -43,7 +61,6 @@ export default function CheckoutPage() {
         throw new Error(data.error || "Checkout failed");
       }
 
-      // Redirect to WooCommerce checkout page
       if (data.paymentUrl) {
         window.location.href = data.paymentUrl;
       } else {
@@ -79,7 +96,6 @@ export default function CheckoutPage() {
         </h1>
 
         <div className="grid lg:grid-cols-3 gap-10">
-          {/* Order Summary */}
           <div className="lg:col-span-2">
             <div className="bg-[#111] border border-white/10 p-8">
               <h2 className="text-xl font-bold uppercase tracking-widest mb-6 border-b border-white/10 pb-4">
@@ -88,7 +104,10 @@ export default function CheckoutPage() {
 
               <div className="space-y-4">
                 {items.map((item) => (
-                  <div key={item.id} className="flex gap-4 pb-4 border-b border-white/10 last:border-0">
+                  <div
+                    key={item.id}
+                    className="flex gap-4 pb-4 border-b border-white/10 last:border-0"
+                  >
                     <div className="w-20 h-20 relative flex-shrink-0 bg-white/5 overflow-hidden">
                       <Image
                         src={item.image || "/placeholder-product.jpg"}
@@ -100,14 +119,23 @@ export default function CheckoutPage() {
                     </div>
 
                     <div className="flex-1">
-                      <h3 className="font-bold text-sm uppercase tracking-wider">{item.name}</h3>
+                      <h3 className="font-bold text-sm uppercase tracking-wider">
+                        {item.name}
+                      </h3>
                       <p className="text-gray-400 text-xs mt-1">
-                        {formatPrice(item.price)} × {item.quantity}
+                        {formatPrice(getCartItemUnitTotal(item))} x {item.quantity}
                       </p>
+                      {item.fitting ? (
+                        <p className="text-[#D3BF89] text-[11px] uppercase tracking-[0.16em] mt-2">
+                          Includes fitting +{formatPrice(item.fitting.price)}
+                        </p>
+                      ) : null}
                     </div>
 
                     <div className="text-right">
-                      <p className="font-bold text-sm">{formatPrice(item.price * item.quantity)}</p>
+                      <p className="font-bold text-sm">
+                        {formatPrice(getCartItemLineTotal(item))}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -115,7 +143,6 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* Payment Summary */}
           <div className="lg:col-span-1">
             <div className="header-sticky-gap sticky bg-[#111] border border-white/10 p-8">
               <h2 className="text-xl font-bold uppercase tracking-widest mb-6 border-b border-white/10 pb-4">
@@ -163,7 +190,7 @@ export default function CheckoutPage() {
               </button>
 
               <p className="text-xs text-gray-500 mt-6 text-center leading-relaxed">
-                You'll be redirected to complete your payment securely
+                You&apos;ll be redirected to complete your payment securely
               </p>
             </div>
           </div>

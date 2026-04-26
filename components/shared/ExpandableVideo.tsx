@@ -12,6 +12,7 @@ type ExpandableVideoProps = {
   buttonClassName?: string;
   modalVideoClassName?: string;
   autoPlay?: boolean;
+  playWhenInView?: boolean;
   loop?: boolean;
   muted?: boolean;
   preload?: "none" | "metadata" | "auto";
@@ -26,6 +27,7 @@ export default function ExpandableVideo({
   buttonClassName = "",
   modalVideoClassName = "",
   autoPlay = true,
+  playWhenInView = false,
   loop = true,
   muted = true,
   preload = "metadata",
@@ -54,6 +56,43 @@ export default function ExpandableVideo({
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isModalOpen]);
+
+  useEffect(() => {
+    const video = inlineVideoRef.current;
+
+    if (!video || !playWhenInView || typeof window === "undefined") {
+      return;
+    }
+
+    const desktopMediaQuery = window.matchMedia("(min-width: 1024px) and (hover: hover) and (pointer: fine)");
+
+    if (!desktopMediaQuery.matches) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          void video.play().catch(() => {
+            // Ignore autoplay rejections.
+          });
+          return;
+        }
+
+        video.pause();
+      },
+      {
+        threshold: 0.45,
+      },
+    );
+
+    observer.observe(video);
+
+    return () => {
+      observer.disconnect();
+      video.pause();
+    };
+  }, [playWhenInView]);
 
   const openExpandedView = async () => {
     const video = inlineVideoRef.current;

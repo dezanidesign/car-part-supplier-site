@@ -1,6 +1,9 @@
 "use client";
 
-import { useCartStore } from "@/lib/store";
+import {
+  getCartItemUnitTotal,
+  useCartStore,
+} from "@/lib/store";
 import { X, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -92,8 +95,13 @@ export default function CartDrawer() {
                         {item.name}
                       </h3>
                       <p className="text-[#D3BF89] text-sm font-bold">
-                        {formatPrice(item.price)}
+                        {formatPrice(getCartItemUnitTotal(item))}
                       </p>
+                      {item.fitting ? (
+                        <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 mt-1">
+                          Includes fitting +{formatPrice(item.fitting.price)}
+                        </p>
+                      ) : null}
                     </div>
 
                     {/* Controls */}

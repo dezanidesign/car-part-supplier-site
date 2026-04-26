@@ -102,6 +102,16 @@ function findMedia(selectors: MediaSelector[]): CuratedMediaItem {
   return fallback;
 }
 
+function findMediaBySrc(src: string): CuratedMediaItem {
+  const item = MEDIA_ITEMS.find((entry) => entry.src === src);
+
+  if (!item) {
+    throw new Error(`Unknown media source: ${src}`);
+  }
+
+  return item;
+}
+
 function findMediaItems(selectors: MediaSelector[], limit = 3): CuratedMediaItem[] {
   const picked = new Map<string, CuratedMediaItem>();
 
@@ -259,10 +269,8 @@ export const SERVICE_MEDIA_GROUPS: Record<string, CuratedMediaItem[]> = {
   wrapping: findMediaItems(
     [
       { project: "porsche-taycan-wrap-wheels", type: "video" },
-      { project: "porsche-911-rear-diffuser", type: "video" },
-      { project: "tesla-model-s", type: "video" },
     ],
-    3,
+    1,
   ),
   "detailing-ppf": findMediaItems(
     [
@@ -309,6 +317,73 @@ export const SERVICE_MEDIA: Record<string, CuratedMediaItem> = {
   "alloy-packages": SERVICE_MEDIA_GROUPS["alloy-packages"][0],
   branding: SERVICE_MEDIA_GROUPS.branding[0],
 };
+
+SERVICE_MEDIA_GROUPS.wrapping = [
+  findMediaBySrc(
+    "/media/fdl/full/porsche/porsche-taycan-wrap-wheels/porsche-taycan-grey-to-nardo-wrap-wheels.mp4",
+  ),
+  findMediaBySrc(
+    "/media/fdl/full/porsche/porsche-taycan-wrap-wheels/5b1a5406-ban.jpg",
+  ),
+  findMediaBySrc(
+    "/media/fdl/full/porsche/porsche-taycan-wrap-wheels/5b1a5412.jpg",
+  ),
+];
+
+SERVICE_MEDIA.wrapping = SERVICE_MEDIA_GROUPS.wrapping[0];
+
+SERVICE_MEDIA_GROUPS["detailing-ppf"] = [
+  findMediaBySrc(
+    "/media/fdl/full/audi/audi-r8/audi-r8-quick-clips.mp4",
+  ),
+  findMediaBySrc(
+    "/media/fdl/full/audi/audi-r8/audi-r8-carbon-wrap.mp4",
+  ),
+  findMediaBySrc(
+    "/media/fdl/full/lamborghini/lamborghini-huracan/lambo-huracan-detail.mp4",
+  ),
+];
+
+SERVICE_MEDIA["detailing-ppf"] = SERVICE_MEDIA_GROUPS["detailing-ppf"][0];
+
+SERVICE_MEDIA_GROUPS["alloy-refurb"] = [
+  findMediaBySrc(
+    "/media/fdl/full/porsche/porsche-taycan-wrap-wheels/5b1a5395.jpg",
+  ),
+  findMediaBySrc(
+    "/media/fdl/full/bmw/bmw-m3-f80/5b1a1671.jpg",
+  ),
+  findMediaBySrc(
+    "/media/fdl/full/mercedes/mercedes-gle/5b1a3740.jpg",
+  ),
+];
+
+SERVICE_MEDIA["alloy-refurb"] = SERVICE_MEDIA_GROUPS["alloy-refurb"][0];
+
+SERVICE_MEDIA_GROUPS.bodykits = [
+  findMediaBySrc(
+    "/media/fdl/full/bmw/bmw-x5m-carbon-edition/bmw-x5m-f95-carbon-edition.mp4",
+  ),
+  findMediaBySrc(
+    "/media/fdl/full/bmw/bmw-x5m-carbon-edition/5b1a8486.jpg",
+  ),
+  findMediaBySrc(
+    "/media/fdl/full/defender/defender-black-110-bodykit/5b1a9617.jpg",
+  ),
+];
+
+SERVICE_MEDIA.bodykits = SERVICE_MEDIA_GROUPS.bodykits[0];
+
+SERVICE_MEDIA_GROUPS["light-tinting"] = [
+  findMediaBySrc(
+    "/media/fdl/full/bmw/bmw-x5-lci/5b1a5047.jpg",
+  ),
+  findMediaBySrc(
+    "/media/fdl/full/porsche/porsche-taycan-wrap-wheels/5b1a5388.jpg",
+  ),
+];
+
+SERVICE_MEDIA["light-tinting"] = SERVICE_MEDIA_GROUPS["light-tinting"][0];
 
 export const SERVICE_ENTRY_MEDIA = {
   bespokeConversions: findMedia([

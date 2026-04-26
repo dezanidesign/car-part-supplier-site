@@ -114,6 +114,7 @@ function ServiceVisual({ service }: { service: (typeof SERVICES)[number] }) {
             poster={primaryMedia.poster}
             title={service.title}
             autoPlay={false}
+            playWhenInView
             className="h-full w-full"
             videoClassName="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             buttonClassName="group-hover:border-white/20"
@@ -145,6 +146,7 @@ function ServiceVisual({ service }: { service: (typeof SERVICES)[number] }) {
                   poster={item.poster}
                   title={item.title}
                   autoPlay={false}
+                  playWhenInView
                   className="h-full w-full"
                   videoClassName="h-full w-full object-cover"
                   buttonClassName="!px-2 !py-2 [&_span]:hidden"

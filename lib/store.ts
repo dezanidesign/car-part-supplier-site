@@ -18,6 +18,13 @@ export interface CartItem {
   sku?: string;
   attributes?: Record<string, string>; // For variations: { Color: "Black", Size: "Large" }
   maxQuantity?: number; // Stock limit
+  fitting?: {
+    productId: number;
+    sku: string;
+    name: string;
+    price: number;
+    regularPrice: number;
+  };
 }
 
 export interface CartState {
@@ -57,6 +64,18 @@ function generateCartItemId(productId: number, variationId?: number, attributes?
   if (variationId) return `${base}-${variationId}`;
   if (attributes) return `${base}-${JSON.stringify(attributes)}`;
   return base;
+}
+
+export function getCartItemUnitTotal(
+  item: Pick<CartItem, "price" | "fitting">,
+): number {
+  return item.price + (item.fitting?.price || 0);
+}
+
+export function getCartItemLineTotal(
+  item: Pick<CartItem, "price" | "quantity" | "fitting">,
+): number {
+  return getCartItemUnitTotal(item) * item.quantity;
 }
 
 // ============================================================================
@@ -141,7 +160,7 @@ export const useCartStore = create<CartStore>()(
       getItemCount: () => get().items.reduce((acc, item) => acc + item.quantity, 0),
       
       getSubtotal: () => 
-        get().items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+        get().items.reduce((acc, item) => acc + getCartItemLineTotal(item), 0),
       
       getItemById: (id) => get().items.find((item) => item.id === id),
       

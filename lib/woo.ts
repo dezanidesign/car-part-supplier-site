@@ -464,6 +464,25 @@ export async function fetchProductBySlug(slug: string): Promise<WooProduct | nul
   return data[0] || null;
 }
 
+export async function fetchProductBySku(sku: string): Promise<WooProduct | null> {
+  const normalizedSku = sku.trim();
+  if (!normalizedSku) return null;
+
+  const { data } = await wooFetchPaged<WooProduct[]>(
+    `/wp-json/wc/v3/products?${buildProductQuery({
+      sku: normalizedSku,
+      status: "publish",
+      per_page: 1,
+    })}`,
+    {
+      revalidate: 300,
+      tags: [WOO_CACHE_TAGS.products],
+    },
+  );
+
+  return data[0] || null;
+}
+
 export async function fetchRelatedProducts(
   currentProduct: WooProduct,
   limit = 4,

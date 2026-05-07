@@ -4,12 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { CheckCircle, ExternalLink, Mail, MessageCircle, SendHorizontal, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { SITE_EMAIL, SITE_PHONE_DISPLAY } from "@/lib/siteContent";
-import { FDL_CHATBOT_SYSTEM_PROMPT } from "@/lib/chatbot/systemPrompt";
 import FormatChatText from "@/components/chatbot/FormatChatText";
 
-const GEMINI_API_KEY = "AIzaSyDsISzXfrcBW4epDfp2GPiMh-OAKxkaTyU";
-const GEMINI_MODEL = "gemini-2.5-flash-lite";
-const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 const HANDOFF_REGEX = /\|\|\|HANDOFF_START\|\|\|([\s\S]*?)\|\|\|HANDOFF_END\|\|\|/;
 const WHATSAPP_NUMBER = "447869022673";
 const WELCOME_MESSAGE =
@@ -66,11 +62,6 @@ type Message = {
   role: "user" | "model";
   text: string;
   handoff?: HandoffData;
-};
-
-type GeminiRequestContent = {
-  role: "user" | "model";
-  parts: Array<{ text: string }>;
 };
 
 function sleep(delayMs: number) {
@@ -149,42 +140,34 @@ function buildHandoffLinks(handoff: HandoffData) {
 }
 
 async function generateGeminiReply(messages: Message[]) {
-  const contents: GeminiRequestContent[] = messages.map((message) => ({
-    role: message.role,
-    parts: [{ text: message.text }],
-  }));
-
   let lastError: unknown;
 
   for (let attempt = 0; attempt < 5; attempt += 1) {
     try {
-      const response = await fetch(GEMINI_ENDPOINT, {
+      const response = await fetch("/api/chatbot", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
-          systemInstruction: { parts: [{ text: FDL_CHATBOT_SYSTEM_PROMPT }] },
-          contents,
-          generationConfig: { temperature: 0.7, maxOutputTokens: 1024 },
+          messages: messages.map((message) => ({
+            role: message.role,
+            text: message.text,
+          })),
         }),
       });
 
       if (!response.ok) {
-        lastError = new Error(`Gemini request failed with status ${response.status}`);
+        lastError = new Error(`Chatbot request failed with status ${response.status}`);
       } else {
-        const data = (await response.json()) as {
-          candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
-        };
-
-        const text = data.candidates?.[0]?.content?.parts
-          ?.map((part) => part.text || "")
-          .join("")
-          .trim();
+        const data = (await response.json()) as { reply?: string };
+        const text = data.reply?.trim();
 
         if (text) {
           return text;
         }
 
-        lastError = new Error("Gemini returned an empty response");
+        lastError = new Error("Chatbot returned an empty response");
       }
     } catch (error) {
       lastError = error;

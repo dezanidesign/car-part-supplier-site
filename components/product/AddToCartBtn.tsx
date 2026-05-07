@@ -5,8 +5,6 @@ import type { WooProduct } from "@/lib/woo";
 import { useState } from "react";
 
 type FittingOption = {
-  productId: number;
-  sku: string;
   name: string;
   price: number;
   regularPrice: number;
@@ -27,9 +25,14 @@ export default function AddToCartBtn({
 }) {
   const addItem = useCartStore((state) => state.addItem);
   const [withFitting, setWithFitting] = useState(false);
+  const hasFittingOption =
+    !!fittingOption &&
+    Number.isFinite(fittingOption.price) &&
+    fittingOption.price > 0;
 
   const handleAddToCart = () => {
-    const selectedFitting = withFitting && fittingOption ? fittingOption : undefined;
+    const selectedFitting =
+      withFitting && hasFittingOption && fittingOption ? fittingOption : undefined;
 
     addItem({
       productId: product.id,
@@ -40,14 +43,14 @@ export default function AddToCartBtn({
       quantity: 1,
       image: product.images?.[0]?.src || "",
       sku: product.sku,
-      attributes: selectedFitting ? { fitting: selectedFitting.sku } : undefined,
+      attributes: selectedFitting ? { fitting: "with-fitting" } : undefined,
       fitting: selectedFitting,
     });
   };
 
   return (
     <div className="flex-1 space-y-3">
-      {fittingOption ? (
+      {hasFittingOption && fittingOption ? (
         <label className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left cursor-pointer transition hover:border-white/20">
           <input
             type="checkbox"
@@ -58,9 +61,6 @@ export default function AddToCartBtn({
           <span className="block">
             <span className="block text-sm font-bold uppercase tracking-[0.18em] text-white">
               With fitting (+{formatPrice(fittingOption.price)})
-            </span>
-            <span className="mt-1 block text-xs text-gray-400">
-              Add professional fitting to this order and keep it bundled with the product in your cart.
             </span>
           </span>
         </label>

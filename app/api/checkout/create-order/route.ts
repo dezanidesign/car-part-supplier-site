@@ -5,9 +5,17 @@ type IncomingItem = {
   quantity: number;
 };
 
+type IncomingFeeLine = {
+  name: string;
+  total: string;
+};
+
 export async function POST(req: Request) {
   try {
-    const { items } = (await req.json()) as { items: IncomingItem[] };
+    const { items, feeLines } = (await req.json()) as {
+      items: IncomingItem[];
+      feeLines?: IncomingFeeLine[];
+    };
 
     if (!items?.length) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
@@ -29,6 +37,12 @@ export async function POST(req: Request) {
         product_id: i.productId,
         quantity: Math.max(1, Math.floor(i.quantity || 1)),
       })),
+      fee_lines: (feeLines || [])
+        .filter((fee) => fee.name?.trim() && fee.total?.trim())
+        .map((fee) => ({
+          name: fee.name.trim(),
+          total: fee.total.trim(),
+        })),
       meta_data: [
         { key: "source", value: "fdl-next-storefront" },
         { key: "_created_via", value: "storefront" },

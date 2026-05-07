@@ -1,6 +1,7 @@
 import "server-only";
 
 import { SHOP_CATEGORIES } from "@/lib/shopCategories";
+import { getFittingPriceString, normalizePriceInput } from "@/lib/fitting";
 import type { WooCategory, WooProduct } from "@/lib/woocommerce";
 
 export type AdminProductStatus = "publish" | "draft";
@@ -30,6 +31,7 @@ export type AdminProductRecord = {
   name: string;
   regularPrice: string;
   salePrice: string;
+  fittingPrice: string;
   shortDescription: string;
   description: string;
   status: AdminProductStatus;
@@ -42,6 +44,7 @@ export type AdminProductMutationInput = {
   name: string;
   regularPrice: string;
   salePrice: string;
+  fittingPrice: string;
   shortDescription: string;
   description: string;
   status: AdminProductStatus;
@@ -112,6 +115,7 @@ export function mapWooProductToAdminRecord(product: WooProduct): AdminProductRec
     name: product.name,
     regularPrice: product.regular_price || product.price || "",
     salePrice: product.sale_price || "",
+    fittingPrice: getFittingPriceString(product.meta_data),
     shortDescription: product.short_description || "",
     description: product.description || "",
     status: normalizeAdminStatus(product.status),
@@ -135,17 +139,6 @@ function sanitizeText(value: unknown): string {
 
 function sanitizeHtml(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
-}
-
-function sanitizePrice(value: unknown): string {
-  if (typeof value !== "string" && typeof value !== "number") return "";
-
-  const normalized = String(value).replace(/[^0-9.]/g, "").trim();
-  if (!normalized) return "";
-
-  if (!/^\d+(\.\d{1,2})?$/.test(normalized)) return "";
-
-  return normalized;
 }
 
 function sanitizeImageList(value: unknown, fallbackSingleImage: unknown): string[] {
@@ -198,8 +191,9 @@ export function validateAdminProductPayload(payload: unknown): {
 
   const body = payload as Record<string, unknown>;
   const name = sanitizeText(body.name);
-  const regularPrice = sanitizePrice(body.regularPrice);
-  const salePrice = sanitizePrice(body.salePrice);
+  const regularPrice = normalizePriceInput(body.regularPrice);
+  const salePrice = normalizePriceInput(body.salePrice);
+  const fittingPrice = normalizePriceInput(body.fittingPrice);
   const shortDescription = sanitizeHtml(body.shortDescription);
   const description = sanitizeHtml(body.description);
   const status = sanitizeText(body.status) === "publish" ? "publish" : sanitizeText(body.status);
@@ -227,6 +221,10 @@ export function validateAdminProductPayload(payload: unknown): {
     }
   }
 
+  if (fittingPrice && parseFloat(fittingPrice) < 0) {
+    return { error: "Fitting price must be zero or greater", status: 400 };
+  }
+
   const supportedModel = getSupportedProductModelBySlug(modelSlug);
   if (!supportedModel) {
     return { error: "Selected category/model is not supported", status: 400 };
@@ -242,6 +240,7 @@ export function validateAdminProductPayload(payload: unknown): {
       name,
       regularPrice,
       salePrice,
+      fittingPrice,
       shortDescription,
       description,
       status,

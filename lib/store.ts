@@ -19,8 +19,6 @@ export interface CartItem {
   attributes?: Record<string, string>; // For variations: { Color: "Black", Size: "Large" }
   maxQuantity?: number; // Stock limit
   fitting?: {
-    productId: number;
-    sku: string;
     name: string;
     price: number;
     regularPrice: number;

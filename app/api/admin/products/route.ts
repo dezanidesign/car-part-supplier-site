@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { requireAdminSession } from "@/lib/adminSession";
+import { FITTING_PRICE_META_KEY } from "@/lib/fitting";
 import {
   mapWooProductToAdminListItem,
   resolveWooCategoryIdForModelSlug,
@@ -87,6 +88,14 @@ export async function POST(request: NextRequest) {
       status: validation.data.status,
       categories: [{ id: categoryId }],
       images: validation.data.images.map((imageUrl) => ({ src: imageUrl })),
+      meta_data: validation.data.fittingPrice
+        ? [
+            {
+              key: FITTING_PRICE_META_KEY,
+              value: validation.data.fittingPrice,
+            },
+          ]
+        : undefined,
     });
 
     clearWooCache();

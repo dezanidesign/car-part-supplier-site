@@ -10,6 +10,7 @@ type ProductRecord = {
   name: string;
   regularPrice: string;
   salePrice: string;
+  fittingPrice: string;
   shortDescription: string;
   description: string;
   status: "publish" | "draft";

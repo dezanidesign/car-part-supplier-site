@@ -1,18 +1,18 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { fetchProductBySku, fetchProductBySlug, fetchRelatedProducts } from "@/lib/woo";
+import {
+  fetchProductBySlug,
+  fetchRelatedProducts,
+  getProductFittingPrice,
+} from "@/lib/woo";
 import AddToCartBtn from "@/components/product/AddToCartBtn";
-
-const FITTING_PRODUCT_SKU = "fdl-fitting";
 
 const formatPrice = (price: string) =>
   parseFloat(price).toLocaleString("en-GB", {
     style: "currency",
     currency: "GBP",
   });
-
-const parseWooPrice = (price: string) => Number.parseFloat(price || "0") || 0;
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const product = await fetchProductBySlug(params.slug);
@@ -25,10 +25,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
-  const [product, fittingProduct] = await Promise.all([
-    fetchProductBySlug(params.slug),
-    fetchProductBySku(FITTING_PRODUCT_SKU),
-  ]);
+  const product = await fetchProductBySlug(params.slug);
 
   if (!product) {
     return notFound();
@@ -41,18 +38,17 @@ export default async function ProductPage({ params }: { params: { slug: string }
     makeModel: product.name,
     message: `Hi FDL Bespoke,\n\nI'm interested in ${product.name}. Please let me know about availability, fitting, and pricing.`,
   }).toString()}`;
+  const fittingPrice = getProductFittingPrice(product);
   const fittingOption =
-    !fittingProduct || product.sku === FITTING_PRODUCT_SKU
-      ? null
-      : {
-          productId: fittingProduct.id,
-          sku: fittingProduct.sku || FITTING_PRODUCT_SKU,
-          name: fittingProduct.name,
-          price: parseWooPrice(fittingProduct.sale_price || fittingProduct.price),
-          regularPrice: parseWooPrice(
-            fittingProduct.regular_price || fittingProduct.price,
-          ),
-        };
+    typeof fittingPrice === "number" &&
+    Number.isFinite(fittingPrice) &&
+    fittingPrice > 0
+    ? {
+        name: `Fitting for ${product.name}`,
+        price: fittingPrice,
+        regularPrice: fittingPrice,
+      }
+    : null;
 
   return (
     <div className="min-h-screen bg-[#050505] text-white pb-20">
@@ -118,11 +114,11 @@ export default async function ProductPage({ params }: { params: { slug: string }
               dangerouslySetInnerHTML={{ __html: product.short_description }}
             />
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-10 border-b border-white/10 pb-10">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end mb-10 border-b border-white/10 pb-10">
               <AddToCartBtn product={product} fittingOption={fittingOption} />
               <Link
                 href={enquiryHref}
-                className="flex-1 border border-white/20 text-white font-bold uppercase tracking-[0.2em] py-4 px-8 rounded-full hover:bg-white hover:text-black transition text-center"
+                className="flex-1 sm:self-end border border-white/20 text-white font-bold uppercase tracking-[0.2em] py-4 px-8 rounded-full hover:bg-white hover:text-black transition text-center"
               >
                 Enquire
               </Link>

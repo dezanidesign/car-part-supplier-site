@@ -4,6 +4,7 @@
  */
 
 import { SHOP_CATEGORIES } from "@/lib/shopCategories";
+import { getFittingPriceNumber } from "@/lib/fitting";
 
 const WOO_BASE_URL = (
   process.env.WOOCOMMERCE_URL ||
@@ -51,6 +52,11 @@ export interface WooProduct {
     id: number;
     name: string;
     slug: string;
+  }>;
+  meta_data: Array<{
+    id?: number;
+    key: string;
+    value: unknown;
   }>;
 }
 
@@ -481,6 +487,10 @@ export async function fetchProductBySku(sku: string): Promise<WooProduct | null>
   );
 
   return data[0] || null;
+}
+
+export function getProductFittingPrice(product: Pick<WooProduct, "meta_data">): number | null {
+  return getFittingPriceNumber(product.meta_data);
 }
 
 export async function fetchRelatedProducts(

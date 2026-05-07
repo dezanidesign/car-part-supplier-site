@@ -33,6 +33,11 @@ export default function ExpandableVideo({
   preload = "metadata",
 }: ExpandableVideoProps) {
   const inlineVideoRef = useRef<HTMLVideoElement>(null);
+  const nativeFullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
+  const nativeFullscreenRestoreRef = useRef<{
+    muted: boolean;
+    controls: boolean;
+  } | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -94,6 +99,45 @@ export default function ExpandableVideo({
     };
   }, [playWhenInView]);
 
+  useEffect(() => {
+    const restoreNativeVideoState = () => {
+      const video = nativeFullscreenVideoRef.current;
+      const restoreState = nativeFullscreenRestoreRef.current;
+
+      if (!video || !restoreState) {
+        return;
+      }
+
+      video.muted = restoreState.muted;
+      video.controls = restoreState.controls;
+      nativeFullscreenVideoRef.current = null;
+      nativeFullscreenRestoreRef.current = null;
+    };
+
+    const handleFullscreenChange = () => {
+      const video = nativeFullscreenVideoRef.current;
+      if (!video) {
+        return;
+      }
+
+      if (document.fullscreenElement === video) {
+        return;
+      }
+
+      restoreNativeVideoState();
+    };
+
+    const video = inlineVideoRef.current;
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    video?.addEventListener("webkitendfullscreen", restoreNativeVideoState as EventListener);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      video?.removeEventListener("webkitendfullscreen", restoreNativeVideoState as EventListener);
+      restoreNativeVideoState();
+    };
+  }, []);
+
   const openExpandedView = async () => {
     const video = inlineVideoRef.current;
 
@@ -103,19 +147,39 @@ export default function ExpandableVideo({
       };
 
       try {
+        nativeFullscreenVideoRef.current = video;
+        nativeFullscreenRestoreRef.current = {
+          muted: video.muted,
+          controls: video.controls,
+        };
+        video.muted = false;
+        video.controls = true;
+
         if (
           typeof nativeVideo.webkitEnterFullscreen === "function" &&
           /iPad|iPhone|iPod/i.test(window.navigator.userAgent)
         ) {
+          await video.play().catch(() => {
+            // Ignore autoplay rejections.
+          });
           nativeVideo.webkitEnterFullscreen();
           return;
         }
 
         if (typeof video.requestFullscreen === "function") {
+          await video.play().catch(() => {
+            // Ignore autoplay rejections.
+          });
           await video.requestFullscreen();
           return;
         }
       } catch {
+        if (nativeFullscreenRestoreRef.current) {
+          video.muted = nativeFullscreenRestoreRef.current.muted;
+          video.controls = nativeFullscreenRestoreRef.current.controls;
+        }
+        nativeFullscreenVideoRef.current = null;
+        nativeFullscreenRestoreRef.current = null;
         // Fall back to the in-app modal viewer.
       }
     }

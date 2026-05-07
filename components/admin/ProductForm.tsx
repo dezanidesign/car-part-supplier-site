@@ -12,6 +12,7 @@ type ProductFormData = {
   name: string;
   regularPrice: string;
   salePrice: string;
+  fittingPrice: string;
   shortDescription: string;
   description: string;
   modelSlug: string;
@@ -24,6 +25,7 @@ const EMPTY: ProductFormData = {
   name: "",
   regularPrice: "",
   salePrice: "",
+  fittingPrice: "",
   shortDescription: "",
   description: "",
   modelSlug: "",
@@ -44,7 +46,7 @@ export default function ProductForm({
   initialData?: ProductFormData;
 }) {
   const router = useRouter();
-  const [data, setData] = useState<ProductFormData>(initialData || EMPTY);
+  const [data, setData] = useState<ProductFormData>({ ...EMPTY, ...initialData });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [detailsOpen, setDetailsOpen] = useState(true);
@@ -174,7 +176,7 @@ export default function ProductForm({
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">
                       Regular Price
@@ -201,6 +203,23 @@ export default function ProductForm({
                       placeholder="Optional"
                       className="w-full bg-[#111] border border-white/10 text-white text-sm px-4 py-3 focus:border-[var(--accent)] focus:outline-none transition-colors"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">
+                      Fitting Price
+                    </label>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={data.fittingPrice}
+                      onChange={(event) => updateField("fittingPrice", event.target.value)}
+                      placeholder="Optional"
+                      className="w-full bg-[#111] border border-white/10 text-white text-sm px-4 py-3 focus:border-[var(--accent)] focus:outline-none transition-colors"
+                    />
+                    <p className="text-[10px] text-gray-600 mt-2">
+                      Leave blank or 0 to hide the fitting option on this product page.
+                    </p>
                   </div>
                 </div>
               </div>

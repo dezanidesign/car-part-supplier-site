@@ -125,7 +125,7 @@ export interface WooAttribute {
 export interface WooMetaData {
   id: number;
   key: string;
-  value: string;
+  value: unknown;
 }
 
 export interface WooVariation {
@@ -284,6 +284,11 @@ export type AdminWooProductUpsert = {
   status: "publish" | "draft";
   categories: Array<{ id: number }>;
   images: Array<{ src: string }>;
+  meta_data?: Array<{
+    id?: number;
+    key: string;
+    value: string;
+  }>;
 };
 
 export async function createAdminProduct(

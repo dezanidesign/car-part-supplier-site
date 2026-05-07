@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { requireAdminSession } from "@/lib/adminSession";
+import { FITTING_PRICE_META_KEY } from "@/lib/fitting";
 import {
   mapWooProductToAdminRecord,
   resolveWooCategoryIdForModelSlug,
@@ -95,6 +96,21 @@ export async function PUT(
       );
     }
 
+    const existingFittingMeta = existing.meta_data?.find(
+      (entry) => entry.key === FITTING_PRICE_META_KEY,
+    );
+
+    const fittingMeta =
+      validation.data.fittingPrice || existingFittingMeta
+        ? [
+            {
+              ...(existingFittingMeta?.id ? { id: existingFittingMeta.id } : {}),
+              key: FITTING_PRICE_META_KEY,
+              value: validation.data.fittingPrice || "",
+            },
+          ]
+        : undefined;
+
     const product = await updateAdminProduct(productId, {
       name: validation.data.name,
       type: "simple",
@@ -105,6 +121,7 @@ export async function PUT(
       status: validation.data.status,
       categories: [{ id: categoryId }],
       images: validation.data.images.map((imageUrl) => ({ src: imageUrl })),
+      meta_data: fittingMeta,
     });
 
     clearWooCache();

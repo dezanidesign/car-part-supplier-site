@@ -22,7 +22,7 @@
    - name
    - phone or email
 4. Confirm the assistant response stays clean on screen and the handoff card appears underneath it.
-5. Click `Send to Faisal on WhatsApp` and confirm the enquiry body is prefilled correctly.
+5. Click `Send via WhatsApp` and confirm the enquiry body is prefilled correctly.
 6. Click `Email instead` and confirm the subject and body are prefilled correctly.
 7. Confirm the chatbot does not appear on `/admin/*`.
 

@@ -12,11 +12,11 @@ const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models
 const HANDOFF_REGEX = /\|\|\|HANDOFF_START\|\|\|([\s\S]*?)\|\|\|HANDOFF_END\|\|\|/;
 const WHATSAPP_NUMBER = "447869022673";
 const WELCOME_MESSAGE =
-  "Welcome to FDL Bespoke. Tell me about your vehicle and what you're after — I'll help get you a quote.";
+  "Welcome to FDL Bespoke. Tell me about your vehicle and what you're after - I'll help get you a quote.";
 const FAILURE_MESSAGE =
-  "Having trouble connecting right now. Message Faisal directly on **07869 022673** or email fdlbespokeuk@gmail.com.";
+  "Having trouble connecting right now. Message us directly on **07869 022673** or email fdlbespokeuk@gmail.com.";
 const HANDOFF_VISIBLE_FALLBACK =
-  "I've put your enquiry together. Send it through using the button below and Faisal will be in touch shortly.";
+  "I've put your enquiry together. Send it through using the button below and we'll be in touch shortly.";
 
 const KEYFRAMES = `
   @keyframes fdl-slide-in-r {
@@ -40,16 +40,12 @@ const KEYFRAMES = `
     100% { opacity: 0;   transform: scale(2); }
   }
   @keyframes fdl-dot-wave {
-    0%, 60%, 100% { transform: translateY(0);   opacity: 0.5; }
-    30%           { transform: translateY(-5px); opacity: 1;   }
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30%           { transform: translateY(-5px); opacity: 1; }
   }
   @keyframes fdl-btn-glow {
     0%, 100% { box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 0 rgba(211,191,137,0); }
     50%      { box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 24px 4px rgba(211,191,137,0.2); }
-  }
-  @keyframes fdl-shimmer {
-    0%   { background-position: -200% center; }
-    100% { background-position:  200% center; }
   }
 `;
 
@@ -82,9 +78,11 @@ function sleep(delayMs: number) {
 
 function normaliseHandoffData(raw: unknown): HandoffData | undefined {
   if (!raw || typeof raw !== "object") return undefined;
+
   const candidate = raw as Record<string, unknown>;
   const toOptionalString = (value: unknown) =>
     typeof value === "string" && value.trim().length > 0 ? value.trim() : undefined;
+
   const handoff: HandoffData = {
     name: toOptionalString(candidate.name) ?? "",
     contact: toOptionalString(candidate.contact) ?? "",
@@ -95,25 +93,37 @@ function normaliseHandoffData(raw: unknown): HandoffData | undefined {
     location: toOptionalString(candidate.location),
     notes: toOptionalString(candidate.notes),
   };
-  if (!handoff.name || !handoff.contact || !handoff.vehicle || !handoff.service) return undefined;
+
+  if (!handoff.name || !handoff.contact || !handoff.vehicle || !handoff.service) {
+    return undefined;
+  }
+
   return handoff;
 }
 
 function extractHandoff(text: string) {
   const match = text.match(HANDOFF_REGEX);
   const cleanText = text.replace(HANDOFF_REGEX, "").trim();
-  if (!match) return { cleanText, handoff: undefined as HandoffData | undefined };
+
+  if (!match) {
+    return { cleanText, handoff: undefined as HandoffData | undefined };
+  }
+
   try {
     const parsed = JSON.parse(match[1]);
     const handoff = normaliseHandoffData(parsed);
     return { cleanText: cleanText || HANDOFF_VISIBLE_FALLBACK, handoff };
   } catch {
-    return { cleanText: cleanText || HANDOFF_VISIBLE_FALLBACK, handoff: undefined as HandoffData | undefined };
+    return {
+      cleanText: cleanText || HANDOFF_VISIBLE_FALLBACK,
+      handoff: undefined as HandoffData | undefined,
+    };
   }
 }
 
 function buildHandoffBody(handoff: HandoffData) {
-  const fallback = "—";
+  const fallback = "-";
+
   return [
     "FDL Enquiry",
     `Name: ${handoff.name}`,
@@ -129,7 +139,8 @@ function buildHandoffBody(handoff: HandoffData) {
 
 function buildHandoffLinks(handoff: HandoffData) {
   const body = buildHandoffBody(handoff);
-  const subject = `FDL Enquiry — ${handoff.name} — ${handoff.vehicle}`;
+  const subject = `FDL Enquiry - ${handoff.name} - ${handoff.vehicle}`;
+
   return {
     whatsapp: `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(body)}`,
     email: `mailto:${SITE_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
@@ -141,7 +152,9 @@ async function generateGeminiReply(messages: Message[]) {
     role: message.role,
     parts: [{ text: message.text }],
   }));
+
   let lastError: unknown;
+
   for (let attempt = 0; attempt < 5; attempt += 1) {
     try {
       const response = await fetch(GEMINI_ENDPOINT, {
@@ -153,37 +166,47 @@ async function generateGeminiReply(messages: Message[]) {
           generationConfig: { temperature: 0.7, maxOutputTokens: 1024 },
         }),
       });
+
       if (!response.ok) {
         lastError = new Error(`Gemini request failed with status ${response.status}`);
       } else {
         const data = (await response.json()) as {
           candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
         };
+
         const text = data.candidates?.[0]?.content?.parts
           ?.map((part) => part.text || "")
           .join("")
           .trim();
-        if (text) return text;
+
+        if (text) {
+          return text;
+        }
+
         lastError = new Error("Gemini returned an empty response");
       }
     } catch (error) {
       lastError = error;
     }
-    if (attempt < 4) await sleep(1000 * 2 ** attempt);
+
+    if (attempt < 4) {
+      await sleep(1000 * 2 ** attempt);
+    }
   }
+
   throw lastError instanceof Error ? lastError : new Error("Gemini request failed");
 }
 
 function TypingIndicator() {
   return (
-    <div className="flex items-center gap-[5px] py-0.5 px-1">
-      {[0, 1, 2].map((i) => (
+    <div className="flex items-center gap-[5px] px-1 py-0.5">
+      {[0, 1, 2].map((index) => (
         <span
-          key={i}
+          key={index}
           className="h-[7px] w-[7px] rounded-full bg-[var(--accent)]"
           style={{
             animation: "fdl-dot-wave 1.1s ease-in-out infinite",
-            animationDelay: `${i * 0.15}s`,
+            animationDelay: `${index * 0.15}s`,
           }}
         />
       ))}
@@ -224,12 +247,16 @@ export default function FDLChatbot() {
 
   useEffect(() => {
     if (!isOpen) return;
+
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setIsOpen(false);
     };
+
     window.addEventListener("keydown", handleKeyDown);
+
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
@@ -276,12 +303,8 @@ export default function FDLChatbot() {
 
   return (
     <>
-      {/* ── Injected keyframes ── */}
       <style dangerouslySetInnerHTML={{ __html: KEYFRAMES }} />
 
-      {/* ══════════════════════════════════════
-          TRIGGER BUTTON
-      ══════════════════════════════════════ */}
       {!isOpen && (
         <button
           type="button"
@@ -292,7 +315,6 @@ export default function FDLChatbot() {
           className="fixed bottom-6 right-6 z-[950] flex items-center gap-2.5 md:bottom-8 md:right-8"
           style={{ animation: "fdl-btn-glow 3.5s ease-in-out infinite" }}
         >
-          {/* Pulse ring */}
           <span
             className="pointer-events-none absolute inset-0 rounded-full"
             style={{
@@ -301,7 +323,6 @@ export default function FDLChatbot() {
             }}
           />
 
-          {/* Button body */}
           <span className="relative flex items-center gap-2.5 rounded-full border border-white/10 bg-[#111111] px-4 py-3 shadow-[0_16px_48px_rgba(0,0,0,0.55)] transition-all duration-300 hover:scale-105 hover:border-[rgba(211,191,137,0.4)] group">
             <MessageCircle
               size={18}
@@ -311,7 +332,6 @@ export default function FDLChatbot() {
               FDL AI
             </span>
 
-            {/* Live dot */}
             <span className="relative flex h-[7px] w-[7px]">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
               <span className="relative inline-flex h-[7px] w-[7px] rounded-full bg-emerald-500" />
@@ -320,15 +340,11 @@ export default function FDLChatbot() {
         </button>
       )}
 
-      {/* ══════════════════════════════════════
-          CHAT PANEL
-      ══════════════════════════════════════ */}
       {isOpen && (
         <div
           className="fixed inset-0 z-[950]"
           style={{ animation: "fdl-backdrop-in 0.25s ease-out both" }}
         >
-          {/* Backdrop */}
           <button
             type="button"
             className="absolute inset-0 bg-black/75 backdrop-blur-[6px] md:bg-black/50"
@@ -336,14 +352,12 @@ export default function FDLChatbot() {
             onClick={() => setIsOpen(false)}
           />
 
-          {/* Panel */}
           <section
             id={panelId}
             aria-label="FDL Assistant"
             className="absolute inset-0 flex flex-col overflow-hidden bg-[#0D0D0D] md:inset-auto md:bottom-8 md:right-8 md:h-[620px] md:w-[390px] md:rounded-[24px] md:border md:border-white/[0.07] md:shadow-[0_40px_140px_rgba(0,0,0,0.8),0_0_0_1px_rgba(255,255,255,0.04)]"
             style={{ animation: "fdl-panel-in 0.35s cubic-bezier(0.22,1,0.36,1) both" }}
           >
-            {/* ── Gold accent bar ── */}
             <div
               className="h-[2px] w-full shrink-0"
               style={{
@@ -352,11 +366,9 @@ export default function FDLChatbot() {
               }}
             />
 
-            {/* ── Header ── */}
             <header className="shrink-0 px-5 pb-4 pt-4 md:px-6">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  {/* Online status */}
                   <div className="mb-2 flex items-center gap-2">
                     <span className="relative flex h-[7px] w-[7px]">
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
@@ -371,7 +383,7 @@ export default function FDLChatbot() {
                     FDL Assistant
                   </p>
                   <p className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-white/30">
-                    Powered by AI · Bespoke builds & enquiries
+                    Bespoke builds and enquiries
                   </p>
                 </div>
 
@@ -386,22 +398,23 @@ export default function FDLChatbot() {
               </div>
             </header>
 
-            {/* Hairline divider */}
             <div
-              className="shrink-0 h-px w-full"
+              className="h-px w-full shrink-0"
               style={{
                 background:
                   "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.07) 30%, rgba(255,255,255,0.07) 70%, transparent 100%)",
               }}
             />
 
-            {/* ── Messages ── */}
             <div className="flex-1 overflow-y-auto px-4 py-5 md:px-5">
               <div className="space-y-3">
                 {messages.map((message, index) => {
                   const links = message.handoff ? buildHandoffLinks(message.handoff) : null;
                   const isNew = !animatedIdsRef.current.has(message.id);
-                  if (isNew) animatedIdsRef.current.add(message.id);
+
+                  if (isNew) {
+                    animatedIdsRef.current.add(message.id);
+                  }
 
                   const animStyle = isNew
                     ? {
@@ -417,12 +430,11 @@ export default function FDLChatbot() {
                       style={animStyle}
                     >
                       <div className="max-w-[88%] space-y-3">
-                        {/* Bubble */}
                         <div
                           className={
                             message.role === "user"
                               ? "rounded-[20px] rounded-tr-[6px] border border-[rgba(211,191,137,0.28)] px-4 py-3 text-white"
-                              : "rounded-[20px] rounded-tl-[6px] border border-white/[0.07] border-l-[rgba(211,191,137,0.45)] border-l-2 px-4 py-3 text-white"
+                              : "rounded-[20px] rounded-tl-[6px] border border-white/[0.07] border-l-2 border-l-[rgba(211,191,137,0.45)] px-4 py-3 text-white"
                           }
                           style={
                             message.role === "user"
@@ -436,7 +448,6 @@ export default function FDLChatbot() {
                           <FormatChatText text={message.text} />
                         </div>
 
-                        {/* Handoff card */}
                         {message.handoff && links ? (
                           <div
                             className="rounded-[20px] p-[1px]"
@@ -447,13 +458,13 @@ export default function FDLChatbot() {
                           >
                             <div className="rounded-[19px] bg-[#0F0F0F] p-4">
                               <div className="mb-1 flex items-center gap-2">
-                                <CheckCircle size={13} className="text-[var(--accent)] shrink-0" />
+                                <CheckCircle size={13} className="shrink-0 text-[var(--accent)]" />
                                 <p className="text-[10px] font-bold uppercase tracking-[0.26em] text-[var(--accent)]">
                                   Enquiry Ready
                                 </p>
                               </div>
-                              <p className="mt-2 text-sm leading-6 text-white/75">
-                                Send this straight through to Faisal and he will pick it up with you directly.
+                              <p className="mt-2 text-sm leading-6 text-white/85">
+                                Send this straight through and we will pick it up with you directly.
                               </p>
 
                               <div className="mt-4 space-y-2">
@@ -485,7 +496,6 @@ export default function FDLChatbot() {
                   );
                 })}
 
-                {/* Typing indicator */}
                 {isTyping && (
                   <div
                     className="flex justify-start"
@@ -504,20 +514,19 @@ export default function FDLChatbot() {
               </div>
             </div>
 
-            {/* ── Input ── */}
-            <div className="shrink-0 border-t border-white/[0.06] px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 md:px-5 md:pb-5">
+            <div className="shrink-0 border-t border-white/[0.06] px-4 pt-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] md:px-5 md:pb-5">
               <div
                 className="rounded-[26px] border border-white/[0.08] bg-white/[0.03] p-3 transition-all duration-200 focus-within:border-[rgba(211,191,137,0.3)] focus-within:bg-white/[0.05]"
                 style={{
                   boxShadow: "none",
                   transition: "border-color 0.2s, background 0.2s, box-shadow 0.2s",
                 }}
-                onFocusCapture={(e) => {
-                  (e.currentTarget as HTMLElement).style.boxShadow =
+                onFocusCapture={(event) => {
+                  (event.currentTarget as HTMLElement).style.boxShadow =
                     "0 0 0 1px rgba(211,191,137,0.12), 0 4px 20px rgba(0,0,0,0.3)";
                 }}
-                onBlurCapture={(e) => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                onBlurCapture={(event) => {
+                  (event.currentTarget as HTMLElement).style.boxShadow = "none";
                 }}
               >
                 <div className="flex items-end gap-3">
@@ -525,14 +534,14 @@ export default function FDLChatbot() {
                     ref={textareaRef}
                     rows={1}
                     value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
+                    onChange={(event) => setInput(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" && !event.shiftKey) {
+                        event.preventDefault();
                         void submitMessage();
                       }
                     }}
-                    placeholder="Tell us about your vehicle…"
+                    placeholder="Tell us about your vehicle..."
                     className="max-h-28 min-h-[44px] flex-1 resize-none bg-transparent px-1 py-2 text-sm leading-6 text-white placeholder:text-white/25 focus:outline-none"
                     aria-label="Message FDL Assistant"
                   />
@@ -555,7 +564,7 @@ export default function FDLChatbot() {
               </div>
 
               <p className="mt-3 text-center text-[10px] uppercase tracking-[0.22em] text-white/20">
-                FDL Bespoke &nbsp;·&nbsp; {SITE_PHONE_DISPLAY}
+                FDL Bespoke - {SITE_PHONE_DISPLAY}
               </p>
             </div>
           </section>

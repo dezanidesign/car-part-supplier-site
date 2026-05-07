@@ -8,7 +8,8 @@ import { FDL_CHATBOT_SYSTEM_PROMPT } from "@/lib/chatbot/systemPrompt";
 import FormatChatText from "@/components/chatbot/FormatChatText";
 
 const GEMINI_API_KEY = "AIzaSyDsISzXfrcBW4epDfp2GPiMh-OAKxkaTyU";
-const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_MODEL = "gemini-2.5-flash-lite";
+const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 const HANDOFF_REGEX = /\|\|\|HANDOFF_START\|\|\|([\s\S]*?)\|\|\|HANDOFF_END\|\|\|/;
 const WHATSAPP_NUMBER = "447869022673";
 const WELCOME_MESSAGE =

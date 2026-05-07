@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPostBySlug } from "@/lib/blog";
 import BlogContent from "@/components/blog/BlogContent";
+import BlogMediaGallery from "@/components/blog/BlogMediaGallery";
 import { ArrowLeft, Clock } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -109,6 +110,8 @@ export default async function BlogPostPage({
 
         {/* Divider */}
         <div className="w-16 h-px bg-[var(--accent)] mb-10 md:mb-12" />
+
+        <BlogMediaGallery items={post.mediaItems || []} />
 
         {/* Body */}
         <BlogContent html={post.content} />

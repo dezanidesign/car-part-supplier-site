@@ -4,8 +4,10 @@ import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { Upload, X, Loader2, AlertCircle } from "lucide-react";
 
-const MAX_SIZE = 10 * 1024 * 1024;
-const ALLOWED = ["image/jpeg", "image/png", "image/webp"];
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
+const MAX_VIDEO_SIZE = 25 * 1024 * 1024;
+const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const VIDEO_TYPES = ["video/mp4", "video/x-m4v"];
 
 export default function ImageUpload({
   value,
@@ -13,12 +15,14 @@ export default function ImageUpload({
   type = "inline",
   requirePublicUrl = false,
   scope = "blog",
+  mediaType = "image",
 }: {
   value?: string;
   onChange: (url: string) => void;
   type?: "cover" | "inline";
   requirePublicUrl?: boolean;
   scope?: "blog" | "products";
+  mediaType?: "image" | "video";
 }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -29,13 +33,24 @@ export default function ImageUpload({
     async (file: File) => {
       setError("");
 
-      if (!ALLOWED.includes(file.type)) {
-        setError("Unsupported format. Use JPG, PNG, or WebP.");
+      const allowedTypes = mediaType === "video" ? VIDEO_TYPES : IMAGE_TYPES;
+      const maxSize = mediaType === "video" ? MAX_VIDEO_SIZE : MAX_IMAGE_SIZE;
+
+      if (!allowedTypes.includes(file.type)) {
+        setError(
+          mediaType === "video"
+            ? "Unsupported format. Use MP4 or M4V."
+            : "Unsupported format. Use JPG, PNG, or WebP.",
+        );
         return;
       }
-      if (file.size > MAX_SIZE) {
+      if (file.size > maxSize) {
         setError(
-          `File too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Maximum is 10MB.`,
+          `File too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Maximum is ${(
+            maxSize /
+            1024 /
+            1024
+          ).toFixed(0)}MB.`,
         );
         return;
       }
@@ -47,6 +62,7 @@ export default function ImageUpload({
         form.append("type", type);
         form.append("scope", scope);
         form.append("requirePublicUrl", requirePublicUrl ? "1" : "0");
+        form.append("mediaType", mediaType);
 
         const res = await fetch("/api/blog/upload", { method: "POST", body: form });
         const data = await res.json();
@@ -63,7 +79,7 @@ export default function ImageUpload({
         setUploading(false);
       }
     },
-    [onChange, requirePublicUrl, scope, type],
+    [mediaType, onChange, requirePublicUrl, scope, type],
   );
 
   const handleDrop = useCallback(
@@ -85,13 +101,24 @@ export default function ImageUpload({
     return (
       <div className="relative group">
         <div className="relative aspect-video bg-[#111] border border-white/10 overflow-hidden">
-          <Image
-            src={value}
-            alt="Uploaded"
-            fill
-            className="object-cover"
-            unoptimized
-          />
+          {mediaType === "video" ? (
+            <video
+              src={value}
+              className="h-full w-full object-cover"
+              controls
+              muted
+              playsInline
+              preload="metadata"
+            />
+          ) : (
+            <Image
+              src={value}
+              alt="Uploaded"
+              fill
+              className="object-cover"
+              unoptimized
+            />
+          )}
         </div>
         <button
           type="button"
@@ -127,14 +154,22 @@ export default function ImageUpload({
         {uploading ? (
           <div className="flex flex-col items-center gap-2">
             <Loader2 size={24} className="animate-spin text-[var(--accent)]" />
-            <p className="text-xs text-gray-400">Compressing and uploading...</p>
+            <p className="text-xs text-gray-400">
+              {mediaType === "video" ? "Uploading video..." : "Compressing and uploading..."}
+            </p>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2">
             <Upload size={24} className="text-gray-500" />
-            <p className="text-xs text-gray-400">Drop an image here or click to browse</p>
+            <p className="text-xs text-gray-400">
+              {mediaType === "video"
+                ? "Drop a video here or click to browse"
+                : "Drop an image here or click to browse"}
+            </p>
             <p className="text-[10px] text-gray-600">
-              JPG, PNG, WebP - Max 10MB - Auto-converted to WebP
+              {mediaType === "video"
+                ? "MP4, M4V - Max 25MB - Uploaded as-is"
+                : "JPG, PNG, WebP - Max 10MB - Auto-converted to WebP"}
             </p>
           </div>
         )}
@@ -150,7 +185,7 @@ export default function ImageUpload({
       <input
         ref={inputRef}
         type="file"
-        accept="image/jpeg,image/png,image/webp"
+        accept={mediaType === "video" ? "video/mp4,video/x-m4v,.m4v" : "image/jpeg,image/png,image/webp"}
         onChange={handleChange}
         className="hidden"
       />

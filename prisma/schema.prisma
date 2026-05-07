@@ -22,6 +22,7 @@ model Post {
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
   publishedAt     DateTime?
+  mediaItems      PostMedia[]
 
   @@index([status, publishedAt(sort: Desc)])
 }
@@ -29,4 +30,23 @@ model Post {
 enum PostStatus {
   DRAFT
   PUBLISHED
+}
+
+model PostMedia {
+  id          String        @id @default(cuid())
+  postId      String
+  type        PostMediaType
+  url         String
+  posterImage String?
+  sortOrder   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  post        Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId, sortOrder])
+}
+
+enum PostMediaType {
+  IMAGE
+  VIDEO
 }

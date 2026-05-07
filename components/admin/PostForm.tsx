@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import TiptapEditor from "./TiptapEditor";
 import ImageUpload from "./ImageUpload";
+import PostMediaManager from "./PostMediaManager";
 import { Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import type { BlogMediaItem } from "@/lib/blog";
 
 interface PostData {
   id?: string;
@@ -12,6 +14,7 @@ interface PostData {
   content: string;
   excerpt: string;
   coverImage: string;
+  mediaItems: BlogMediaItem[];
   status: "DRAFT" | "PUBLISHED";
   category: string;
   metaTitle: string;
@@ -25,6 +28,7 @@ const EMPTY: PostData = {
   content: "",
   excerpt: "",
   coverImage: "",
+  mediaItems: [],
   status: "DRAFT",
   category: "",
   metaTitle: "",
@@ -37,7 +41,7 @@ export default function PostForm({
   initialData?: PostData & { id: string };
 }) {
   const router = useRouter();
-  const [data, setData] = useState<PostData>(initialData || EMPTY);
+  const [data, setData] = useState<PostData>({ ...EMPTY, ...initialData });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [seoOpen, setSeoOpen] = useState(false);
@@ -242,6 +246,16 @@ export default function PostForm({
               value={data.coverImage}
               onChange={(url) => set("coverImage", url)}
               type="cover"
+            />
+          </div>
+
+          <div className="bg-[#0F0F0F] border border-white/10 p-4">
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-3">
+              Post Gallery Media
+            </label>
+            <PostMediaManager
+              items={data.mediaItems}
+              onChange={(mediaItems) => setData((prev) => ({ ...prev, mediaItems }))}
             />
           </div>
 

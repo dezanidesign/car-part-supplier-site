@@ -65,6 +65,7 @@ export default function EditPostPage() {
           content: post.content,
           excerpt: post.excerpt || "",
           coverImage: post.coverImage || "",
+          mediaItems: post.mediaItems || [],
           status: post.status,
           category: post.category || "",
           metaTitle: post.metaTitle || "",

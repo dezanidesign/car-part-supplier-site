@@ -1,6 +1,14 @@
 import { prisma } from "./prisma";
 
 type PostStatus = "DRAFT" | "PUBLISHED";
+type PostMediaType = "IMAGE" | "VIDEO";
+
+export type BlogMediaItem = {
+  id?: string;
+  type: "image" | "video";
+  url: string;
+  posterImage?: string;
+};
 
 function slugify(text: string): string {
   return text
@@ -11,9 +19,89 @@ function slugify(text: string): string {
     .trim();
 }
 
+function sanitizeText(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function isValidPublicMediaUrl(value: string): boolean {
+  if (value.startsWith("/uploads/")) return true;
+
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+function sanitizeMediaItems(value: unknown): BlogMediaItem[] {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .map((entry) => {
+      if (!entry || typeof entry !== "object") return null;
+
+      const candidate = entry as Record<string, unknown>;
+      const type = candidate.type === "video" ? "video" : candidate.type === "image" ? "image" : null;
+      const url = sanitizeText(candidate.url);
+      const posterImage = sanitizeText(candidate.posterImage);
+
+      if (!type || !url || !isValidPublicMediaUrl(url)) {
+        return null;
+      }
+
+      return {
+        type,
+        url,
+        posterImage:
+          type === "video" && posterImage && isValidPublicMediaUrl(posterImage)
+            ? posterImage
+            : "",
+      } satisfies BlogMediaItem;
+    })
+    .filter(Boolean) as BlogMediaItem[];
+}
+
+function toPrismaMediaType(type: BlogMediaItem["type"]): PostMediaType {
+  return type === "video" ? "VIDEO" : "IMAGE";
+}
+
+function mapPostMediaItem(item: {
+  id: string;
+  type: PostMediaType;
+  url: string;
+  posterImage: string | null;
+}): BlogMediaItem {
+  return {
+    id: item.id,
+    type: item.type === "VIDEO" ? "video" : "image",
+    url: item.url,
+    posterImage: item.posterImage || "",
+  };
+}
+
+function mapPostRecord<
+  T extends {
+    mediaItems?: Array<{
+      id: string;
+      type: PostMediaType;
+      url: string;
+      posterImage: string | null;
+    }>;
+  },
+>(post: T): Omit<T, "mediaItems"> & { mediaItems: BlogMediaItem[] } {
+  const { mediaItems, ...rest } = post;
+
+  return {
+    ...rest,
+    mediaItems: (mediaItems || []).map(mapPostMediaItem),
+  };
+}
+
 async function uniqueSlug(base: string, excludeId?: string): Promise<string> {
   let slug = slugify(base);
   let suffix = 0;
+
   while (true) {
     const candidate = suffix === 0 ? slug : `${slug}-${suffix}`;
     const existing = await prisma.post.findUnique({ where: { slug: candidate } });
@@ -21,8 +109,6 @@ async function uniqueSlug(base: string, excludeId?: string): Promise<string> {
     suffix++;
   }
 }
-
-// ── Public queries ──────────────────────────────────────────────────────
 
 export async function getPublishedPosts(page = 1, limit = 9, category?: string) {
   const where = {
@@ -53,10 +139,17 @@ export async function getPublishedPosts(page = 1, limit = 9, category?: string) 
 }
 
 export async function getPostBySlug(slug: string) {
-  return prisma.post.findUnique({ where: { slug } });
-}
+  const post = await prisma.post.findUnique({
+    where: { slug },
+    include: {
+      mediaItems: {
+        orderBy: { sortOrder: "asc" },
+      },
+    },
+  });
 
-// ── Admin queries ───────────────────────────────────────────────────────
+  return post ? mapPostRecord(post) : null;
+}
 
 export async function getAllPosts(page = 1, limit = 20, search?: string) {
   const where = search
@@ -77,7 +170,16 @@ export async function getAllPosts(page = 1, limit = 20, search?: string) {
 }
 
 export async function getPostById(id: string) {
-  return prisma.post.findUnique({ where: { id } });
+  const post = await prisma.post.findUnique({
+    where: { id },
+    include: {
+      mediaItems: {
+        orderBy: { sortOrder: "asc" },
+      },
+    },
+  });
+
+  return post ? mapPostRecord(post) : null;
 }
 
 export async function createPost(data: {
@@ -85,20 +187,46 @@ export async function createPost(data: {
   content: string;
   excerpt?: string;
   coverImage?: string;
+  mediaItems?: BlogMediaItem[];
   status?: PostStatus;
   category?: string;
   metaTitle?: string;
   metaDescription?: string;
 }) {
   const slug = await uniqueSlug(data.title);
-  return prisma.post.create({
+  const mediaItems = sanitizeMediaItems(data.mediaItems);
+
+  const post = await prisma.post.create({
     data: {
-      ...data,
+      title: sanitizeText(data.title),
+      content: sanitizeText(data.content),
+      excerpt: sanitizeText(data.excerpt),
+      coverImage: sanitizeText(data.coverImage),
+      category: sanitizeText(data.category),
+      metaTitle: sanitizeText(data.metaTitle),
+      metaDescription: sanitizeText(data.metaDescription),
       slug,
       status: data.status ?? "DRAFT",
       publishedAt: data.status === "PUBLISHED" ? new Date() : null,
+      mediaItems: mediaItems.length
+        ? {
+            create: mediaItems.map((item, index) => ({
+              type: toPrismaMediaType(item.type),
+              url: item.url,
+              posterImage: item.posterImage || null,
+              sortOrder: index,
+            })),
+          }
+        : undefined,
+    },
+    include: {
+      mediaItems: {
+        orderBy: { sortOrder: "asc" },
+      },
     },
   });
+
+  return mapPostRecord(post);
 }
 
 export async function updatePost(
@@ -108,6 +236,7 @@ export async function updatePost(
     content?: string;
     excerpt?: string;
     coverImage?: string;
+    mediaItems?: BlogMediaItem[];
     status?: PostStatus;
     category?: string;
     metaTitle?: string;
@@ -118,17 +247,54 @@ export async function updatePost(
   if (!existing) return null;
 
   const slug = data.title ? await uniqueSlug(data.title, id) : undefined;
+  const mediaItems = sanitizeMediaItems(data.mediaItems);
 
-  // Set publishedAt when first published
   let publishedAt = existing.publishedAt;
   if (data.status === "PUBLISHED" && !existing.publishedAt) {
     publishedAt = new Date();
   }
 
-  return prisma.post.update({
+  const post = await prisma.post.update({
     where: { id },
-    data: { ...data, ...(slug ? { slug } : {}), publishedAt },
+    data: {
+      ...(typeof data.title === "string" ? { title: sanitizeText(data.title) } : {}),
+      ...(typeof data.content === "string" ? { content: sanitizeText(data.content) } : {}),
+      ...(typeof data.excerpt === "string" ? { excerpt: sanitizeText(data.excerpt) } : {}),
+      ...(typeof data.coverImage === "string"
+        ? { coverImage: sanitizeText(data.coverImage) }
+        : {}),
+      ...(typeof data.category === "string" ? { category: sanitizeText(data.category) } : {}),
+      ...(typeof data.metaTitle === "string"
+        ? { metaTitle: sanitizeText(data.metaTitle) }
+        : {}),
+      ...(typeof data.metaDescription === "string"
+        ? { metaDescription: sanitizeText(data.metaDescription) }
+        : {}),
+      ...(typeof data.status === "string" ? { status: data.status } : {}),
+      ...(slug ? { slug } : {}),
+      publishedAt,
+      ...(Array.isArray(data.mediaItems)
+        ? {
+            mediaItems: {
+              deleteMany: {},
+              create: mediaItems.map((item, index) => ({
+                type: toPrismaMediaType(item.type),
+                url: item.url,
+                posterImage: item.posterImage || null,
+                sortOrder: index,
+              })),
+            },
+          }
+        : {}),
+    },
+    include: {
+      mediaItems: {
+        orderBy: { sortOrder: "asc" },
+      },
+    },
   });
+
+  return mapPostRecord(post);
 }
 
 export async function deletePost(id: string) {

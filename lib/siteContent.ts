@@ -11,7 +11,7 @@ export const SITE_ADDRESS = "Unit C3, 511 Bradford Rd, Batley, WF17 8LL";
 export const SITE_ADDRESS_SHORT = "Carlinghow Mills, Batley";
 
 export const SITE_HOURS = [
-  "Mon - Fri: 10AM - 5PM",
+  "Mon - Fri: 10 - 5",
   "Saturday: Appointments only",
   "Sunday: Closed",
 ];

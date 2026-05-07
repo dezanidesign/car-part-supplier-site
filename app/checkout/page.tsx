@@ -33,25 +33,42 @@ export default function CheckoutPage() {
     setError("");
 
     try {
-      const checkoutItems = Array.from(
+      const lineItems = Array.from(
         items.reduce((lines, item) => {
           const mainQuantity = lines.get(item.productId) || 0;
           lines.set(item.productId, mainQuantity + item.quantity);
-
-          if (item.fitting) {
-            const fittingQuantity = lines.get(item.fitting.productId) || 0;
-            lines.set(item.fitting.productId, fittingQuantity + item.quantity);
-          }
 
           return lines;
         }, new Map<number, number>()),
       ).map(([productId, quantity]) => ({ productId, quantity }));
 
+      const feeLines = Array.from(
+        items.reduce((fees, item) => {
+          if (!item.fitting) {
+            return fees;
+          }
+
+          const key = `fitting-${item.productId}`;
+          const existing = fees.get(key) || {
+            name: item.fitting.name,
+            total: 0,
+          };
+
+          existing.total += item.fitting.price * item.quantity;
+          fees.set(key, existing);
+          return fees;
+        }, new Map<string, { name: string; total: number }>()),
+      ).map(([, fee]) => ({
+        name: fee.name,
+        total: fee.total.toFixed(2),
+      }));
+
       const res = await fetch("/api/checkout/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          items: checkoutItems,
+          items: lineItems,
+          feeLines,
         }),
       });
 
@@ -125,11 +142,6 @@ export default function CheckoutPage() {
                       <p className="text-gray-400 text-xs mt-1">
                         {formatPrice(getCartItemUnitTotal(item))} x {item.quantity}
                       </p>
-                      {item.fitting ? (
-                        <p className="text-[#D3BF89] text-[11px] uppercase tracking-[0.16em] mt-2">
-                          Includes fitting +{formatPrice(item.fitting.price)}
-                        </p>
-                      ) : null}
                     </div>
 
                     <div className="text-right">

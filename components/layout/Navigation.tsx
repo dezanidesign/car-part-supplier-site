@@ -127,8 +127,8 @@ export function Navigation() {
           onMouseEnter={() => openShop(true)}
           onMouseLeave={() => openShop(false)}
         >
-          <button className="hover:text-[var(--accent)] transition-colors font-bold flex items-center gap-1 py-4">
-            SHOP <ChevronDown size={12} />
+          <button className="hover:text-[var(--accent)] transition-colors font-bold flex items-center gap-1 py-4 whitespace-nowrap">
+            CHOOSE YOUR CAR <ChevronDown size={12} />
           </button>
           <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-4 transition-all duration-300 ${isShopOpen ? "opacity-100 translate-y-0 visible" : "opacity-0 translate-y-4 invisible"}`}>
              {/* Uses your new ShopMegaMenu component */}
@@ -190,12 +190,12 @@ export function Navigation() {
 
             {/* Shop Button (Triggers Slide) */}
             <div className="border-b border-white/10 pb-6">
-              <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-4 block">Store</span>
+              <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-4 block">Vehicles</span>
               <button 
                 onClick={() => setMobileView('shop')}
                 className="w-full flex items-center justify-between font-display text-xl uppercase font-bold text-white hover:text-[var(--accent)] py-2 group"
               >
-                <span>Shop Parts</span>
+                <span>Choose Your Car</span>
                 <ChevronRight size={20} className="text-white/50 group-hover:text-[var(--accent)]" />
               </button>
             </div>
@@ -230,7 +230,7 @@ export function Navigation() {
               >
                 <ChevronLeft size={14} /> Back
               </button>
-              <span className="text-white font-display font-bold uppercase tracking-widest">Shop Categories</span>
+              <span className="text-white font-display font-bold uppercase tracking-widest">Choose Your Car</span>
             </div>
 
             {/* Shop Categories Accordion */}

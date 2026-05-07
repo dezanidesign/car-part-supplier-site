@@ -3,6 +3,7 @@ import TopBar from "@/components/layout/TopBar";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import CartDrawer from "@/components/cart/CartDrawer";
+import FDLChatbot from "@/components/chatbot/FDLChatbot";
 import {
   SITE_ADDRESS,
   SITE_EMAIL,
@@ -133,6 +134,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="site-chrome-bottom">
           <Footer />
           <CartDrawer />
+          <FDLChatbot />
         </div>
 
         <script

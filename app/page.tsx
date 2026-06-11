@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import HeroCarousel from "@/components/home/HeroCarousel";
+import JourneySplit from "@/components/home/JourneySplit";
 import Marquee from "@/components/home/Marquee";
 import ExpertiseGrid from "@/components/home/ExpertiseGrid";
 import TransformationSection from "@/components/home/TransformationSection";
@@ -29,6 +30,7 @@ export default function HomePage() {
   return (
     <>
       <HeroCarousel slides={HOME_HERO_SLIDES} />
+      <JourneySplit />
       <Marquee />
       <ExpertiseGrid />
       <TransformationSection />

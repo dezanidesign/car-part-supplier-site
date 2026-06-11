@@ -45,3 +45,18 @@ export const CONVERSION_COPY = {
   collectionDelivery:
     "We offer fully insured collection & delivery service for all our clients nationwide.",
 };
+
+export const BUYING_REASSURANCE_POINTS = [
+  "Fitment advice available",
+  "Specialist sourcing",
+  "Premium OEM & aftermarket parts",
+  "Installation options available",
+  "Secure checkout",
+  "Nationwide enquiries",
+] as const;
+
+export const QUOTE_PROCESS_STEPS = [
+  "Tell us your vehicle",
+  "Share the part, service or upgrade you need",
+  "We confirm fitment, availability and next steps",
+] as const;

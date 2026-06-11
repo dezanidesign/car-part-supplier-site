@@ -72,17 +72,17 @@ export default function ExpertiseGrid() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-20 border-b border-white/10 pb-6 md:pb-8">
           <div>
             <h2 className="font-display text-3xl md:text-5xl font-bold uppercase text-white mb-3 md:mb-0">
-              Our <span className="text-outline-strong">Expertise</span>
+              Premium Parts, Styling <span className="text-outline-strong">&amp; Vehicle Upgrades</span>
             </h2>
-            <p className="text-gray-500 font-bold uppercase text-[10px] md:text-xs tracking-widest mt-3 max-w-sm">
-              Visual entry points into the work people ask for most.
+            <p className="text-gray-400 text-sm leading-relaxed mt-3 max-w-xl">
+              From curated parts and carbon styling to bespoke conversions, retrofits and specialist sourcing, FDL Bespoke helps premium vehicle owners upgrade with confidence.
             </p>
           </div>
           <Link
             href="/services"
             className="mt-6 md:mt-0 inline-flex items-center gap-3 text-[var(--accent)] text-[10px] font-bold uppercase tracking-[0.22em] hover:text-white transition-colors"
           >
-            <span>View Services</span>
+            <span>View Upgrade Services</span>
             <ArrowRight size={12} />
           </Link>
         </div>

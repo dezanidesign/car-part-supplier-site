@@ -145,51 +145,62 @@ export default function HeroCarousel({ slides }: Props) {
 
       <div className="fdl-overlay" />
 
-      <div className="hero-bleed-inner relative z-10 p-6 pb-32 pointer-events-none md:p-16 md:pb-40">
-        <div className="mb-6 overflow-hidden md:mb-8">
-          <h1 className="font-display text-5xl font-bold uppercase leading-[0.85] text-white tracking-tight md:text-8xl lg:text-9xl">
-            FDL<span className="text-[var(--accent)]">.</span>
+      <div className="hero-bleed-inner pointer-events-none relative z-10 px-6 pb-40 md:px-16 md:pb-36">
+        <div className="max-w-4xl border-l-2 border-[var(--accent)] pl-5 md:pl-7">
+          <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.26em] text-[var(--accent)] md:text-xs">
+            FDL Bespoke - Premium Vehicle Specialists
+          </p>
+          <h1 className="font-display max-w-[16ch] text-4xl font-bold uppercase leading-[0.96] text-white md:text-6xl lg:text-7xl">
+            Premium parts, styling &amp; bespoke conversions<span className="text-[var(--accent)]">.</span>
           </h1>
-        </div>
-        <div className="flex flex-col items-start justify-between gap-6 border-t border-white/20 pt-6 md:flex-row md:items-end md:gap-12 md:pt-8">
-          <div className="max-w-2xl">
-            <p className="font-display mb-6 text-lg font-bold uppercase leading-tight text-white md:mb-8 md:text-2xl">
-              Defined by Detail.<br />Driven by Passion.
-            </p>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-gray-200 md:mt-5 md:text-base">
+            Shop curated vehicle parts or speak to FDL about fitment, sourcing, retrofits and custom builds.
+          </p>
+          <div className="pointer-events-auto mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap md:mt-7">
             <Link
-              href={currentSlide.href}
-              className="pointer-events-auto inline-flex items-center gap-3 bg-white px-6 py-3 text-xs font-bold uppercase tracking-widest text-black transition-all duration-300 hover:bg-[var(--accent)] hover:text-black md:px-8 md:py-4 md:text-sm group"
-              aria-label={`Shop ${currentSlide.label}`}
+              href="/shop"
+              className="group inline-flex items-center justify-center gap-3 bg-white px-6 py-3 text-xs font-bold uppercase tracking-widest text-black transition-all duration-300 hover:bg-[var(--accent)] hover:text-black md:px-7 md:py-3.5"
+              aria-label="Shop vehicle parts"
             >
-              <ShoppingBag size={16} className="md:h-5 md:w-5" />
-              <span>Shop Now</span>
-              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1 md:h-4 md:w-4" />
+              <ShoppingBag size={16} />
+              <span>Shop Parts</span>
+              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
             </Link>
-          </div>
-          <div className="flex items-center gap-3 whitespace-nowrap text-xs font-bold uppercase tracking-widest text-[var(--accent)]">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--accent)]" />
-            Workshop Active
+            <Link
+              href="/contact"
+              className="group inline-flex items-center justify-center gap-3 border border-white/30 bg-black/25 px-6 py-3 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-sm transition-all duration-300 hover:border-white hover:bg-white hover:text-black md:px-7 md:py-3.5"
+              aria-label="Request a quote"
+            >
+              <span>Request a Quote</span>
+              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+            </Link>
+            <Link
+              href="#shop-by-vehicle"
+              className="hidden items-center justify-center px-2 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--accent)] transition-colors hover:text-white sm:inline-flex"
+            >
+              Browse by Vehicle
+            </Link>
           </div>
         </div>
       </div>
 
-      <div className="pointer-events-none absolute bottom-0 left-0 z-20 flex w-full items-end justify-between p-6 md:p-16">
+      <div className="pointer-events-none absolute bottom-0 left-0 z-20 flex w-full items-end justify-between p-6 md:p-12">
         <div className="pointer-events-auto flex gap-3 md:gap-4">
           <button
             type="button"
             onClick={() => goToSlide(state.current.currentIndex - 1)}
-            className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white backdrop-blur-sm transition-all hover:bg-white hover:text-black md:h-14 md:w-14"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-black/30 text-white backdrop-blur-sm transition-all hover:bg-white hover:text-black md:h-12 md:w-12"
             aria-label="Previous slide"
           >
-            <ChevronLeft size={20} className="md:h-6 md:w-6" />
+            <ChevronLeft size={20} />
           </button>
           <button
             type="button"
             onClick={() => goToSlide(state.current.currentIndex + 1)}
-            className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white backdrop-blur-sm transition-all hover:bg-white hover:text-black md:h-14 md:w-14"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-black/30 text-white backdrop-blur-sm transition-all hover:bg-white hover:text-black md:h-12 md:w-12"
             aria-label="Next slide"
           >
-            <ChevronRight size={20} className="md:h-6 md:w-6" />
+            <ChevronRight size={20} />
           </button>
         </div>
 
@@ -201,7 +212,7 @@ export default function HeroCarousel({ slides }: Props) {
               onClick={() => goToSlide(idx)}
               className={`font-display cursor-pointer font-bold transition-all duration-500 ${
                 currentIndex === idx
-                  ? "text-3xl text-white md:text-5xl"
+                  ? "text-2xl text-white md:text-3xl"
                   : "text-xs text-white/30 hover:text-white/60 md:text-sm"
               }`}
               aria-label={`Show ${slide.label}`}
@@ -212,11 +223,6 @@ export default function HeroCarousel({ slides }: Props) {
         </div>
       </div>
 
-      <div className="pointer-events-none absolute bottom-28 right-6 z-20 hidden max-w-[220px] text-right md:block md:right-16">
-        <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[var(--accent)]">
-          {slides[currentIndex]?.label}
-        </p>
-      </div>
     </div>
   );
 }

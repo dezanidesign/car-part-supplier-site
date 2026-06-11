@@ -24,6 +24,16 @@ import {
   DEFENDER_HERO_IMAGE,
 } from '@/lib/curatedMedia';
 
+function formatProductPrice(price: string) {
+  const numeric = parseFloat(price || '0');
+  if (!Number.isFinite(numeric) || numeric <= 0) return 'Price on request';
+
+  return numeric.toLocaleString('en-GB', {
+    style: 'currency',
+    currency: 'GBP',
+  });
+}
+
 // ============================================================================
 // GALLERY IMAGES
 // ============================================================================
@@ -265,16 +275,16 @@ export default function DefenderPage({ products }: { products: WooProduct[] }) {
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link
-                  href="#enquire"
+                  href="#defender-products"
                   className="bg-[var(--accent)] text-black font-bold uppercase tracking-[0.15em] px-8 py-4 rounded-full hover:brightness-110 transition-all flex items-center gap-2 text-sm"
                 >
-                  Start Your Build <ArrowRight size={16} />
+                  Shop Defender Parts <ArrowRight size={16} />
                 </Link>
                 <Link
-                  href="#builds"
+                  href="#enquire"
                   className="border border-white/20 text-white font-bold uppercase tracking-[0.15em] px-8 py-4 rounded-full hover:bg-white hover:text-black transition-all text-sm"
                 >
-                  View Builds
+                  Request Defender Quote
                 </Link>
               </div>
             </div>
@@ -333,6 +343,87 @@ export default function DefenderPage({ products }: { products: WooProduct[] }) {
           </div>
         </div>
       </section>
+
+      {products.length > 0 && (
+        <section
+          id="defender-products"
+          className="px-6 md:px-16 py-16 md:py-24 bg-[var(--bg-dark)] border-b border-white/5"
+        >
+          <div className="max-w-[1920px] mx-auto">
+            <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="text-[var(--accent)] text-[10px] font-bold uppercase tracking-[0.35em] mb-4">
+                  Defender Parts
+                </p>
+                <h2 className="font-display text-3xl md:text-5xl font-bold uppercase leading-tight">
+                  Shop Defender Parts, Styling &amp; Upgrades
+                </h2>
+              </div>
+              <p className="text-gray-400 text-sm max-w-md leading-relaxed">
+                Defender-specific parts with fitment advice, sourcing support and installation options available through FDL Bespoke.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+              {products.slice(0, 4).map((product) => {
+                const img = product.images?.[0]?.src;
+                const price = product.sale_price || product.price;
+
+                return (
+                  <Link
+                    key={product.id}
+                    href={`/product/${product.slug}`}
+                    className="group flex h-full flex-col border border-white/10 bg-white/[0.03] transition-all duration-300 hover:border-[var(--accent)]/40 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/70"
+                  >
+                    <div className="aspect-square bg-white/5 overflow-hidden">
+                      {img ? (
+                        <img
+                          src={img}
+                          alt={product.name}
+                          className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-white/10">
+                          <Layers size={40} />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-1 flex-col gap-3 p-4 md:p-5">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--accent)]">
+                        Land Rover Defender
+                      </p>
+                      <h3 className="font-bold text-white text-sm line-clamp-2 leading-snug">
+                        {product.name}
+                      </h3>
+                      <p className="text-xs text-gray-400">Fitment advice available</p>
+                      <div className="mt-auto flex items-center justify-between gap-4 border-t border-white/10 pt-4">
+                        <span className="text-sm font-bold text-white">
+                          {formatProductPrice(price)}
+                        </span>
+                        <span className="flex items-center gap-1.5 text-[var(--accent)] text-[10px] font-bold uppercase tracking-widest">
+                          View <ArrowRight size={10} />
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            <div className="mt-10 flex flex-col gap-4 border border-white/10 bg-white/[0.02] p-5 md:flex-row md:items-center md:justify-between">
+              <p className="text-sm text-gray-300">
+                Not sure what fits your Defender? Send your registration, model year or part details and we&apos;ll help confirm compatibility.
+              </p>
+              <Link
+                href="#enquire"
+                className="inline-flex items-center gap-3 self-start bg-[var(--accent)] px-5 py-3 text-[10px] font-bold uppercase tracking-[0.18em] text-black transition-all hover:bg-white md:self-auto"
+              >
+                Request Fitment Help <ArrowRight size={12} />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ==================================================================
           SECTION 4: GALLERY / BUILDS
@@ -562,6 +653,7 @@ export default function DefenderPage({ products }: { products: WooProduct[] }) {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
               {products.slice(0, 12).map((product) => {
                 const img = product.images?.[0]?.src;
+                const price = product.sale_price || product.price;
                 return (
                   <Link
                     key={product.id}
@@ -582,12 +674,21 @@ export default function DefenderPage({ products }: { products: WooProduct[] }) {
                       )}
                     </div>
                     <div className="p-4 md:p-5">
+                      <p className="text-[var(--accent)] text-[10px] font-bold uppercase tracking-[0.18em] mb-2">
+                        Land Rover Defender
+                      </p>
                       <h3 className="font-bold text-white text-xs md:text-sm uppercase tracking-wide line-clamp-2 group-hover:text-[var(--accent)] transition-colors mb-3 leading-snug">
                         {product.name}
                       </h3>
-                      <span className="flex items-center gap-1.5 text-[var(--accent)] text-[10px] font-bold uppercase tracking-widest">
-                        View Product <ArrowRight size={10} />
-                      </span>
+                      <p className="text-xs text-gray-400 mb-4">Fitment advice available</p>
+                      <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-4">
+                        <span className="text-white text-sm font-bold">
+                          {formatProductPrice(price)}
+                        </span>
+                        <span className="flex items-center gap-1.5 text-[var(--accent)] text-[10px] font-bold uppercase tracking-widest">
+                          View Product <ArrowRight size={10} />
+                        </span>
+                      </div>
                     </div>
                   </Link>
                 );

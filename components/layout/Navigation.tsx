@@ -6,7 +6,6 @@ import { useState, useEffect, useRef } from "react";
 import { ShoppingBag, Menu, X, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
 import { useCartStore } from "@/lib/store";
 import ShopMegaMenu from "./ShopMegaMenu";
-import { SHOP_NAV_CATEGORIES } from "@/lib/shopCategories";
 import { SITE_EMAIL, SITE_LOGO_PATH } from "@/lib/siteContent";
 
 const mainNavItems = [
@@ -26,8 +25,6 @@ export function Navigation() {
   
   // NEW: Track which "view" the mobile menu is showing
   const [mobileView, setMobileView] = useState<'main' | 'shop'>('main');
-  // NEW: Track which brand is expanded in mobile shop view
-  const [expandedBrand, setExpandedBrand] = useState<string | null>(null);
 
   const [isShopOpen, setIsShopOpen] = useState(false);
 
@@ -36,6 +33,7 @@ export function Navigation() {
   // Refs for mobile menu scroll containers
   const mainMenuRef = useRef<HTMLDivElement>(null);
   const shopMenuRef = useRef<HTMLDivElement>(null);
+  const desktopShopRef = useRef<HTMLDivElement>(null);
   const scrollPositionRef = useRef(0);
 
   useEffect(() => {
@@ -85,8 +83,35 @@ export function Navigation() {
     setIsShopOpen(open);
   };
 
-  const toggleBrand = (slug: string) => {
-    setExpandedBrand(expandedBrand === slug ? null : slug);
+  useEffect(() => {
+    if (!isShopOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsShopOpen(false);
+      }
+    };
+
+    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node | null;
+      if (target && desktopShopRef.current?.contains(target)) return;
+      setIsShopOpen(false);
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+    };
+  }, [isShopOpen]);
+
+  const closeMobileMenu = () => {
+    setIsMenuOpen(false);
+    setMobileView('main');
   };
 
   return (
@@ -96,6 +121,7 @@ export function Navigation() {
           ? "bg-black/90 backdrop-blur-md border-b border-white/5"
           : "bg-transparent"
       }`}
+      style={isMenuOpen ? { zIndex: 9200 } : undefined}
     >
       {/* ======================= LOGO ======================= */}
       <Link href="/" className="relative z-[250] block shrink-0 w-[60px] h-[20px] sm:w-[72px] sm:h-[24px] lg:w-[110px] lg:h-[36px] xl:w-[130px] xl:h-[42px] overflow-hidden lg:justify-self-start">
@@ -123,19 +149,39 @@ export function Navigation() {
 
         {/* SHOP Dropdown (Desktop Mega Menu) */}
         <div
+          ref={desktopShopRef}
           className="relative group h-full flex items-center"
-          onMouseEnter={() => openShop(true)}
-          onMouseLeave={() => openShop(false)}
+          onFocus={() => openShop(true)}
+          onBlur={(event) => {
+            const nextFocus = event.relatedTarget as Node | null;
+            if (!nextFocus || !event.currentTarget.contains(nextFocus)) {
+              openShop(false);
+            }
+          }}
         >
-          <button className="hover:text-[var(--accent)] transition-colors font-bold flex items-center gap-1 py-4 whitespace-nowrap">
-            CHOOSE YOUR CAR <ChevronDown size={12} />
+          <button
+            type="button"
+            onClick={() => openShop(true)}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") openShop(false);
+              if (event.key === "ArrowDown") openShop(true);
+            }}
+            aria-expanded={isShopOpen}
+            aria-haspopup="true"
+            aria-controls="shop-menu-panel"
+            className="hover:text-[var(--accent)] transition-colors font-bold flex items-center gap-1 py-4 whitespace-nowrap"
+          >
+            SHOP PARTS <ChevronDown size={12} />
           </button>
-          <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-4 transition-all duration-300 ${isShopOpen ? "opacity-100 translate-y-0 visible" : "opacity-0 translate-y-4 invisible"}`}>
-             {/* Uses your new ShopMegaMenu component */}
-             <div className="bg-black/95 border border-white/10 shadow-2xl backdrop-blur-xl">
-               <div className="w-[min(1400px,92vw)] px-10 py-10">
-                  <ShopMegaMenu onNavigate={() => openShop(false)} />
-               </div>
+          <div
+            id="shop-menu-panel"
+            className={`fixed left-1/2 top-[var(--header-offset)] z-[240] -translate-x-1/2 transition-all duration-300 ${
+              isShopOpen ? "opacity-100 translate-y-0 visible" : "opacity-0 translate-y-4 invisible"
+            }`}
+            style={{ zIndex: 240 }}
+          >
+             <div style={{ width: "calc(100vw - 2rem)", maxWidth: "980px" }}>
+                <ShopMegaMenu onNavigate={() => openShop(false)} />
              </div>
           </div>
         </div>
@@ -146,11 +192,14 @@ export function Navigation() {
             {item.label}
           </Link>
         ))}
+        <Link href="/contact" className="text-[var(--accent)] hover:text-white transition-colors font-bold">
+          REQUEST QUOTE
+        </Link>
       </div>
 
       {/* ======================= ICONS & TOGGLE ======================= */}
       <div className="flex items-center gap-6 xl:gap-8 relative z-[250] shrink-0 lg:justify-self-end">
-        <Link href="/cart" className="relative group">
+        <Link href="/cart" className="relative group" aria-label="View cart">
           <ShoppingBag className="text-white group-hover:text-[var(--accent)] transition-colors" size={22} />
           {cartItemCount > 0 && (
             <span className="absolute -top-2 -right-2 bg-[var(--accent)] text-black text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold shadow-lg">
@@ -161,13 +210,21 @@ export function Navigation() {
         <button
           className="lg:hidden text-white p-2"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-controls="mobile-menu"
+          aria-expanded={isMenuOpen}
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {/* ======================= MOBILE MENU (Enkahnz Style) ======================= */}
-      <div className={`fixed top-0 left-0 right-0 bottom-0 bg-black z-[200] lg:hidden transition-all duration-300 ${isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}>
+      <div
+        id="mobile-menu"
+        className={`fixed top-0 left-0 right-0 bottom-0 bg-black z-[200] lg:hidden transition-all duration-300 ${
+          isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
+      >
         <div className="h-full flex flex-col relative overflow-hidden">
           
           {/* VIEW 1: MAIN MENU */}
@@ -190,12 +247,12 @@ export function Navigation() {
 
             {/* Shop Button (Triggers Slide) */}
             <div className="border-b border-white/10 pb-6">
-              <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-4 block">Vehicles</span>
+              <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-4 block">Shop</span>
               <button 
                 onClick={() => setMobileView('shop')}
-                className="w-full flex items-center justify-between font-display text-xl uppercase font-bold text-white hover:text-[var(--accent)] py-2 group"
+                className="w-full flex items-center justify-between text-xl uppercase font-bold text-white hover:text-[var(--accent)] py-2 group"
               >
-                <span>Choose Your Car</span>
+                <span>Shop Parts</span>
                 <ChevronRight size={20} className="text-white/50 group-hover:text-[var(--accent)]" />
               </button>
             </div>
@@ -230,47 +287,14 @@ export function Navigation() {
               >
                 <ChevronLeft size={14} /> Back
               </button>
-              <span className="text-white font-display font-bold uppercase tracking-widest">Choose Your Car</span>
+              <span className="text-white font-display font-bold uppercase tracking-widest">Shop Parts</span>
             </div>
 
-            {/* Shop Categories Accordion */}
-            <div className="flex flex-col pb-20">
-               {/* Quick Link to All */}
-               <Link href="/shop" onClick={() => setIsMenuOpen(false)} className="py-4 border-b border-white/10 text-white font-bold uppercase tracking-widest text-sm flex justify-between items-center">
-                  All Products <ChevronRight size={16} className="opacity-50" />
-               </Link>
-
-               {/* Categories from Data */}
-               {SHOP_NAV_CATEGORIES.map((make) => (
-                 <div key={make.slug} className="border-b border-white/10">
-                   <button 
-                     onClick={() => toggleBrand(make.slug)}
-                     className="w-full py-4 flex items-center justify-between text-white hover:text-[var(--accent)] transition-colors"
-                   >
-                     <span className="font-display font-bold uppercase tracking-wider">{make.label}</span>
-                     <ChevronDown 
-                       size={16} 
-                       className={`transition-transform duration-300 ${expandedBrand === make.slug ? "rotate-180 text-[var(--accent)]" : "text-white/50"}`} 
-                     />
-                   </button>
-                   
-                   {/* Expanded List */}
-                   <div className={`overflow-hidden transition-all duration-300 ${expandedBrand === make.slug ? "max-h-[500px] opacity-100 mb-4" : "max-h-0 opacity-0"}`}>
-                     <div className="flex flex-col gap-3 pl-4 border-l border-white/10 ml-1">
-                       {make.models.map((model) => (
-                         <Link 
-                           key={model.slug} 
-                           href={`/shop/${model.slug}`}
-                           onClick={() => setIsMenuOpen(false)}
-                           className="text-sm text-gray-400 hover:text-white uppercase tracking-wide block py-1"
-                         >
-                           {model.label}
-                         </Link>
-                       ))}
-                     </div>
-                   </div>
-                 </div>
-               ))}
+            <div className="pb-20">
+              <ShopMegaMenu
+                variant="mobile"
+                onNavigate={closeMobileMenu}
+              />
             </div>
           </div>
 

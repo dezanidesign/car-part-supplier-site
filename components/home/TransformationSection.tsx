@@ -12,13 +12,13 @@ export default function TransformationSection() {
         <div className="grid lg:grid-cols-5 gap-8 lg:gap-16 items-center">
           <div className="lg:col-span-2 order-2 lg:order-1">
             <span className="text-[var(--accent)] text-[10px] md:text-xs font-bold uppercase tracking-widest mb-3 md:mb-4 block">
-              The Transformation
+              Workshop Proof
             </span>
             <h2 className="font-display text-2xl md:text-5xl font-bold uppercase text-white leading-[0.95] mb-4 md:mb-6">
-              Before <span className="text-outline-accent">&amp;</span> After<span className="text-[var(--accent)]">.</span>
+              See the Finish Before You Enquire<span className="text-[var(--accent)]">.</span>
             </h2>
             <p className="text-gray-400 text-xs md:text-base leading-relaxed mb-6 md:mb-8">
-              Witness the precision and craftsmanship that defines FDL. Every modification is executed to perfection, transforming your vision into reality.
+              Explore real FDL work before choosing parts, fitment or a custom quote. The gallery supports the buying journey rather than replacing it.
             </p>
             <Link href="/gallery" className="inline-flex items-center gap-3 text-white text-xs md:text-sm font-bold uppercase tracking-widest hover:text-[var(--accent)] transition-colors group">
               <span>View Full Gallery</span>

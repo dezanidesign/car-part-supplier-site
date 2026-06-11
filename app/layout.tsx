@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import TopBar from "@/components/layout/TopBar";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
@@ -136,6 +137,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <CartDrawer />
           <FDLChatbot />
         </div>
+
+        <Analytics />
 
         <script
           type="application/ld+json"

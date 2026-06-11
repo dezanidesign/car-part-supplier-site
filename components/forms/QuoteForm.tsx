@@ -103,11 +103,11 @@ function QuoteFormContent({
     const newErrors: FormErrors = {};
 
     if (!formData.name.trim()) newErrors.name = 'Name is required.';
-    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required.';
+    if (!formData.phone.trim() && !formData.email.trim()) {
+      newErrors.phone = 'Please provide a phone number or email address.';
+    }
 
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required.';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address.';
     }
 
@@ -216,6 +216,9 @@ function QuoteFormContent({
 
   return (
     <form onSubmit={handleSubmit} noValidate>
+      <p className="mb-6 text-xs leading-relaxed text-gray-500">
+        Add the vehicle and what you need. Use either phone or email so we can reply with fitment, availability and next steps.
+      </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8">
         <div>
           <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Name *</label>
@@ -231,7 +234,7 @@ function QuoteFormContent({
         </div>
 
         <div>
-          <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Phone Number *</label>
+          <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Phone Number</label>
           <input
             type="tel"
             name="phone"
@@ -244,7 +247,7 @@ function QuoteFormContent({
         </div>
 
         <div>
-          <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Email *</label>
+          <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Email</label>
           <input
             type="email"
             name="email"
@@ -270,27 +273,27 @@ function QuoteFormContent({
       </div>
 
       <div className="mb-6 md:mb-8">
-        <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Car Make & Model *</label>
+        <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Vehicle Make, Model & Year *</label>
         <input
           type="text"
           name="makeModel"
           value={formData.makeModel}
           onChange={handleChange}
           className="w-full bg-transparent border-b border-white/10 py-2 md:py-3 text-white focus:outline-none focus:border-[var(--accent)] text-base md:text-lg transition-colors"
-          placeholder="e.g. Range Rover Sport SVR"
+          placeholder="e.g. 2021 Range Rover Sport SVR"
         />
         {errors.makeModel && <p className="text-red-400 text-xs mt-1">{errors.makeModel}</p>}
       </div>
 
       <div className="mb-6 md:mb-8">
-        <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">Message / Details *</label>
+        <label className="block text-[10px] font-bold uppercase text-gray-500 mb-2">What are you looking for? *</label>
         <textarea
           name="message"
           value={formData.message}
           onChange={handleChange}
           rows={4}
           className="w-full bg-transparent border-b border-white/10 py-2 md:py-3 text-white focus:outline-none focus:border-[var(--accent)] text-base md:text-lg transition-colors resize-none"
-          placeholder="Describe what you're looking for..."
+          placeholder="Tell us the part, service, retrofit or upgrade you need..."
         />
         {errors.message && <p className="text-red-400 text-xs mt-1">{errors.message}</p>}
       </div>
@@ -349,7 +352,7 @@ function QuoteFormContent({
             <span>Opening email...</span>
           </>
         ) : (
-          <span>Open Email Inquiry</span>
+          <span>Send Enquiry</span>
         )}
       </button>
     </form>

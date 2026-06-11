@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Star, Quote, ShoppingBag } from 'lucide-react';
+import { ArrowRight, Star, Quote, ShoppingBag } from 'lucide-react';
 
 const REVIEWS = [
   {
@@ -60,15 +60,21 @@ export default function ReviewsSection() {
 
         <div className="text-center border-t border-white/5 pt-10 md:pt-16">
           <h3 className="font-display text-2xl md:text-4xl font-bold uppercase text-white mb-4 md:mb-6">
-            Ready to Transform<span className="text-[var(--accent)]">?</span>
+            Need Parts, Fitment or a Custom Quote<span className="text-[var(--accent)]">?</span>
           </h3>
           <p className="text-gray-400 text-xs md:text-sm mb-6 md:mb-8 max-w-xl mx-auto">
-            Browse our curated collection of premium parts and accessories, trusted by enthusiasts nationwide.
+            Tell us what you drive and what you&apos;re looking for. We&apos;ll help confirm compatibility, availability, installation options and the next step.
           </p>
-          <Link href="/shop" className="inline-flex items-center gap-3 bg-white text-black px-8 md:px-12 py-4 md:py-5 font-bold uppercase tracking-widest text-xs md:text-sm hover:bg-[var(--accent)] hover:text-black transition-all duration-300">
-            <ShoppingBag size={16} className="md:w-5 md:h-5" />
-            <span>Browse Shop</span>
-          </Link>
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link href="/shop" className="inline-flex items-center gap-3 bg-white text-black px-8 md:px-12 py-4 md:py-5 font-bold uppercase tracking-widest text-xs md:text-sm hover:bg-[var(--accent)] hover:text-black transition-all duration-300">
+              <ShoppingBag size={16} className="md:w-5 md:h-5" />
+              <span>Browse Shop</span>
+            </Link>
+            <Link href="/contact" className="inline-flex items-center gap-3 border border-white/20 text-white px-8 md:px-12 py-4 md:py-5 font-bold uppercase tracking-widest text-xs md:text-sm hover:bg-white hover:text-black transition-all duration-300">
+              <span>Request Quote</span>
+              <ArrowRight size={16} className="md:w-5 md:h-5" />
+            </Link>
+          </div>
         </div>
       </div>
     </section>

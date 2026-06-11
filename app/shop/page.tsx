@@ -3,7 +3,7 @@ import ShopFeed from "../../components/shop/ShopFeed";
 
 export const metadata = {
   title: "Shop All | FDL Bespoke",
-  description: "Browse our complete catalog of luxury automotive enhancements.",
+  description: "Shop curated premium vehicle parts with fitment advice, specialist sourcing, and secure checkout from FDL Bespoke.",
 };
 
 export const revalidate = 300;
@@ -46,12 +46,27 @@ export default async function ShopIndexPage({
       <div className="bg-[#050505] pb-12 px-6 md:px-12 border-b border-white/10">
         <div className="max-w-[1920px] mx-auto">
           <h1 className="font-display text-5xl md:text-8xl font-bold uppercase tracking-tight leading-none">
-            The Collection<span className="text-[var(--accent)]">.</span>
+            Shop Premium Vehicle Parts<span className="text-[var(--accent)]">.</span>
           </h1>
-          <p className="text-gray-400 mt-6 max-w-xl text-sm md:text-base leading-relaxed border-l-2 border-[var(--accent)] pl-6">
-            Explore our comprehensive range of bespoke automotive enhancements. 
-            From carbon fiber aerodynamics to forged wheels and interior conversions.
-          </p>
+          <div className="mt-6 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <p className="max-w-xl border-l-2 border-[var(--accent)] pl-6 text-sm leading-relaxed text-gray-400 md:text-base">
+              Search listed parts, filter by vehicle, or send us the details for fitment and sourcing help. The shop is built around the quickest route to the right part.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="#vehicle-browser"
+                className="inline-flex items-center justify-center bg-[var(--accent)] px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-black transition-colors hover:bg-white"
+              >
+                Browse Vehicles
+              </a>
+              <a
+                href="#products"
+                className="inline-flex items-center justify-center border border-white/15 px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-white transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              >
+                View Parts
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 

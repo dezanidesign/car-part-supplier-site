@@ -13,6 +13,7 @@ import {
   SITE_PHONE_DISPLAY,
   SITE_PHONE_LINK,
   SITE_SOCIALS,
+  QUOTE_PROCESS_STEPS,
 } from '@/lib/siteContent';
 
 const ContactPage = () => (
@@ -83,8 +84,22 @@ const ContactPage = () => (
         {/* Right: Quote Form */}
         <div className="lg:col-span-3">
           <div className="bg-[var(--bg-card)] p-6 md:p-12 border border-white/5">
-            <h2 className="font-display text-2xl md:text-3xl font-bold uppercase text-white mb-2">Quote Request</h2>
-            <p className="text-gray-500 text-sm mb-8">Fill in the details below and we&apos;ll get back to you with a custom quote.</p>
+            <h2 className="font-display text-2xl md:text-3xl font-bold uppercase text-white mb-2">
+              Need a Part, Retrofit or Custom Build Quote?
+            </h2>
+            <p className="text-gray-400 text-sm mb-8 leading-relaxed">
+              Send your vehicle details and what you&apos;re looking for. We&apos;ll help confirm compatibility, availability, installation options and the next step.
+            </p>
+            <div className="mb-8 grid gap-3 md:grid-cols-3">
+              {QUOTE_PROCESS_STEPS.map((step, index) => (
+                <div key={step} className="border border-white/10 bg-black/20 p-4">
+                  <span className="mb-3 block text-[10px] font-bold text-[var(--accent)]">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <p className="text-xs leading-relaxed text-gray-300">{step}</p>
+                </div>
+              ))}
+            </div>
             <QuoteForm />
           </div>
         </div>

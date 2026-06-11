@@ -7,6 +7,7 @@ import {
   getProductFittingPrice,
 } from "@/lib/woo";
 import AddToCartBtn from "@/components/product/AddToCartBtn";
+import { BUYING_REASSURANCE_POINTS } from "@/lib/siteContent";
 
 const formatPrice = (price: string) =>
   parseFloat(price).toLocaleString("en-GB", {
@@ -114,13 +115,22 @@ export default async function ProductPage({ params }: { params: { slug: string }
               dangerouslySetInnerHTML={{ __html: product.short_description }}
             />
 
+            <div className="mb-8 grid gap-3 border border-white/10 bg-white/[0.03] p-4 sm:grid-cols-2">
+              {BUYING_REASSURANCE_POINTS.slice(0, 4).map((point) => (
+                <div key={point} className="flex items-center gap-3 text-xs text-gray-300">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
+                  <span>{point}</span>
+                </div>
+              ))}
+            </div>
+
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end mb-10 border-b border-white/10 pb-10">
               <AddToCartBtn product={product} fittingOption={fittingOption} />
               <Link
                 href={enquiryHref}
                 className="flex-1 sm:self-end border border-white/20 text-white font-bold uppercase tracking-[0.2em] py-4 px-8 rounded-full hover:bg-white hover:text-black transition text-center"
               >
-                Enquire
+                Check Fitment
               </Link>
             </div>
 
